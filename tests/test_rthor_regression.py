@@ -18,7 +18,6 @@ import pytest
 class TestRandallRegression:
     """Test randall() function against R outputs."""
 
-    @pytest.mark.skip(reason="randall() not yet implemented")
     def test_randall_matches_r_output(
         self,
         input_matrix_file: Path,
@@ -30,8 +29,8 @@ class TestRandallRegression:
         result = randall(
             n=6,
             nmat=3,
-            ord="circular6",
             input=input_matrix_file,
+            ord="circular6",
             description=["sample_one", "sample_two", "sample_three"],
         )
 
