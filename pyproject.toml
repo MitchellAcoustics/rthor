@@ -1,30 +1,25 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = [
-    "setuptools",
-    "setuptools-scm",
-]
+requires = ["setuptools", "setuptools-scm"]
 
 [dependency-groups]
 dev = [
-    "build",
-    "mypy",
-    "pre-commit",
-    "ruff",
-    "tox",
-    "twine",
+    "build>=1.3.0",
+    "prek>=0.2.3",
+    "ruff>=0.13.3",
+    "tox>=4.30.3",
+    "twine>=6.2.0",
+    "ty>=0.0.1a21",
+    {include-group = "docs"},
+    {include-group = "test"},
 ]
 docs = [
-    "mkdocs",
-    "mkdocs-include-markdown-plugin",
-    "mkdocs-material",
-    "mkdocstrings",
-    "mkdocstrings-python",
+    "mkdocs-include-markdown-plugin>=7.2.0",
+    "mkdocs-material>=9.6.21",
+    "mkdocs>=1.6.1",
+    "mkdocstrings[python]>=0.30.1",
 ]
-test = [
-    "pytest",
-    "pytest-cov",
-]
+test = ["pytest-cov>=7.0.0", "pytest>=8.4.2", "xdoctest>=1.3.0"]
 
 [project]
 authors = [
@@ -39,18 +34,12 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
-dependencies = [
-]
+dependencies = []
 description = "Python implementation of RTHOR (Randomization test of hypothesized order relations)"
-dynamic = [
-    "version",
-]
-keywords = [
-]
+dynamic = ["version"]
+keywords = []
 license = "MIT"
-license-files = [
-    "LICENSE.md",
-]
+license-files = ["LICENSE.md"]
 name = "pythor"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -58,26 +47,12 @@ urls.homepage = "https://github.com/MitchellAcoustics/pythor"
 
 [tool.coverage]
 report = {sort = "cover"}
-run = {branch = true, parallel = true, source = [
-    "pythor",
-]}
-paths.source = [
-    "src",
-    ".tox*/*/lib/python*/site-packages",
-]
-
-[tool.mypy]
-explicit_package_bases = true
+run = {branch = true, parallel = true, source = ["pythor"]}
+paths.source = ["src", ".tox*/*/lib/python*/site-packages"]
 
 [tool.pytest.ini_options]
-addopts = [
-    "--color=yes",
-    "--import-mode=importlib",
-    "--verbose",
-]
-testpaths = [
-    "tests",
-]
+addopts = ["--color=yes", "--import-mode=importlib", "--verbose"]
+testpaths = ["tests"]
 
 [tool.ruff]
 fix = true
@@ -94,16 +69,10 @@ lint.per-file-ignores = {"tests*" = [
     "INP001", # File is part of an implicit namespace package.
     "S101", # Use of `assert` detected
 ]}
-lint.select = [
-    "ALL",
-]
-lint.isort.known-first-party = [
-    "pythor",
-]
+lint.select = ["ALL"]
+lint.isort.known-first-party = ["pythor"]
 lint.mccabe.max-complexity = 18
-lint.pep8-naming.classmethod-decorators = [
-    "classmethod",
-]
+lint.pep8-naming.classmethod-decorators = ["classmethod"]
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
@@ -119,11 +88,7 @@ overrides."tool.tox.env.docs.commands".inline_arrays = false
 overrides."tool.tox.env_run_base.commands".inline_arrays = false
 
 [tool.tox]
-env_list = [
-    "py311",
-    "py312",
-    "py313",
-]
+env_list = ["py311", "py312", "py313"]
 env_run_base = {commands = [
     [
         "pytest",
