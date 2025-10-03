@@ -4,7 +4,7 @@ import numpy as np
 
 
 def generate_hypothesis_matrix(
-    ord: str | list[int],
+    ord: str | list[int],  # noqa: A002
     n: int,
 ) -> tuple[np.ndarray, np.ndarray, int]:
     """

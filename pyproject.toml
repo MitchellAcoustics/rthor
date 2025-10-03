@@ -64,9 +64,15 @@ lint.ignore = [
     "D407", # removed dashes lines under sections
     "D417", # argument description in docstring (unreliable)
     "ISC001", # simplify implicit str concatenation (ruff-format recommended)
+    "PERF401", # list.extend suggestion (readability over micro-optimization)
+    "PLR0912", # too many branches (acceptable for RTHOR algorithm complexity)
+    "PLR2004", # magic value comparison (acceptable for algorithm constants)
+    "RUF002", # ambiguous unicode in docstrings (× is clearer than x for dimensions)
 ]
 lint.per-file-ignores = {"tests*" = [
+    "ERA001", # Commented-out code (test comments for clarity)
     "INP001", # File is part of an implicit namespace package.
+    "PLR2004", # Magic value used in comparison (test constants are OK)
     "S101", # Use of `assert` detected
 ]}
 lint.select = ["ALL"]

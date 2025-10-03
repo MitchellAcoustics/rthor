@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(R:*)",
+      "Bash(Rscript:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git rm:*)",
+      "Bash(git reset:*)",
+      "Bash(uv run prek run:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

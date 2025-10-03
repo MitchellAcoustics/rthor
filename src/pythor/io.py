@@ -92,7 +92,8 @@ def read_correlation_matrices(
 
 
 def extract_lower_triangle(
-    corr_matrix: np.ndarray, include_diagonal: bool = True
+    corr_matrix: np.ndarray,
+    include_diagonal: bool = True,  # noqa: FBT001, FBT002
 ) -> np.ndarray:
     """
     Extract lower triangular values from correlation matrix.

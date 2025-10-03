@@ -129,7 +129,6 @@ class TestRandmfRegression:
 class TestRandallFromDfRegression:
     """Test randall_from_df() function against R outputs."""
 
-    @pytest.mark.skip(reason="randall_from_df() not yet implemented")
     def test_randall_from_df_matches_r_output(
         self,
         df_list: list[pd.DataFrame],
