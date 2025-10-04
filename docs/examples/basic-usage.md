@@ -4,7 +4,10 @@ This example demonstrates the fundamental features of pythor for testing correla
 
 ## Interactive Notebook
 
-@@@marimo notebooks/basic_usage.py
+/// marimo-embed-file
+filepath: docs/notebooks/basic_usage.py
+height: large
+///
 
 ## Key Concepts
 

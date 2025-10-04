@@ -4,7 +4,10 @@ This example demonstrates advanced usage including custom orderings, DataFrame i
 
 ## Interactive Notebook
 
-@@@marimo notebooks/advanced_features.py
+/// marimo-embed-file
+filepath: docs/notebooks/advanced_features.py
+height: large
+///
 
 ## Topics Covered
 
