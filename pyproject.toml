@@ -14,7 +14,9 @@ dev = [
     {include-group = "test"},
 ]
 docs = [
+    "marimo>=0.9.0",
     "mkdocs-include-markdown-plugin>=7.2.0",
+    "mkdocs-marimo>=0.1.0",
     "mkdocs-material>=9.6.21",
     "mkdocs>=1.6.1",
     "mkdocstrings[python]>=0.30.1",
@@ -69,16 +71,17 @@ lint.ignore = [
     "TC002", # type checking blocks (would break runtime imports)
     "TC003", # type checking blocks (would break runtime imports)
 ]
-lint.per-file-ignores = {"tests*" = [
-    "ERA001", # Commented-out code (test comments for clarity)
-    "INP001", # File is part of an implicit namespace package.
-    "PLR2004", # Magic value used in comparison (test constants are OK)
-    "S101", # Use of `assert` detected
-]}
 lint.select = ["ALL"]
 lint.isort.known-first-party = ["pythor"]
 lint.mccabe.max-complexity = 18
 lint.pep8-naming.classmethod-decorators = ["classmethod"]
+lint.per-file-ignores."docs/notebooks/*" = ["ALL"]
+lint.per-file-ignores."tests*" = [
+    "ERA001",
+    "INP001",
+    "PLR2004",
+    "S101",
+]
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"

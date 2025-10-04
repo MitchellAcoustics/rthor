@@ -35,14 +35,32 @@ theme:
 
 nav:
   - Overview: index.md
-  - API reference: api.md
+  - Getting Started:
+      - Installation: user-guide/installation.md
+      - Quick Start: user-guide/quickstart.md
+  - Examples:
+      - Basic Usage: examples/basic-usage.md
+      - Advanced Features: examples/advanced-features.md
+  - User Guide:
+      - Core Concepts: user-guide/concepts.md
+      - Input Formats: user-guide/input-formats.md
+      - Interpreting Results: user-guide/results.md
+  - API Reference: api.md
   - License: LICENSE.md
 
 markdown_extensions:
   - pymdownx.tasklist
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
 
 plugins:
   - search
+  - marimo
   - mkdocstrings:
       default_handler: python
       handlers:

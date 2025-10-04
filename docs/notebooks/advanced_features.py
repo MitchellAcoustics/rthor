@@ -1,0 +1,267 @@
+import marimo
+
+__generated_with = "0.9.14"
+app = marimo.App(width="medium")
+
+
+@app.cell
+def __():
+    import marimo as mo
+
+    return (mo,)
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        # Advanced Features of pythor
+
+        This notebook demonstrates advanced features including custom orderings,
+        working with DataFrames, and pairwise matrix comparisons.
+        """
+    )
+
+
+@app.cell
+def __():
+    import numpy as np
+    import pandas as pd
+
+    import pythor
+
+    return np, pd, pythor
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        ## Custom Orderings
+
+        While pythor provides preset orderings like "circular6" and "circular8",
+        you can specify custom hypothesized orderings for any number of variables.
+
+        The ordering is specified as a vector where each element represents the
+        hypothesized relationship between pairs of variables.
+        """
+    )
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        ### Example: 4-Variable Linear Ordering
+
+        Let's create a custom ordering for 4 variables arranged linearly:
+        Variable 1 < Variable 2 < Variable 3 < Variable 4
+
+        For 4 variables, we have 4×(4-1)/2 = 6 pairwise comparisons.
+        """
+    )
+
+
+@app.cell
+def __(np, pythor):
+    # Create a correlation matrix with linear structure
+    corr_linear = np.array(
+        [
+            [1.00, 0.80, 0.60, 0.40],
+            [0.80, 1.00, 0.75, 0.55],
+            [0.60, 0.75, 1.00, 0.70],
+            [0.40, 0.55, 0.70, 1.00],
+        ]
+    )
+
+    # Custom ordering: [1,2,1] means:
+    # - Pair (1,2): Expect corr(1,2) > corr(1,3)  → order value 1
+    # - Pair (1,3): Expect corr(1,3) > corr(1,4)  → order value 2
+    # - Pair (1,4): ...and so on
+    #
+    # For a simple linear order (1<2<3<4), a common pattern is:
+    custom_order = [1, 2, 3, 2, 3, 3]
+
+    result_custom = pythor.rthor_test(corr_linear, order=custom_order)
+    print(result_custom.summary())
+    return corr_linear, custom_order, result_custom
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        ## Working with DataFrames
+
+        pythor can work directly with pandas DataFrames containing raw data.
+        It will compute the correlation matrices automatically.
+        """
+    )
+
+
+@app.cell
+def __(np, pd):
+    # Create sample datasets
+    np.random.seed(42)
+
+    # Dataset 1: Strong circular structure
+    n_samples = 100
+    angles = np.linspace(0, 2 * np.pi, 6, endpoint=False)
+
+    data1 = pd.DataFrame(
+        {
+            f"var{i + 1}": np.sin(angles[i]) + np.random.normal(0, 0.3, n_samples)
+            for i in range(6)
+        }
+    )
+
+    # Dataset 2: Weaker circular structure (more noise)
+    data2 = pd.DataFrame(
+        {
+            f"var{i + 1}": np.sin(angles[i]) + np.random.normal(0, 0.6, n_samples)
+            for i in range(6)
+        }
+    )
+
+    # Dataset 3: Random (no structure)
+    data3 = pd.DataFrame(
+        {f"var{i + 1}": np.random.normal(0, 1, n_samples) for i in range(6)}
+    )
+
+    print("Sample data shape:", data1.shape)
+    data1.head()
+    return angles, data1, data2, data3, n_samples
+
+
+@app.cell
+def __(data1, data2, data3, pythor):
+    # Test DataFrames
+    result_dfs = pythor.rthor_test(
+        [data1, data2, data3],
+        order="circular6",
+        labels=["Strong Structure", "Weak Structure", "Random"],
+    )
+
+    print(result_dfs.summary())
+    return (result_dfs,)
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        Notice how the CI values and p-values reflect the strength of the circular
+        structure in each dataset.
+        """
+    )
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        ## Pairwise Matrix Comparisons
+
+        The `compare_matrices()` function performs two analyses:
+        1. Individual RTHOR tests for each matrix
+        2. Pairwise comparisons to determine which matrix fits better
+        """
+    )
+
+
+@app.cell
+def __(data1, data2, data3, pythor):
+    # Compare matrices pairwise
+    comparison = pythor.compare_matrices([data1, data2, data3], order="circular6")
+
+    print(comparison.summary())
+    return (comparison,)
+
+
+@app.cell
+def __(comparison, mo):
+    mo.md("""
+    ### Individual Results
+
+    First, let's look at how each matrix performed individually:
+    """)
+    comparison.rthor_results
+
+
+@app.cell
+def __(comparison, mo):
+    mo.md("""
+    ### Pairwise Comparisons
+
+    Now let's see the pairwise comparisons:
+
+    - **both_agree**: Predictions satisfied by both matrices
+    - **only1**: Predictions satisfied only by matrix 1
+    - **only2**: Predictions satisfied only by matrix 2
+    - **neither**: Predictions satisfied by neither
+    - **ci**: Comparison CI (positive means matrix 2 fits better)
+    - **p_value**: Significance of the difference
+    """)
+    comparison.comparisons
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        ## Reading from Files
+
+        For large-scale analyses, you can read correlation matrices from text files:
+
+        ```python
+        result = pythor.rthor_test(
+            "correlations.txt",
+            n_matrices=10,
+            n_variables=6,
+            order="circular6"
+        )
+        ```
+
+        The file should contain lower triangular matrices (including diagonal) with
+        values separated by whitespace.
+        """
+    )
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        ## Export Results
+
+        Results can be easily exported for further analysis:
+
+        ```python
+        # To CSV
+        result.results.to_csv("rthor_results.csv", index=False)
+
+        # To dictionary (for JSON)
+        result_dict = result.to_dict()
+
+        # Get specific statistics
+        significant_matrices = result.results[result.results['p_value'] < 0.05]
+        ```
+        """
+    )
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        ## Next Steps
+
+        - Explore the [API Reference](../api.md) for complete function documentation
+        - Read the [User Guide](../user-guide/concepts.md) for theoretical background
+        - Check the [Input Formats](../user-guide/input-formats.md) guide for data preparation
+        """
+    )
+
+
+if __name__ == "__main__":
+    app.run()
