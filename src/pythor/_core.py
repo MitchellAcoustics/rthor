@@ -22,8 +22,7 @@ def generate_hypothesis(
     order: str | list[int] | np.ndarray,
     n_variables: int,
 ) -> tuple[np.ndarray, np.ndarray, int]:
-    """
-    Generate hypothesis matrix for RTHOR analysis.
+    """Generate hypothesis matrix for RTHOR analysis.
 
     Parameters
     ----------
@@ -35,7 +34,7 @@ def generate_hypothesis(
     Returns
     -------
     hypothesis_matrix : np.ndarray
-        Hypothesis matrix (n_pairs × n_pairs)
+        Hypothesis matrix (n_pairs x n_pairs)
     order_array : np.ndarray
         Processed order array
     n_predictions : int
@@ -58,15 +57,14 @@ def calculate_fit(
     correlation_matrix: np.ndarray,
     hypothesis_matrix: np.ndarray,
 ) -> tuple[int, int]:
-    """
-    Calculate fit of correlation matrix to hypothesis.
+    """Calculate fit of correlation matrix to hypothesis.
 
     Parameters
     ----------
     correlation_matrix : np.ndarray
-        Correlation matrix (n × n)
+        Correlation matrix (n x n)
     hypothesis_matrix : np.ndarray
-        Hypothesis matrix (n_pairs × n_pairs)
+        Hypothesis matrix (n_pairs x n_pairs)
 
     Returns
     -------
@@ -89,8 +87,7 @@ def calculate_fit(
 
 
 def calculate_ci(n_agreements: int, n_ties: int, n_predictions: int) -> float:
-    """
-    Calculate Correspondence Index.
+    """Calculate Correspondence Index.
 
     Parameters
     ----------
@@ -120,8 +117,7 @@ def run_permutation_test(
     n_agreements: int,
     permutations: np.ndarray,
 ) -> float:
-    """
-    Run randomization test via permutations.
+    """Run randomization test via permutations.
 
     Parameters
     ----------
@@ -132,7 +128,7 @@ def run_permutation_test(
     n_agreements : int
         Observed number of agreements
     permutations : np.ndarray
-        Permutation matrix (n_permutations × n_variables)
+        Permutation matrix (n_permutations x n_variables)
 
     Returns
     -------
@@ -160,7 +156,7 @@ def run_permutation_test(
     return count / n_permutations
 
 
-def test_single_matrix(  # noqa: PLR0913
+def test_single_matrix(
     correlation_matrix: np.ndarray,
     hypothesis_matrix: np.ndarray,
     n_predictions: int,
@@ -168,8 +164,7 @@ def test_single_matrix(  # noqa: PLR0913
     matrix_id: int,
     label: str,
 ) -> dict:
-    """
-    Test a single correlation matrix.
+    """Test a single correlation matrix.
 
     Parameters
     ----------
@@ -219,8 +214,7 @@ def test_multiple_matrices(
     order: str | list[int] | np.ndarray,
     labels: list[str] | None,
 ) -> pd.DataFrame:
-    """
-    Test multiple correlation matrices.
+    """Test multiple correlation matrices.
 
     Parameters
     ----------
@@ -275,7 +269,7 @@ def test_multiple_matrices(
     return df
 
 
-def compare_two_matrices(  # noqa: PLR0913
+def compare_two_matrices(
     corr_mat1: np.ndarray,
     corr_mat2: np.ndarray,
     hypothesis_matrix: np.ndarray,
@@ -283,8 +277,7 @@ def compare_two_matrices(  # noqa: PLR0913
     matrix1_id: int,
     matrix2_id: int,
 ) -> dict:
-    """
-    Compare two correlation matrices.
+    """Compare two correlation matrices.
 
     Parameters
     ----------
@@ -376,8 +369,7 @@ def compare_multiple_matrices(
     correlation_matrices: np.ndarray,
     order: str | list[int] | np.ndarray,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Compare all pairs of correlation matrices.
+    """Compare all pairs of correlation matrices.
 
     Parameters
     ----------

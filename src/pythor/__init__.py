@@ -5,9 +5,9 @@ from .api import compare_matrices, rthor_test
 from .results import ComparisonResult, RTHORResult
 
 __all__ = [
+    "ComparisonResult",
+    "RTHORResult",
     "__version__",
     "compare_matrices",
     "rthor_test",
-    "ComparisonResult",
-    "RTHORResult",
 ]

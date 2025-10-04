@@ -10,8 +10,7 @@ def read_correlation_matrices(
     n: int,
     nmat: int,
 ) -> np.ndarray:
-    """
-    Read correlation matrices from text file.
+    """Read correlation matrices from text file.
 
     Parameters
     ----------
@@ -25,7 +24,7 @@ def read_correlation_matrices(
     Returns
     -------
     dmatm : np.ndarray
-        3D array of correlation matrices (n × n × nmat)
+        3D array of correlation matrices (n x n x nmat)
 
     Notes
     -----
@@ -95,13 +94,12 @@ def extract_lower_triangle(
     corr_matrix: np.ndarray,
     include_diagonal: bool = True,  # noqa: FBT001, FBT002
 ) -> np.ndarray:
-    """
-    Extract lower triangular values from correlation matrix.
+    """Extract lower triangular values from correlation matrix.
 
     Parameters
     ----------
     corr_matrix : np.ndarray
-        Correlation matrix (n × n)
+        Correlation matrix (n x n)
     include_diagonal : bool, default=True
         Whether to include diagonal values
 

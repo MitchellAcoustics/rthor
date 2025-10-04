@@ -11,8 +11,7 @@ import pandas as pd
 
 @dataclass
 class RTHORResult:
-    """
-    Results from RTHOR (Randomization Test of Hypothesized Order Relations) analysis.
+    """Results from RTHOR (Randomization Test of Hypothesized Order Relations) analysis.
 
     This class encapsulates the results of testing whether correlation matrices
     conform to a hypothesized ordering of variables.
@@ -57,8 +56,7 @@ class RTHORResult:
     n_permutations: int
 
     def summary(self) -> str:
-        """
-        Generate formatted summary of results.
+        """Generate formatted summary of results.
 
         Returns
         -------
@@ -104,8 +102,7 @@ class RTHORResult:
         return "\n".join(lines)
 
     def to_dict(self) -> dict[str, Any]:
-        """
-        Convert results to dictionary for serialization.
+        """Convert results to dictionary for serialization.
 
         Returns
         -------
@@ -137,8 +134,7 @@ class RTHORResult:
 
 @dataclass
 class ComparisonResult:
-    """
-    Results from pairwise matrix comparison analysis.
+    """Results from pairwise matrix comparison analysis.
 
     This class encapsulates both individual matrix RTHOR tests and pairwise
     comparisons between matrices.
@@ -146,7 +142,8 @@ class ComparisonResult:
     Attributes
     ----------
     rthor_results : pd.DataFrame
-        Individual RTHOR test results for each matrix (same format as RTHORResult.results)
+        Individual RTHOR test results for each matrix
+        (same format as RTHORResult.results)
     comparisons : pd.DataFrame
         Pairwise comparison results with columns:
         - matrix1: First matrix identifier
@@ -187,8 +184,7 @@ class ComparisonResult:
     n_permutations: int
 
     def summary(self) -> str:
-        """
-        Generate formatted summary of results.
+        """Generate formatted summary of results.
 
         Returns
         -------
@@ -259,8 +255,7 @@ class ComparisonResult:
         return "\n".join(lines)
 
     def to_dict(self) -> dict[str, Any]:
-        """
-        Convert results to dictionary for serialization.
+        """Convert results to dictionary for serialization.
 
         Returns
         -------

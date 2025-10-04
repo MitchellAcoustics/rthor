@@ -59,15 +59,15 @@ fix = true
 force-exclude = true
 lint.ignore = [
     "COM812", # trailing commas (ruff-format recommended)
-    "D203", # no-blank-line-before-class
-    "D212", # multi-line-summary-first-line
-    "D407", # removed dashes lines under sections
     "D417", # argument description in docstring (unreliable)
     "ISC001", # simplify implicit str concatenation (ruff-format recommended)
+    "NPY002", # legacy np.random (required for R parity)
     "PERF401", # list.extend suggestion (readability over micro-optimization)
     "PLR0912", # too many branches (acceptable for RTHOR algorithm complexity)
+    "PLR0913", # too many arguments (acceptable for algorithm functions)
     "PLR2004", # magic value comparison (acceptable for algorithm constants)
-    "RUF002", # ambiguous unicode in docstrings (× is clearer than x for dimensions)
+    "TC002", # type checking blocks (would break runtime imports)
+    "TC003", # type checking blocks (would break runtime imports)
 ]
 lint.per-file-ignores = {"tests*" = [
     "ERA001", # Commented-out code (test comments for clarity)

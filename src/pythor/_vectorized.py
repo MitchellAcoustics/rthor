@@ -1,5 +1,4 @@
-"""
-Vectorized operations for RTHOR algorithm.
+"""Vectorized operations for RTHOR algorithm.
 
 This module contains high-performance vectorized implementations of core
 RTHOR operations, replacing nested loops with NumPy broadcasting.
@@ -11,8 +10,7 @@ import numpy as np
 
 
 def build_comparison_matrix(correlations_vector: np.ndarray) -> np.ndarray:
-    """
-    Build comparison matrix from correlation vector.
+    """Build comparison matrix from correlation vector.
 
     Vectorized replacement for nested loops in calculate_fit().
 
@@ -48,21 +46,18 @@ def build_comparison_matrix(correlations_vector: np.ndarray) -> np.ndarray:
 
     # Vectorized comparison using np.where
     # This broadcasts to (n, n) automatically
-    comparison_matrix = np.where(
+    return np.where(
         corr_j > corr_i,
         1,
         np.where(corr_j == corr_i, 2, 0),
     ).astype(np.int32)
-
-    return comparison_matrix
 
 
 def count_agreements(
     comparison_matrix: np.ndarray,
     hypothesis_matrix: np.ndarray,
 ) -> tuple[int, int]:
-    """
-    Count agreements and ties between comparison and hypothesis matrices.
+    """Count agreements and ties between comparison and hypothesis matrices.
 
     Vectorized replacement for nested loops in calculate_fit().
 
@@ -105,8 +100,7 @@ def count_agreements(
 
 
 def build_hypothesis_matrix(order_array: np.ndarray) -> np.ndarray:
-    """
-    Build hypothesis matrix from order array.
+    """Build hypothesis matrix from order array.
 
     Vectorized replacement for nested loops in generate_hypothesis_matrix().
 
@@ -138,21 +132,18 @@ def build_hypothesis_matrix(order_array: np.ndarray) -> np.ndarray:
     order_j = order_array[np.newaxis, :]  # Row vector
 
     # Vectorized comparison: 1 where order_j < order_i
-    hypothesis_matrix = (order_j < order_i).astype(np.int32)
-
-    return hypothesis_matrix
+    return (order_j < order_i).astype(np.int32)
 
 
 def extract_upper_triangle_vector(matrix: np.ndarray) -> np.ndarray:
-    """
-    Extract upper triangle of matrix as vector (row-major order).
+    """Extract upper triangle of matrix as vector (row-major order).
 
     This matches R's row-major ordering for consistency with original implementation.
 
     Parameters
     ----------
     matrix : np.ndarray
-        2D square matrix (n × n)
+        2D square matrix (n x n)
 
     Returns
     -------
@@ -195,8 +186,7 @@ def build_pairwise_comparison_matrices(
     corr_vec1: np.ndarray,
     corr_vec2: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Build comparison matrices for two correlation vectors.
+    """Build comparison matrices for two correlation vectors.
 
     Used in pairwise matrix comparison (randmf).
 
@@ -230,8 +220,7 @@ def count_pairwise_agreements(
     comp_mat2: np.ndarray,
     hypothesis_matrix: np.ndarray,
 ) -> tuple[int, int, int, int]:
-    """
-    Count agreement patterns between two matrices.
+    """Count agreement patterns between two matrices.
 
     Vectorized replacement for quadruple nested loops in randmf().
 
@@ -295,8 +284,7 @@ def calculate_comparison_ci(
     both_agree: int,
     neither: int,
 ) -> float:
-    """
-    Calculate Correspondence Index for pairwise comparison.
+    """Calculate Correspondence Index for pairwise comparison.
 
     Parameters
     ----------
@@ -316,7 +304,8 @@ def calculate_comparison_ci(
 
     Notes
     -----
-    Formula from R code (randmf.R:205): CI = (only2 - only1) / (both + only1 + only2 + neither)
+    Formula from R code (randmf.R:205):
+    CI = (only2 - only1) / (both + only1 + only2 + neither)
 
     """
     denominator = both_agree + only1 + only2 + neither

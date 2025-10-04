@@ -54,8 +54,7 @@ _PRESET_ORDERS = {
 def validate_correlation_matrix(
     matrix: np.ndarray, *, matrix_id: int | None = None
 ) -> None:
-    """
-    Validate that a matrix is a valid correlation matrix.
+    """Validate that a matrix is a valid correlation matrix.
 
     Parameters
     ----------
@@ -81,7 +80,10 @@ def validate_correlation_matrix(
         raise ValueError(msg)
 
     if matrix.shape[0] < 2:
-        msg = f"{prefix}Matrix must be at least 2×2, got {matrix.shape[0]}×{matrix.shape[0]}"
+        msg = (
+            f"{prefix}Matrix must be at least 2x2, "
+            f"got {matrix.shape[0]}x{matrix.shape[0]}"
+        )
         raise ValueError(msg)
 
     # Check symmetry
@@ -104,8 +106,7 @@ def validate_order(
     order: str | list[int] | np.ndarray,
     n_variables: int,
 ) -> np.ndarray:
-    """
-    Validate and process order specification.
+    """Validate and process order specification.
 
     Parameters
     ----------
@@ -186,8 +187,7 @@ def validate_labels(
     labels: list[str] | None,
     n_matrices: int,
 ) -> list[str]:
-    """
-    Validate and process matrix labels.
+    """Validate and process matrix labels.
 
     Parameters
     ----------
@@ -221,8 +221,7 @@ def validate_labels(
 
 
 def validate_filepath(filepath: Path | str) -> Path:
-    """
-    Validate filepath exists and is readable.
+    """Validate filepath exists and is readable.
 
     Parameters
     ----------
@@ -256,8 +255,7 @@ def validate_filepath(filepath: Path | str) -> Path:
 
 
 def validate_dataframe_list(df_list: list[pd.DataFrame]) -> None:
-    """
-    Validate list of DataFrames for RTHOR analysis.
+    """Validate list of DataFrames for RTHOR analysis.
 
     Parameters
     ----------
@@ -291,7 +289,10 @@ def validate_dataframe_list(df_list: list[pd.DataFrame]) -> None:
     # Check each DataFrame has enough rows for correlation
     for i, df in enumerate(df_list, 1):
         if len(df) < 2:
-            msg = f"DataFrame {i} has insufficient rows ({len(df)}) for correlation analysis"
+            msg = (
+                f"DataFrame {i} has insufficient rows ({len(df)}) "
+                f"for correlation analysis"
+            )
             raise ValueError(msg)
 
         # Check for non-numeric columns
@@ -307,8 +308,7 @@ def validate_dataframe_list(df_list: list[pd.DataFrame]) -> None:
 def validate_correlation_matrices_3d(
     matrices: np.ndarray,
 ) -> None:
-    """
-    Validate 3D array of correlation matrices.
+    """Validate 3D array of correlation matrices.
 
     Parameters
     ----------
@@ -326,10 +326,12 @@ def validate_correlation_matrices_3d(
         raise ValueError(msg)
 
     if matrices.shape[0] != matrices.shape[1]:
-        msg = f"Expected square matrices (n×n×m), got {matrices.shape[0]}×{matrices.shape[1]}×{matrices.shape[2]}"
+        msg = (
+            f"Expected square matrices (nxnxm), "
+            f"got {matrices.shape[0]}x{matrices.shape[1]}x{matrices.shape[2]}"
+        )
         raise ValueError(msg)
 
-    n_variables = matrices.shape[0]
     n_matrices = matrices.shape[2]
 
     # Validate each matrix

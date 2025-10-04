@@ -7,8 +7,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from pythor._core import compare_multiple_matrices, test_multiple_matrices
+from pythor._core import (
+    compare_multiple_matrices,
+    generate_hypothesis,
+    test_multiple_matrices,
+)
 from pythor._input import process_input
+from pythor.permutations import generate_permutations
 from pythor.results import ComparisonResult, RTHORResult
 
 
@@ -19,8 +24,7 @@ def rthor_test(
     n_matrices: int | None = None,
     n_variables: int | None = None,
 ) -> RTHORResult:
-    """
-    Randomization Test of Hypothesized Order Relations (RTHOR).
+    """Randomization Test of Hypothesized Order Relations (RTHOR).
 
     Tests whether correlation matrices conform to a hypothesized ordering
     of variables using permutation-based randomization tests.
@@ -36,8 +40,8 @@ def rthor_test(
           Correlations computed automatically. Each DataFrame should contain only
           the numeric columns to analyze.
         - **Arrays** (np.ndarray): Pre-computed correlation matrices. Can be:
-          - 2D array (n×n): Single correlation matrix
-          - 3D array (n×n×m): Multiple correlation matrices
+          - 2D array (nxn): Single correlation matrix
+          - 3D array (nxnxm): Multiple correlation matrices
 
     order : str or list[int], default="circular6"
         Hypothesized ordering of variables:
@@ -136,10 +140,7 @@ def rthor_test(
     results_df = test_multiple_matrices(correlation_matrices, order, labels)
 
     # Get metadata for result object
-    from pythor._core import generate_hypothesis
-    from pythor.permutations import generate_permutations
-
-    hypothesis_matrix, order_array, n_predictions = generate_hypothesis(order, n_vars)
+    _, order_array, n_predictions = generate_hypothesis(order, n_vars)
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
 
@@ -159,8 +160,7 @@ def compare_matrices(
     n_matrices: int | None = None,
     n_variables: int | None = None,
 ) -> ComparisonResult:
-    """
-    Pairwise comparison of multiple correlation matrices using RTHOR.
+    """Pairwise comparison of multiple correlation matrices using RTHOR.
 
     Tests both individual matrices and pairwise differences between matrices
     to determine which matrices best fit the hypothesized ordering and whether
@@ -250,10 +250,7 @@ def compare_matrices(
     rthor_df, comparisons_df = compare_multiple_matrices(correlation_matrices, order)
 
     # Get metadata
-    from pythor._core import generate_hypothesis
-    from pythor.permutations import generate_permutations
-
-    hypothesis_matrix, order_array, n_predictions = generate_hypothesis(order, n_vars)
+    _, order_array, n_predictions = generate_hypothesis(order, n_vars)
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
 

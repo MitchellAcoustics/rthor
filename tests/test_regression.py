@@ -1,5 +1,4 @@
-"""
-Regression tests against R RTHORR package outputs.
+"""Regression tests against R RTHORR package outputs.
 
 These tests ensure that the Python implementation produces identical results
 to the original R implementation.
@@ -78,7 +77,7 @@ class TestRthorTestRegression:
         df_list: list[pd.DataFrame],
         expected_randall_from_df_output: pd.DataFrame,
     ) -> None:
-        """Test that rthor_test() with DataFrame input matches R randall_from_df() output."""
+        """Test rthor_test() with DataFrame input matches R randall_from_df()."""
         result = rthor_test(
             data=df_list,
             order="circular6",
@@ -221,7 +220,7 @@ class TestCompareMatricesRegression:
         df_list: list[pd.DataFrame],
         expected_randmf_from_df_output: dict[str, pd.DataFrame],
     ) -> None:
-        """Test that compare_matrices() with DataFrame input matches R randmf_from_df() output."""
+        """Test compare_matrices() with DataFrame input matches R randmf_from_df()."""
         result = compare_matrices(
             data=df_list,
             order="circular6",
@@ -374,7 +373,7 @@ class TestInputValidation:
         # Use DataFrame list with 5 columns instead of 6
         df_5col = [df.iloc[:, :5] for df in df_list]
 
-        with pytest.raises(ValueError, match="circular6.*6 variables"):
+        with pytest.raises(ValueError, match=r"circular6.*6 variables"):
             rthor_test(
                 data=df_5col,
                 order="circular6",  # Wrong! This requires 6 variables, but we have 5
@@ -395,7 +394,7 @@ class TestInputValidation:
         input_matrix_file: Path,
     ) -> None:
         """Test that wrong number of labels raises error."""
-        with pytest.raises(ValueError, match="Number of labels.*doesn't match"):
+        with pytest.raises(ValueError, match=r"Number of labels.*doesn't match"):
             rthor_test(
                 data=input_matrix_file,
                 n_matrices=3,

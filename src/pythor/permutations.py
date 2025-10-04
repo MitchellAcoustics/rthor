@@ -9,8 +9,7 @@ import numpy as np
 def generate_permutations(
     n: int, max_perm: int = 50000, seed: int | None = None
 ) -> np.ndarray:
-    """
-    Generate permutations for randomization test.
+    """Generate permutations for randomization test.
 
     Parameters
     ----------
@@ -24,7 +23,7 @@ def generate_permutations(
     Returns
     -------
     permat : np.ndarray
-        Permutation matrix (nper × n) where each row is a permutation.
+        Permutation matrix (nper x n) where each row is a permutation.
         Values are 0-indexed (unlike R which is 1-indexed).
 
     Notes
@@ -62,20 +61,19 @@ def generate_permutations(
 
 
 def apply_permutation(dmat: np.ndarray, perm: np.ndarray) -> np.ndarray:
-    """
-    Apply permutation to correlation matrix.
+    """Apply permutation to correlation matrix.
 
     Parameters
     ----------
     dmat : np.ndarray
-        Original correlation matrix (n × n)
+        Original correlation matrix (n x n)
     perm : np.ndarray
         Permutation vector (length n), 0-indexed
 
     Returns
     -------
     dmatp : np.ndarray
-        Permuted correlation matrix (n × n)
+        Permuted correlation matrix (n x n)
 
     Notes
     -----

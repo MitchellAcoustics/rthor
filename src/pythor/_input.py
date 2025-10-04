@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 import numpy as np
 import pandas as pd
@@ -20,8 +21,7 @@ def process_input(
     n_matrices: int | None = None,
     n_variables: int | None = None,
 ) -> tuple[np.ndarray, int, int]:
-    """
-    Process various input formats into 3D correlation matrix array.
+    """Process various input formats into 3D correlation matrix array.
 
     Parameters
     ----------
@@ -56,7 +56,7 @@ def process_input(
 
     # Handle list of DataFrames
     if isinstance(data, list):
-        return _process_dataframe_list(data)
+        return _process_dataframe_list(cast("list[pd.DataFrame]", data))
 
     # Handle numpy array
     if isinstance(data, np.ndarray):
@@ -111,7 +111,7 @@ def _process_dataframe_list(
     correlation_values = []
     for df in df_list_reversed:
         # Compute correlation matrix
-        corr_matrix = df.corr().values
+        corr_matrix = df.corr().to_numpy()
 
         # Extract lower triangle with diagonal
         lower_tri = extract_lower_triangle(corr_matrix, include_diagonal=True)
@@ -150,7 +150,7 @@ def _process_array_input(
     # Handle 3D array (multiple matrices)
     elif array.ndim == 3:
         if array.shape[0] != array.shape[1]:
-            msg = f"Expected square matrices (n×n×m), got shape {array.shape}"
+            msg = f"Expected square matrices (nxnxm), got shape {array.shape}"
             raise ValueError(msg)
 
         n_variables = array.shape[0]
@@ -172,8 +172,7 @@ def _build_3d_from_vector(
     n_variables: int,
     n_matrices: int,
 ) -> np.ndarray:
-    """
-    Build 3D correlation matrix array from flat vector.
+    """Build 3D correlation matrix array from flat vector.
 
     Matches logic from io.py read_correlation_matrices().
 
