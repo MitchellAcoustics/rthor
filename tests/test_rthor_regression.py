@@ -9,7 +9,6 @@ to the original R implementation.
 from pathlib import Path
 
 import pandas as pd
-import pytest
 
 # pythor will be implemented, but we'll write tests first (TDD)
 # When implementing functions, import them from pythor and remove @pytest.mark.skip
@@ -168,7 +167,6 @@ class TestRandallFromDfRegression:
 class TestRandmfFromDfRegression:
     """Test randmf_from_df() function against R outputs."""
 
-    @pytest.mark.skip(reason="randmf_from_df() not yet implemented")
     def test_randmf_from_df_matches_r_output(
         self,
         df_list: list[pd.DataFrame],
@@ -179,7 +177,7 @@ class TestRandmfFromDfRegression:
 
         result = randmf_from_df(
             df_list=df_list,
-            ord="circular6",
+            order="circular6",
         )
 
         # Check structure

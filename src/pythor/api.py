@@ -620,3 +620,368 @@ def randmf(  # noqa: C901, PLR0915
     comp_df["p"] = comp_df["p"].astype(float)
 
     return {"RTHOR": rthor_df, "comparisons": comp_df}
+
+
+def randmf_from_df(  # noqa: C901, PLR0915
+    df_list: list[pd.DataFrame],
+    order: str | list[int] = "circular6",
+) -> dict[str, pd.DataFrame]:
+    """
+    Randomization test with pairwise matrix comparisons from raw data.
+
+    Parameters
+    ----------
+    df_list : list[pd.DataFrame]
+        List of DataFrames containing raw data. Each DataFrame should have
+        only the columns for variables to be included in the analysis.
+    order : str or list[int], default="circular6"
+        Hypothesized ordering. Can be:
+        - "circular6": Preset for 6-variable circular model
+        - "circular8": Preset for 8-variable circular model
+        - Custom list of integers
+
+    Returns
+    -------
+    result : dict[str, pd.DataFrame]
+        Dictionary with two DataFrames:
+        - "RTHOR": Main RTHOR results (same format as randall)
+        - "comparisons": Pairwise matrix comparison results with columns:
+            - mat1, mat2: Matrix pair indices
+            - bothmet, 1met2not, 2met1not, neither: Agreement pattern counts
+            - CI: Comparison correspondence index
+            - p: p-value from randomization test
+
+    Notes
+    -----
+    Translated from RTHORR/R/randmf_from_df.R lines 29-354.
+    Priority 1: Results must match R output exactly.
+
+    This function computes correlation matrices from the input DataFrames,
+    then runs the same pairwise comparison analysis as randmf().
+
+    """
+    # Validate inputs
+    column_counts = [df.shape[1] for df in df_list]
+    if len(set(column_counts)) != 1:
+        msg = "Number of columns is not equal for all dataframes passed in."
+        raise ValueError(msg)
+
+    nmat = len(df_list)
+    if nmat < 2:
+        msg = "Expect two or more dataframes to be input in list"
+        raise ValueError(msg)
+
+    # Get dimensions
+    n = df_list[0].shape[1]
+
+    # Critical: R reverses df_list (line 72)
+    df_list_reversed = list(reversed(df_list))
+
+    # Compute correlation matrices and extract lower triangles (lines 79-85)
+    za_values = []
+    for df in df_list_reversed:
+        cor_df = df.corr()
+        lower_tri = extract_lower_triangle(cor_df.values, include_diagonal=True)
+        za_values = list(lower_tri) + za_values
+
+    za = np.array(za_values)
+
+    # Build 3D matrix array from correlation values (lines 90-106)
+    dmatm = np.zeros((n, n, nmat))
+    np_pairs = (n * n - n) // 2
+
+    for m in range(nmat):
+        ii = m * (np_pairs + n) - 1
+
+        # First pass: fill upper triangle
+        for j in range(n):
+            for i in range(n):
+                if i > j:
+                    continue
+                ii += 1
+                dmatm[i, j, m] = za[ii]
+
+        # Second pass: fill lower triangle (make symmetric)
+        ii = m * (np_pairs + n) - 1
+        for i in range(n):
+            for j in range(n):
+                if i < j:
+                    continue
+                ii += 1
+                dmatm[i, j, m] = za[ii]
+
+    # Rest of algorithm is identical to randmf()
+    # Generate hypothesis matrix
+    mathyp, ord_array, nhyp = generate_hypothesis_matrix(order, n)
+
+    # Generate permutations
+    permat = generate_permutations(n)
+    nper = permat.shape[0]
+
+    # Initialize output for RTHOR results
+    rthor_results = []
+
+    # Initialize arrays for comparison tracking
+    bboth = np.zeros(nhyp, dtype=np.int32)
+    yy1n2 = np.zeros(nhyp, dtype=np.int32)
+    nn1y2 = np.zeros(nhyp, dtype=np.int32)
+    nn1n2 = np.zeros(nhyp, dtype=np.int32)
+
+    # Process each matrix for RTHOR results
+    for kk in range(nmat):
+        dmat = dmatm[:, :, kk]
+
+        # Calculate fit for original data
+        nagr, ntie = calculate_fit(dmat, mathyp)
+
+        # Calculate CI
+        ci = calculate_ci(nagr, ntie, nhyp)
+
+        # Randomization test
+        count = 1
+
+        for k in range(nper - 1):
+            pp = permat[k, :]
+            dmatp = apply_permutation(dmat, pp)
+            nsup, nntie = calculate_fit(dmatp, mathyp)
+
+            if nsup >= nagr:
+                count += 1
+
+        # Calculate p-value
+        prob = count / nper
+
+        # Store RTHOR results
+        rthor_results.append(
+            {
+                "mat": kk + 1,
+                "pred": nhyp,
+                "met": nagr,
+                "tie": ntie,
+                "CI": ci,
+                "p": prob,
+            }
+        )
+
+    # Now perform pairwise comparisons
+    comparison_results = []
+
+    # Loop through all pairs of matrices
+    for kk1 in range(nmat):
+        for kk2 in range(kk1 + 1, nmat):
+            # Reset agreement tracking arrays for this pair
+            bboth.fill(0)
+            yy1n2.fill(0)
+            nn1y2.fill(0)
+            nn1n2.fill(0)
+
+            # Extract matrices
+            dmat1 = dmatm[:, :, kk1]
+            dmat2 = dmatm[:, :, kk2]
+
+            # Extract upper triangles as vectors
+            scal1 = []
+            scal2 = []
+            for i in range(n):
+                for j in range(n):
+                    if i >= j:
+                        continue
+                    scal1.append(dmat1[i, j])
+                    scal2.append(dmat2[i, j])
+
+            scal1 = np.array(scal1)
+            scal2 = np.array(scal2)
+
+            # Build comparison matrices
+            matc1 = np.zeros((np_pairs, np_pairs), dtype=np.int32)
+            matc2 = np.zeros((np_pairs, np_pairs), dtype=np.int32)
+
+            for i in range(np_pairs):
+                for j in range(np_pairs):
+                    if scal1[j] > scal1[i]:
+                        matc1[i, j] = 1
+                    elif scal1[j] == scal1[i]:
+                        matc1[i, j] = 2
+                    else:
+                        matc1[i, j] = 0
+
+                    if scal2[j] > scal2[i]:
+                        matc2[i, j] = 1
+                    elif scal2[j] == scal2[i]:
+                        matc2[i, j] = 2
+                    else:
+                        matc2[i, j] = 0
+
+            # Track agreement patterns
+            nsup1 = 0
+            ntie1 = 0
+            nsup2 = 0
+            ntie2 = 0
+            both = 0
+            n1y2 = 0
+            y1n2 = 0
+            n1n2 = 0
+
+            for i in range(np_pairs):
+                for j in range(np_pairs):
+                    m1 = 0
+                    m2 = 0
+                    v1 = 0
+                    v2 = 0
+
+                    # Track met/tie for each matrix
+                    if matc1[i, j] == 1 and mathyp[i, j] == 1:
+                        nsup1 += 1
+                        m1 = 1
+                    if matc1[i, j] == 2 and mathyp[i, j] == 1:
+                        ntie1 += 1
+                    if matc1[i, j] == 0 and mathyp[i, j] == 1:
+                        v1 = 1
+
+                    if matc2[i, j] == 1 and mathyp[i, j] == 1:
+                        nsup2 += 1
+                        m2 = 1
+                    if matc2[i, j] == 2 and mathyp[i, j] == 1:
+                        ntie2 += 1
+                    if matc2[i, j] == 0 and mathyp[i, j] == 1:
+                        v2 = 1
+
+                    # Track agreement patterns
+                    if m1 == 1 and m2 == 1:
+                        both += 1
+                    if v1 == 1 and m2 == 1:
+                        n1y2 += 1
+                    if m1 == 1 and v2 == 1:
+                        y1n2 += 1
+                    if v1 == 1 and v2 == 1:
+                        n1n2 += 1
+
+            # Calculate comparison CI
+            sum_bboth = both
+            sum_yy1n2 = y1n2
+            sum_nn1y2 = n1y2
+            sum_nn1n2 = n1n2
+
+            denom = sum_bboth + sum_yy1n2 + sum_nn1y2 + sum_nn1n2
+            comp_ci = (sum_nn1y2 - sum_yy1n2) / denom if denom > 0 else 0.0
+
+            # Randomization test for comparison
+            comp_count = 1
+
+            for k in range(nper - 1):
+                pp = permat[k, :]
+
+                # Apply permutation to both matrices
+                dmat1p = apply_permutation(dmat1, pp)
+                dmat2p = apply_permutation(dmat2, pp)
+
+                # Extract upper triangles from permuted matrices
+                scal1p = []
+                scal2p = []
+                for i in range(n):
+                    for j in range(n):
+                        if i >= j:
+                            continue
+                        scal1p.append(dmat1p[i, j])
+                        scal2p.append(dmat2p[i, j])
+
+                scal1p = np.array(scal1p)
+                scal2p = np.array(scal2p)
+
+                # Build comparison matrices for permuted data
+                matc1p = np.zeros((np_pairs, np_pairs), dtype=np.int32)
+                matc2p = np.zeros((np_pairs, np_pairs), dtype=np.int32)
+
+                for i in range(np_pairs):
+                    for j in range(np_pairs):
+                        if scal1p[j] > scal1p[i]:
+                            matc1p[i, j] = 1
+                        elif scal1p[j] == scal1p[i]:
+                            matc1p[i, j] = 2
+                        else:
+                            matc1p[i, j] = 0
+
+                        if scal2p[j] > scal2p[i]:
+                            matc2p[i, j] = 1
+                        elif scal2p[j] == scal2p[i]:
+                            matc2p[i, j] = 2
+                        else:
+                            matc2p[i, j] = 0
+
+                # Count agreements for permuted data
+                both_p = 0
+                n1y2_p = 0
+                y1n2_p = 0
+                n1n2_p = 0
+
+                for i in range(np_pairs):
+                    for j in range(np_pairs):
+                        m1 = 0
+                        m2 = 0
+                        v1 = 0
+                        v2 = 0
+
+                        if matc1p[i, j] == 1 and mathyp[i, j] == 1:
+                            m1 = 1
+                        if matc1p[i, j] == 0 and mathyp[i, j] == 1:
+                            v1 = 1
+
+                        if matc2p[i, j] == 1 and mathyp[i, j] == 1:
+                            m2 = 1
+                        if matc2p[i, j] == 0 and mathyp[i, j] == 1:
+                            v2 = 1
+
+                        if m1 == 1 and m2 == 1:
+                            both_p += 1
+                        if m1 == 1 and v2 == 1:
+                            y1n2_p += 1
+                        if v1 == 1 and m2 == 1:
+                            n1y2_p += 1
+                        if v1 == 1 and v2 == 1:
+                            n1n2_p += 1
+
+                # Calculate permuted CI
+                denom_p = both_p + y1n2_p + n1y2_p + n1n2_p
+                comp_ci_p = (n1y2_p - y1n2_p) / denom_p if denom_p > 0 else 0.0
+
+                # Count if permuted CI >= observed CI
+                if comp_ci_p >= comp_ci:
+                    comp_count += 1
+
+            # Calculate comparison p-value
+            comp_prob = comp_count / nper
+
+            # Store comparison results
+            comparison_results.append(
+                {
+                    "mat1": kk1 + 1,
+                    "mat2": kk2 + 1,
+                    "bothmet": sum_bboth,
+                    "1met2not": sum_yy1n2,
+                    "2met1not": sum_nn1y2,
+                    "neither": sum_nn1n2,
+                    "CI": comp_ci,
+                    "p": comp_prob,
+                }
+            )
+
+    # Create DataFrames
+    rthor_df = pd.DataFrame(rthor_results)
+    rthor_df["mat"] = rthor_df["mat"].astype(int)
+    rthor_df["pred"] = rthor_df["pred"].astype(int)
+    rthor_df["met"] = rthor_df["met"].astype(int)
+    rthor_df["tie"] = rthor_df["tie"].astype(int)
+    rthor_df["CI"] = rthor_df["CI"].astype(float)
+    rthor_df["p"] = rthor_df["p"].astype(float)
+
+    comp_df = pd.DataFrame(comparison_results)
+    comp_df["mat1"] = comp_df["mat1"].astype(int)
+    comp_df["mat2"] = comp_df["mat2"].astype(int)
+    comp_df["bothmet"] = comp_df["bothmet"].astype(int)
+    comp_df["1met2not"] = comp_df["1met2not"].astype(int)
+    comp_df["2met1not"] = comp_df["2met1not"].astype(int)
+    comp_df["neither"] = comp_df["neither"].astype(int)
+    comp_df["CI"] = comp_df["CI"].astype(float)
+    comp_df["p"] = comp_df["p"].astype(float)
+
+    return {"RTHOR": rthor_df, "comparisons": comp_df}
