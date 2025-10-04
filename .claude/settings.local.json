@@ -8,7 +8,11 @@
       "Bash(git commit:*)",
       "Bash(git rm:*)",
       "Bash(git reset:*)",
-      "Bash(uv run prek run:*)"
+      "Bash(uv run prek run:*)",
+      "Bash(git checkout:*)",
+      "Bash(uv run:*)",
+      "Bash(cat:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []
