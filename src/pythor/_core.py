@@ -1,4 +1,4 @@
-"""Core RTHOR algorithm functions (refactored with vectorization)."""
+"""Core RTHOR algorithm functions."""
 
 from __future__ import annotations
 

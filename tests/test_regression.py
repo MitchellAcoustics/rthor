@@ -1,8 +1,8 @@
 """
-Regression tests for new API (v0.2.0) against R RTHORR outputs.
+Regression tests against R RTHORR package outputs.
 
-These tests ensure the refactored implementation maintains numerical parity
-with the original R implementation.
+These tests ensure that the Python implementation produces identical results
+to the original R implementation.
 """
 
 from pathlib import Path
