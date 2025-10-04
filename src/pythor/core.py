@@ -4,7 +4,7 @@ import numpy as np
 
 
 def generate_hypothesis_matrix(
-    ord: str | list[int],  # noqa: A002
+    order: str | list[int],
     n: int,
 ) -> tuple[np.ndarray, np.ndarray, int]:
     """
@@ -12,7 +12,7 @@ def generate_hypothesis_matrix(
 
     Parameters
     ----------
-    ord : str or list[int]
+    order : str or list[int]
         Order specification. Can be:
         - "circular6": Preset ordering for 6-variable circular model
         - "circular8": Preset ordering for 8-variable circular model
@@ -24,7 +24,7 @@ def generate_hypothesis_matrix(
     -------
     mathyp : np.ndarray
         Hypothesis matrix (np × np) where np = (n² - n) / 2
-        mathyp[i,j] = 1 if ord[j] < ord[i], else 0
+        mathyp[i,j] = 1 if order[j] < order[i], else 0
     ord_array : np.ndarray
         The processed order array
     nhyp : int
@@ -37,10 +37,10 @@ def generate_hypothesis_matrix(
     between variables based on the hypothesized ordering.
 
     """
-    # Process ord input - convert to array
-    if ord == "circular6":
+    # Process order input - convert to array
+    if order == "circular6":
         ord_array = np.array([1, 2, 3, 2, 1, 1, 2, 3, 2, 1, 2, 3, 1, 2, 1])
-    elif ord == "circular8":
+    elif order == "circular8":
         ord_array = np.array(
             [
                 1,
@@ -74,7 +74,7 @@ def generate_hypothesis_matrix(
             ]
         )
     else:
-        ord_array = np.array(ord)
+        ord_array = np.array(order)
 
     # Calculate number of pairs (upper triangle without diagonal)
     np_pairs = (n * n - n) // 2

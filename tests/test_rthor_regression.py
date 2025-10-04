@@ -29,8 +29,8 @@ class TestRandallRegression:
         result = randall(
             n=6,
             nmat=3,
-            input=input_matrix_file,
-            ord="circular6",
+            filepath=input_matrix_file,
+            order="circular6",
             description=["sample_one", "sample_two", "sample_three"],
         )
 
@@ -62,7 +62,6 @@ class TestRandallRegression:
 class TestRandmfRegression:
     """Test randmf() function against R outputs."""
 
-    @pytest.mark.skip(reason="randmf() not yet implemented")
     def test_randmf_matches_r_output(
         self,
         input_matrix_file: Path,
@@ -74,8 +73,8 @@ class TestRandmfRegression:
         result = randmf(
             n=6,
             nmat=3,
-            ord="circular6",
-            input=input_matrix_file,
+            filepath=input_matrix_file,
+            order="circular6",
         )
 
         # Check that result is a dict with correct keys
@@ -140,7 +139,7 @@ class TestRandallFromDfRegression:
         result = randall_from_df(
             df_list=df_list,
             description=["whole sample", "t1", "t2", "t3", "t4"],
-            ord="circular6",
+            order="circular6",
         )
 
         # Check DataFrame structure
