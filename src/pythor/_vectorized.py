@@ -14,26 +14,22 @@ def build_comparison_matrix(correlations_vector: np.ndarray) -> np.ndarray:
 
     Vectorized replacement for nested loops in calculate_fit().
 
-    Parameters
-    ----------
+    Args:
     correlations_vector : np.ndarray
         1D array of correlation values from upper triangle
 
-    Returns
-    -------
+    Returns:
     comparison_matrix : np.ndarray
         Matrix where:
         - comparison_matrix[i,j] = 1 if correlations_vector[j] > correlations_vector[i]
         - comparison_matrix[i,j] = 2 if correlations_vector[j] == correlations_vector[i]
         - comparison_matrix[i,j] = 0 if correlations_vector[j] < correlations_vector[i]
 
-    Notes
-    -----
+    Notes:
     Performance: O(1) broadcast vs O(n²) nested loops.
     Original R code (randall.R:135-140) used nested loops.
 
-    Examples
-    --------
+    Examples:
     >>> corr = np.array([0.8, 0.6, 0.7])
     >>> comp = build_comparison_matrix(corr)
     >>> comp.shape
@@ -61,27 +57,23 @@ def count_agreements(
 
     Vectorized replacement for nested loops in calculate_fit().
 
-    Parameters
-    ----------
+    Args:
     comparison_matrix : np.ndarray
         Comparison matrix from build_comparison_matrix()
     hypothesis_matrix : np.ndarray
         Hypothesis matrix (1 where prediction exists, 0 otherwise)
 
-    Returns
-    -------
+    Returns:
     n_agreements : int
         Number of agreements (comparison==1 and hypothesis==1)
     n_ties : int
         Number of ties (comparison==2 and hypothesis==1)
 
-    Notes
-    -----
+    Notes:
     Performance: O(1) boolean indexing vs O(n²) nested loops.
     Original R code (randall.R:143-146) used nested loops.
 
-    Examples
-    --------
+    Examples:
     >>> comp = np.array([[0, 1, 0], [0, 0, 2], [1, 0, 0]])
     >>> hyp = np.array([[0, 1, 1], [0, 0, 1], [0, 0, 0]])
     >>> n_agr, n_tie = count_agreements(comp, hyp)
@@ -104,23 +96,19 @@ def build_hypothesis_matrix(order_array: np.ndarray) -> np.ndarray:
 
     Vectorized replacement for nested loops in generate_hypothesis_matrix().
 
-    Parameters
-    ----------
+    Args:
     order_array : np.ndarray
         1D array specifying hypothesized ordering
 
-    Returns
-    -------
+    Returns:
     hypothesis_matrix : np.ndarray
         Matrix where hypothesis_matrix[i,j] = 1 if order_array[j] < order_array[i]
 
-    Notes
-    -----
+    Notes:
     Performance: O(1) broadcast vs O(n²) nested loops.
     Original R code (randall.R:71-79) used nested loops.
 
-    Examples
-    --------
+    Examples:
     >>> order = np.array([1, 2, 3, 2, 1])
     >>> hyp = build_hypothesis_matrix(order)
     >>> hyp.shape
@@ -140,23 +128,19 @@ def extract_upper_triangle_vector(matrix: np.ndarray) -> np.ndarray:
 
     This matches R's row-major ordering for consistency with original implementation.
 
-    Parameters
-    ----------
+    Args:
     matrix : np.ndarray
         2D square matrix (n x n)
 
-    Returns
-    -------
+    Returns:
     vector : np.ndarray
         1D array of upper triangle values (length = n*(n-1)/2)
 
-    Notes
-    -----
+    Notes:
     Extracts in the same order as R code (randall.R:126-131) for exact parity.
     Uses row-major traversal: (0,1), (0,2), ..., (0,n-1), (1,2), ..., (n-2,n-1)
 
-    Examples
-    --------
+    Examples:
     >>> mat = np.array([[1.0, 0.8, 0.6],
     ...                 [0.8, 1.0, 0.7],
     ...                 [0.6, 0.7, 1.0]])
@@ -190,22 +174,19 @@ def build_pairwise_comparison_matrices(
 
     Used in pairwise matrix comparison (randmf).
 
-    Parameters
-    ----------
+    Args:
     corr_vec1 : np.ndarray
         Correlation vector from first matrix
     corr_vec2 : np.ndarray
         Correlation vector from second matrix
 
-    Returns
-    -------
+    Returns:
     comp_mat1 : np.ndarray
         Comparison matrix for first vector
     comp_mat2 : np.ndarray
         Comparison matrix for second vector
 
-    Notes
-    -----
+    Notes:
     Vectorized version of R code (randmf.R:244-254).
 
     """
@@ -224,8 +205,7 @@ def count_pairwise_agreements(
 
     Vectorized replacement for quadruple nested loops in randmf().
 
-    Parameters
-    ----------
+    Args:
     comp_mat1 : np.ndarray
         Comparison matrix for first correlation matrix
     comp_mat2 : np.ndarray
@@ -233,8 +213,7 @@ def count_pairwise_agreements(
     hypothesis_matrix : np.ndarray
         Hypothesis matrix
 
-    Returns
-    -------
+    Returns:
     both_agree : int
         Count where both matrices satisfy hypothesis
     only1 : int
@@ -244,8 +223,7 @@ def count_pairwise_agreements(
     neither : int
         Count where neither matrix satisfies hypothesis
 
-    Notes
-    -----
+    Notes:
     Performance: O(1) vs O(n⁴) nested loops.
     Original R code (randmf.R:256-280) used 4 nested loops.
 
@@ -286,8 +264,7 @@ def calculate_comparison_ci(
 ) -> float:
     """Calculate Correspondence Index for pairwise comparison.
 
-    Parameters
-    ----------
+    Args:
     only1 : int
         Count where only matrix 1 agrees
     only2 : int
@@ -297,13 +274,11 @@ def calculate_comparison_ci(
     neither : int
         Count where neither agrees
 
-    Returns
-    -------
+    Returns:
     ci : float
         Comparison CI
 
-    Notes
-    -----
+    Notes:
     Formula from R code (randmf.R:205):
     CI = (only2 - only1) / (both + only1 + only2 + neither)
 

@@ -16,35 +16,20 @@ class RTHORResult:
     This class encapsulates the results of testing whether correlation matrices
     conform to a hypothesized ordering of variables.
 
-    Attributes
-    ----------
-    results : pd.DataFrame
-        Main results table with columns:
-        - matrix: Matrix identifier (1-indexed)
-        - predictions: Number of hypothesized predictions (nhyp)
-        - agreements: Number of predictions met (nagr)
-        - ties: Number of tied correlations
-        - ci: Correspondence Index (fit measure, range: -1 to 1)
-        - p_value: Randomization test p-value
-        - label: Matrix description/label
-    n_matrices : int
-        Number of matrices analyzed
-    n_variables : int
-        Number of variables in each matrix
-    order : np.ndarray
-        The hypothesized ordering used for analysis
-    n_predictions : int
-        Total number of hypothesized predictions
-    n_permutations : int
-        Number of permutations used in randomization test
+    Attributes:
+        results: Main results table with columns (matrix, predictions, agreements,
+            ties, ci, p_value, label).
+        n_matrices: Number of matrices analyzed.
+        n_variables: Number of variables in each matrix.
+        order: The hypothesized ordering used for analysis.
+        n_predictions: Total number of hypothesized predictions.
+        n_permutations: Number of permutations used in randomization test.
 
-    Examples
-    --------
-    >>> import pythor
-    >>> result = pythor.rthor_test("correlations.txt", order="circular6")
-    >>> print(result.summary())
-    >>> result.results  # Access results DataFrame
-    >>> result.plot()  # Visualize results
+    Examples:
+        >>> import pythor
+        >>> result = pythor.rthor_test("correlations.txt", order="circular6")
+        >>> print(result.summary())
+        >>> result.results  # Access results DataFrame
 
     """
 
@@ -58,10 +43,8 @@ class RTHORResult:
     def summary(self) -> str:
         """Generate formatted summary of results.
 
-        Returns
-        -------
-        str
-            Multi-line summary string with key statistics
+        Returns:
+            Multi-line summary string with key statistics.
 
         """
         lines = [

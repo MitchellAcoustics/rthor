@@ -23,8 +23,7 @@ def process_input(
 ) -> tuple[np.ndarray, int, int]:
     """Process various input formats into 3D correlation matrix array.
 
-    Parameters
-    ----------
+    Args:
     data : Path, str, list[pd.DataFrame], or np.ndarray
         Input data in various formats:
         - Path/str: File path containing correlation matrices
@@ -35,8 +34,7 @@ def process_input(
     n_variables : int, optional
         Number of variables (required for file input if ambiguous)
 
-    Returns
-    -------
+    Returns:
     correlation_matrices : np.ndarray
         3D array of shape (n_variables, n_variables, n_matrices)
     n_variables : int
@@ -44,8 +42,7 @@ def process_input(
     n_matrices : int
         Number of matrices
 
-    Raises
-    ------
+    Raises:
     ValueError
         If input format is invalid or parameters are missing
 
@@ -176,8 +173,7 @@ def _build_3d_from_vector(
 
     Matches logic from io.py read_correlation_matrices().
 
-    Parameters
-    ----------
+    Args:
     za : np.ndarray
         Flat array of correlation values
     n_variables : int
@@ -185,8 +181,7 @@ def _build_3d_from_vector(
     n_matrices : int
         Number of matrices
 
-    Returns
-    -------
+    Returns:
     correlation_matrices : np.ndarray
         3D array (n_variables, n_variables, n_matrices)
 

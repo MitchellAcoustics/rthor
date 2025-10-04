@@ -12,8 +12,7 @@ def read_correlation_matrices(
 ) -> np.ndarray:
     """Read correlation matrices from text file.
 
-    Parameters
-    ----------
+    Args:
     filepath : Path or str
         Path to input file containing correlation matrices
     n : int
@@ -21,13 +20,11 @@ def read_correlation_matrices(
     nmat : int
         Number of matrices in the file
 
-    Returns
-    -------
+    Returns:
     dmatm : np.ndarray
         3D array of correlation matrices (n x n x nmat)
 
-    Notes
-    -----
+    Notes:
     Translated from RTHORR/R/randall.R lines 49-67.
 
     Input file format:
@@ -96,20 +93,17 @@ def extract_lower_triangle(
 ) -> np.ndarray:
     """Extract lower triangular values from correlation matrix.
 
-    Parameters
-    ----------
+    Args:
     corr_matrix : np.ndarray
         Correlation matrix (n x n)
     include_diagonal : bool, default=True
         Whether to include diagonal values
 
-    Returns
-    -------
+    Returns:
     values : np.ndarray
         Lower triangular values in row-major order
 
-    Notes
-    -----
+    Notes:
     Used by randall_from_df and randmf_from_df to convert
     correlation matrices computed from DataFrames into the
     format expected by the file reading functions.

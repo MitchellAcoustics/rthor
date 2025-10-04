@@ -11,8 +11,7 @@ def generate_permutations(
 ) -> np.ndarray:
     """Generate permutations for randomization test.
 
-    Parameters
-    ----------
+    Args:
     n : int
         Number of variables to permute
     max_perm : int, default=50000
@@ -20,14 +19,12 @@ def generate_permutations(
     seed : int, optional
         Random seed for reproducibility when using random sampling
 
-    Returns
-    -------
+    Returns:
     permat : np.ndarray
         Permutation matrix (nper x n) where each row is a permutation.
         Values are 0-indexed (unlike R which is 1-indexed).
 
-    Notes
-    -----
+    Notes:
     Translated from RTHORR/R/randall.R lines 92-107.
 
     Critical for Priority 1: Permutation order must match R exactly.
@@ -63,20 +60,17 @@ def generate_permutations(
 def apply_permutation(dmat: np.ndarray, perm: np.ndarray) -> np.ndarray:
     """Apply permutation to correlation matrix.
 
-    Parameters
-    ----------
+    Args:
     dmat : np.ndarray
         Original correlation matrix (n x n)
     perm : np.ndarray
         Permutation vector (length n), 0-indexed
 
-    Returns
-    -------
+    Returns:
     dmatp : np.ndarray
         Permuted correlation matrix (n x n)
 
-    Notes
-    -----
+    Notes:
     Translated from RTHORR/R/randall.R lines 162-165.
     R code: dmatp[i,j] <- dmat[pp[i], pp[j]]
 

@@ -56,15 +56,13 @@ def validate_correlation_matrix(
 ) -> None:
     """Validate that a matrix is a valid correlation matrix.
 
-    Parameters
-    ----------
+    Args:
     matrix : np.ndarray
         Matrix to validate
     matrix_id : int, optional
         Matrix identifier for error messages
 
-    Raises
-    ------
+    Raises:
     ValueError
         If matrix is not a valid correlation matrix
 
@@ -108,8 +106,7 @@ def validate_order(
 ) -> np.ndarray:
     """Validate and process order specification.
 
-    Parameters
-    ----------
+    Args:
     order : str or list[int] or np.ndarray
         Order specification. Can be:
         - "circular6": Preset for 6-variable circular model
@@ -118,13 +115,11 @@ def validate_order(
     n_variables : int
         Number of variables in correlation matrices
 
-    Returns
-    -------
+    Returns:
     order_array : np.ndarray
         Processed order array (int32)
 
-    Raises
-    ------
+    Raises:
     ValueError
         If order specification is invalid
 
@@ -189,20 +184,17 @@ def validate_labels(
 ) -> list[str]:
     """Validate and process matrix labels.
 
-    Parameters
-    ----------
+    Args:
     labels : list[str] or None
         Matrix labels, or None to auto-generate
     n_matrices : int
         Number of matrices
 
-    Returns
-    -------
+    Returns:
     labels : list[str]
         Processed labels (auto-generated if input was None)
 
-    Raises
-    ------
+    Raises:
     ValueError
         If number of labels doesn't match number of matrices
 
@@ -223,18 +215,15 @@ def validate_labels(
 def validate_filepath(filepath: Path | str) -> Path:
     """Validate filepath exists and is readable.
 
-    Parameters
-    ----------
+    Args:
     filepath : Path or str
         Path to file
 
-    Returns
-    -------
+    Returns:
     path : Path
         Validated Path object
 
-    Raises
-    ------
+    Raises:
     FileNotFoundError
         If file doesn't exist
     ValueError
@@ -257,13 +246,11 @@ def validate_filepath(filepath: Path | str) -> Path:
 def validate_dataframe_list(df_list: list[pd.DataFrame]) -> None:
     """Validate list of DataFrames for RTHOR analysis.
 
-    Parameters
-    ----------
+    Args:
     df_list : list[pd.DataFrame]
         List of DataFrames
 
-    Raises
-    ------
+    Raises:
     ValueError
         If DataFrames are invalid or inconsistent
 
@@ -310,13 +297,11 @@ def validate_correlation_matrices_3d(
 ) -> None:
     """Validate 3D array of correlation matrices.
 
-    Parameters
-    ----------
+    Args:
     matrices : np.ndarray
         3D array of shape (n, n, n_matrices)
 
-    Raises
-    ------
+    Raises:
     ValueError
         If array is invalid
 

@@ -12,7 +12,13 @@
       "Bash(git checkout:*)",
       "Bash(uv run:*)",
       "Bash(cat:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(git mv:*)",
+      "Bash(find:*)",
+      "Bash(test:*)",
+      "Bash(for f in *.py)",
+      "Bash(do)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

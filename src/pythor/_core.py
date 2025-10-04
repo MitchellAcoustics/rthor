@@ -24,15 +24,13 @@ def generate_hypothesis(
 ) -> tuple[np.ndarray, np.ndarray, int]:
     """Generate hypothesis matrix for RTHOR analysis.
 
-    Parameters
-    ----------
+    Args:
     order : str or list[int] or np.ndarray
         Order specification (validated by caller)
     n_variables : int
         Number of variables
 
-    Returns
-    -------
+    Returns:
     hypothesis_matrix : np.ndarray
         Hypothesis matrix (n_pairs x n_pairs)
     order_array : np.ndarray
@@ -59,15 +57,13 @@ def calculate_fit(
 ) -> tuple[int, int]:
     """Calculate fit of correlation matrix to hypothesis.
 
-    Parameters
-    ----------
+    Args:
     correlation_matrix : np.ndarray
         Correlation matrix (n x n)
     hypothesis_matrix : np.ndarray
         Hypothesis matrix (n_pairs x n_pairs)
 
-    Returns
-    -------
+    Returns:
     n_agreements : int
         Number of predictions satisfied
     n_ties : int
@@ -89,8 +85,7 @@ def calculate_fit(
 def calculate_ci(n_agreements: int, n_ties: int, n_predictions: int) -> float:
     """Calculate Correspondence Index.
 
-    Parameters
-    ----------
+    Args:
     n_agreements : int
         Number of agreements
     n_ties : int
@@ -98,13 +93,11 @@ def calculate_ci(n_agreements: int, n_ties: int, n_predictions: int) -> float:
     n_predictions : int
         Number of predictions
 
-    Returns
-    -------
+    Returns:
     ci : float
         Correspondence Index
 
-    Notes
-    -----
+    Notes:
     CI = (n_agreements - (n_predictions - (n_agreements + n_ties))) / n_predictions
 
     """
@@ -119,8 +112,7 @@ def run_permutation_test(
 ) -> float:
     """Run randomization test via permutations.
 
-    Parameters
-    ----------
+    Args:
     correlation_matrix : np.ndarray
         Original correlation matrix
     hypothesis_matrix : np.ndarray
@@ -130,8 +122,7 @@ def run_permutation_test(
     permutations : np.ndarray
         Permutation matrix (n_permutations x n_variables)
 
-    Returns
-    -------
+    Returns:
     p_value : float
         Proportion of permutations with fit >= observed
 
@@ -166,8 +157,7 @@ def test_single_matrix(
 ) -> dict:
     """Test a single correlation matrix.
 
-    Parameters
-    ----------
+    Args:
     correlation_matrix : np.ndarray
         Correlation matrix to test
     hypothesis_matrix : np.ndarray
@@ -181,8 +171,7 @@ def test_single_matrix(
     label : str
         Matrix label
 
-    Returns
-    -------
+    Returns:
     result : dict
         Dictionary with keys: matrix, predictions, agreements, ties, ci, p_value, label
 
@@ -216,8 +205,7 @@ def test_multiple_matrices(
 ) -> pd.DataFrame:
     """Test multiple correlation matrices.
 
-    Parameters
-    ----------
+    Args:
     correlation_matrices : np.ndarray
         3D array (n_variables, n_variables, n_matrices)
     order : str or list[int] or np.ndarray
@@ -225,8 +213,7 @@ def test_multiple_matrices(
     labels : list[str], optional
         Matrix labels
 
-    Returns
-    -------
+    Returns:
     results : pd.DataFrame
         Results table
 
@@ -279,8 +266,7 @@ def compare_two_matrices(
 ) -> dict:
     """Compare two correlation matrices.
 
-    Parameters
-    ----------
+    Args:
     corr_mat1 : np.ndarray
         First correlation matrix
     corr_mat2 : np.ndarray
@@ -294,8 +280,7 @@ def compare_two_matrices(
     matrix2_id : int
         Second matrix ID
 
-    Returns
-    -------
+    Returns:
     result : dict
         Comparison result with keys: matrix1, matrix2, both_agree, only1, only2,
         neither, ci, p_value
@@ -371,15 +356,13 @@ def compare_multiple_matrices(
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Compare all pairs of correlation matrices.
 
-    Parameters
-    ----------
+    Args:
     correlation_matrices : np.ndarray
         3D array (n_variables, n_variables, n_matrices)
     order : str or list[int] or np.ndarray
         Hypothesized ordering
 
-    Returns
-    -------
+    Returns:
     rthor_results : pd.DataFrame
         Individual matrix test results
     comparisons : pd.DataFrame
