@@ -16,111 +16,205 @@
 [license-badge]:            https://img.shields.io/badge/License-MIT-yellow.svg
 <!-- prettier-ignore-end -->
 
-Python implementation of RTHOR (Randomization test of hypothesized order relations)
+**pythor** is a Python implementation of RTHOR (Randomization Test of Hypothesized Order Relations), a statistical test for circumplex and circular models in correlation matrices.
 
-This project is developed in collaboration with the
-[Centre for Advanced Research Computing](https://ucl.ac.uk/arc), University
-College London.
+## Features
 
-## About
+- **Exact R Parity**: Produces numerically identical results to the original R RTHORR package
+- **Multiple Input Formats**: Works with files, pandas DataFrames, or numpy arrays
+- **Flexible Analysis**: Test single matrices or compare multiple matrices pairwise
+- **Fast Performance**: Vectorized operations using NumPy for efficient computation
+- **Type-Safe**: Fully typed with comprehensive input validation
+- **Well-Documented**: Extensive docstrings and examples
 
-### Project Team
+## Quick Start
 
-Andrew Mitchell ([andrew.mitchell.research@gmail.com](mailto:andrew.mitchell.research@gmail.com))
+```python
+import pythor
+import pandas as pd
 
-<!-- TODO: how do we have an array of collaborators ? -->
+# Test from correlation matrix file
+result = pythor.rthor_test(
+    "correlations.txt",
+    order="circular6",
+    n_matrices=3,
+    n_variables=6,
+    labels=["Sample 1", "Sample 2", "Sample 3"]
+)
+
+# View results
+print(result.summary())
+print(result.results)
+
+# Test from DataFrames
+result = pythor.rthor_test(
+    [df1, df2, df3],
+    order="circular6",
+    labels=["Group A", "Group B", "Group C"]
+)
+
+# Compare multiple matrices
+comparison = pythor.compare_matrices([df1, df2, df3], order="circular6")
+print(comparison.summary())
+print(comparison.comparisons)  # Pairwise differences
+```
+
+## Installation
+
+### From PyPI (when released)
+
+```sh
+pip install pythor
+```
+
+### From Source
+
+```sh
+pip install git+https://github.com/MitchellAcoustics/pythor.git
+```
+
+### For Development
+
+```sh
+git clone https://github.com/MitchellAcoustics/pythor.git
+cd pythor
+pip install -e .[dev]
+```
+
+## Requirements
+
+- Python 3.11, 3.12, or 3.13
+- NumPy ≥ 1.24.0
+- pandas ≥ 2.0.0
+
+## What is RTHOR?
+
+RTHOR (Randomization Test of Hypothesized Order Relations) is a statistical method for testing whether correlation matrices conform to a hypothesized ordering of variables. This is particularly useful for:
+
+- **Circumplex Models**: Variables arranged in a circular pattern (e.g., interpersonal behavior, emotions)
+- **Circular Structures**: Testing theoretical predictions about variable ordering
+- **Correlation Patterns**: Validating expected patterns in correlation matrices
+
+The test uses a randomization approach to compute p-values, comparing the observed Correspondence Index (CI) with values from permuted data. CI ranges from -1 (perfect disagreement) to +1 (perfect agreement).
+
+## Key Functions
+
+### `rthor_test()`
+
+Test whether correlation matrices conform to a hypothesized ordering.
+
+**Parameters:**
+
+- `data`: Input data (file path, list of DataFrames, or numpy array)
+- `order`: Hypothesized ordering ("circular6", "circular8", or custom list)
+- `labels`: Optional descriptive labels for matrices
+- `n_matrices`: Number of matrices (required for file input)
+- `n_variables`: Number of variables (required for file input)
+
+**Returns:** `RTHORResult` object with results DataFrame and metadata
+
+### `compare_matrices()`
+
+Compare multiple correlation matrices pairwise to determine which fits the hypothesis better.
+
+**Parameters:** Same as `rthor_test()` but requires at least 2 matrices
+
+**Returns:** `ComparisonResult` object with individual results and pairwise comparisons
+
+## Documentation
+
+Full documentation is available at [https://mitchellacoustics.github.io/pythor](https://mitchellacoustics.github.io/pythor)
+
+## Testing
+
+Run tests across all supported Python versions:
+
+```sh
+tox
+```
+
+Run tests in current environment:
+
+```sh
+pytest tests
+```
+
+Run tests with coverage:
+
+```sh
+pytest --cov --cov-report=xml
+```
+
+## Development
+
+This project uses:
+
+- **uv** for dependency management
+- **ruff** for linting and formatting
+- **pytest** for testing
+- **mkdocs** with Material theme for documentation
+- **pre-commit** hooks (via prek) for code quality
+
+Install development dependencies:
+
+```sh
+pip install -e .[dev]
+```
+
+Run pre-commit hooks:
+
+```sh
+prek run
+```
+
+Build documentation:
+
+```sh
+mkdocs serve
+```
+
+## Project Team
+
+**Andrew Mitchell** ([andrew.mitchell.research@gmail.com](mailto:andrew.mitchell.research@gmail.com))
 
 ### Research Software Engineering Contact
 
 Centre for Advanced Research Computing, University College London
 ([arc.collaborations@ucl.ac.uk](mailto:arc.collaborations@ucl.ac.uk))
 
-## Built With
+## Citation
 
-<!-- TODO: can cookiecutter make a list of frameworks? -->
+If you use pythor in your research, please cite both this package and the original R implementation:
 
-- [Framework 1](https://something.com)
-- [Framework 2](https://something.com)
-- [Framework 3](https://something.com)
+**pythor:**
 
-## Getting Started
-
-### Prerequisites
-
-<!-- Any tools or versions of languages needed to run code. For example specific Python or Node versions. Minimum hardware requirements also go here. -->
-
-`pythor` requires Python 3.11&ndash;3.13.
-
-### Installation
-
-<!-- How to build or install the application. -->
-
-We recommend installing in a project specific virtual environment created using
-a environment management tool such as
-[Conda](https://docs.conda.io/projects/conda/en/stable/). To install the latest
-development version of `pythor` using `pip` in the currently active
-environment run
-
-```sh
-pip install git+https://github.com/MitchellAcoustics/pythor.git
+```bibtex
+@software{mitchell_pythor_2025,
+  author = {Mitchell, Andrew},
+  title = {pythor: Python implementation of RTHOR},
+  year = {2025},
+  url = {https://github.com/MitchellAcoustics/pythor}
+}
 ```
 
-Alternatively create a local clone of the repository with
+**Original R RTHORR:**
 
-```sh
-git clone https://github.com/MitchellAcoustics/pythor.git
+```bibtex
+@manual{gurtman_rthorr_2021,
+  title = {RTHORR: Randomization Tests of Hypothesized Order Relations},
+  author = {Gurtman, Michael B.},
+  year = {2021},
+  note = {R package version 1.0.0}
+}
 ```
 
-and then install in editable mode by running
+## License
 
-```sh
-pip install -e .
-```
+MIT License. See [LICENSE.md](LICENSE.md) for details.
 
-### Running Locally
+## Acknowledgments
 
-How to run the application on your local system.
+This project is developed in collaboration with the
+[Centre for Advanced Research Computing](https://ucl.ac.uk/arc), University College London.
 
-### Running Tests
-
-<!-- How to run tests on your local system. -->
-
-Tests can be run across all compatible Python versions in isolated environments
-using [`tox`](https://tox.wiki/en/latest/) by running
-
-```sh
-tox
-```
-
-To run tests manually in a Python environment with `pytest` installed run
-
-```sh
-pytest tests
-```
-
-again from the root of the repository.
-
-### Building Documentation
-
-The MkDocs HTML documentation can be built locally by running
-
-```sh
-tox -e docs
-```
-
-from the root of the repository. The built documentation will be written to
-`site`.
-
-Alternatively to build and preview the documentation locally, in a Python
-environment with the optional `docs` dependencies installed, run
-
-```sh
-mkdocs serve
-```
-
-## Roadmap
-
-- [x] Initial Research
-- [ ] Minimum viable product <-- You are Here
-- [ ] Alpha Release
-- [ ] Feature-Complete Release
+pythor is a Python port of the R package RTHORR by Michael B. Gurtman. The implementation maintains exact numerical parity with the original R version while providing a Pythonic interface and improved performance through vectorization.
