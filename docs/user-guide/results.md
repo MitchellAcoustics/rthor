@@ -393,6 +393,6 @@ with open('rthor_table.tex', 'w') as f:
 ## Next Steps
 
 - Review [Core Concepts](concepts.md) for theoretical background
-- See [Advanced Features](../examples/advanced-features.md) for complex analyses
+- See [Advanced Features](../examples/advanced-features.py) for complex analyses
 - Check [API Reference](../api.md) for function details
-- Try the [interactive notebooks](../examples/basic-usage.md)
+- Try the [interactive notebooks](../examples/basic-usage.py)

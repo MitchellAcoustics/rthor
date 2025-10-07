@@ -239,6 +239,6 @@ result = pythor.rthor_test(matrix, order=custom_order)
 ## Next Steps
 
 - See [Input Formats](input-formats.md) for data preparation
-- Try [Basic Usage Example](../examples/basic-usage.md)
-- Explore [Advanced Features](../examples/advanced-features.md)
+- Try [Basic Usage Example](../examples/basic-usage.py)
+- Explore [Advanced Features](../examples/advanced-features.py)
 - Check [API Reference](../api.md) for function details

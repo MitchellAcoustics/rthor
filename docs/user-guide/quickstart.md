@@ -203,7 +203,7 @@ Now that you understand the basics:
 
 - Learn about [Core Concepts](concepts.md) - Theory behind RTHOR
 - Explore [Input Formats](input-formats.md) - Data preparation details
-- See [Advanced Features](../examples/advanced-features.md) - Custom orderings and comparisons
+- See [Advanced Features](../examples/advanced-features.py) - Custom orderings and comparisons
 - Check [API Reference](../api.md) - Complete function documentation
 
 ## Common Pitfalls

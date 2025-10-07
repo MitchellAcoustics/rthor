@@ -353,6 +353,6 @@ for batch_start in range(0, 1000, batch_size):
 ## Next Steps
 
 - Learn about [interpreting results](results.md)
-- See [basic usage examples](../examples/basic-usage.md)
-- Explore [advanced features](../examples/advanced-features.md)
+- See [basic usage examples](../examples/basic-usage.py)
+- Explore [advanced features](../examples/advanced-features.py)
 - Check [API reference](../api.md)

@@ -3,7 +3,11 @@
     "allow": [
       "WebFetch(domain:marimo-team.github.io)",
       "WebSearch",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(uv run mkdocs build:*)",
+      "Bash(uv run ruff check:*)",
+      "Bash(grep:*)",
+      "Bash(uv run pytest:*)"
     ],
     "deny": [],
     "ask": []

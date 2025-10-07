@@ -39,8 +39,8 @@ nav:
       - Installation: user-guide/installation.md
       - Quick Start: user-guide/quickstart.md
   - Examples:
-      - Basic Usage: examples/basic-usage.md
-      - Advanced Features: examples/advanced-features.md
+      - Basic Usage: examples/basic-usage.py
+      - Advanced Features: examples/advanced-features.py
   - User Guide:
       - Core Concepts: user-guide/concepts.md
       - Input Formats: user-guide/input-formats.md
@@ -60,7 +60,10 @@ markdown_extensions:
 
 plugins:
   - search
-  - marimo
+  - mkdocs-jupyter:
+      execute: true
+      include_source: true
+      allow_errors: false
   - mkdocstrings:
       default_handler: python
       handlers:

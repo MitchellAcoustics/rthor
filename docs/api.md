@@ -165,7 +165,7 @@ result = pythor.rthor_test(matrix, order=custom_order)
 
 The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length k×(k-1)/2.
 
-See the [Advanced Features](examples/advanced-features.md) example for detailed explanation of custom orderings.
+See the [Advanced Features](examples/advanced-features.py) example for detailed explanation of custom orderings.
 
 ## Statistical Interpretation
 
@@ -238,7 +238,7 @@ group2_ci = result.results.loc[result.results['label'].str.contains('Group2'), '
 
 ## See Also
 
-- [Basic Usage Example](examples/basic-usage.md) - Getting started guide
-- [Advanced Features](examples/advanced-features.md) - Custom orderings, comparisons
+- [Basic Usage Example](examples/basic-usage.py) - Getting started guide
+- [Advanced Features](examples/advanced-features.py) - Custom orderings, comparisons
 - [User Guide](user-guide/concepts.md) - Theoretical background
 - [Input Formats Guide](user-guide/input-formats.md) - Detailed data preparation
