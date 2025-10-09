@@ -32,7 +32,7 @@ jobs:
           enable-cache: true
 
       - name: Install the project
-        run: python sync --locked --dev
+        run: uv sync --locked --dev
 
       - name: Run prek
-        run: prek run --all-files --color always --verbose
+        run: uv run prek run --all-files --color always --verbose
