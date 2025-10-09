@@ -1,7 +1,7 @@
 site_name: "pythor"
 site_description: "Documentation website for pythor"
 site_author: "Andrew Mitchell"
-copyright: "Copyright © 2025 Andrew Mitchell"
+copyright: Copyright &copy; 2025 Andrew Mitchell
 repo_url: "https://github.com/MitchellAcoustics/pythor/"
 repo_name: "MitchellAcoustics/pythor"
 edit_uri: edit/main/docs/
@@ -15,6 +15,11 @@ theme:
   name: "material"
   features:
     - content.action.edit
+    - navigation.tabs
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.indexes
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
@@ -49,21 +54,25 @@ nav:
   - License: LICENSE.md
 
 markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.tasklist
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
-  - admonition
   - pymdownx.details
 
 plugins:
   - search
+  - autorefs
   - mkdocs-jupyter:
       execute: true
       include_source: true
       allow_errors: false
+      theme: default
   - mkdocstrings:
       default_handler: python
       handlers:
@@ -72,13 +81,37 @@ plugins:
             - "https://docs.python.org/3/objects.inv"
           options:
             docstring_style: google
+            docstring_section_style: spacy
+            separate_signature: true
+            merge_init_into_class: true
+            show_symbol_type_heading: true # waiting for general release
+            show_symbol_type_toc: true
+            modernize_annotations: true
+            summary: true
             show_submodules: true
           paths: [src]
   - include-markdown:
       opening_tag: "{!"
       closing_tag: "!}"
+  - api-autonav:
+      modules: ["src/pythor"]
+      module_options:
+        ".*":
+          merge_init_into_class: true
+          show_symbol_type_heading: true # waiting for general release
+          show_symbol_type_toc: true
+      exclude: ["re: ^soundscapy$"] # ends up double-documenting top level imports, so don't auto generate things exported from pythor.__init__.py
 
 extra:
   social:
     - icon: fontawesome/brands/github
       link: "https://github.com/MitchellAcoustics"
+
+extra_css:
+  - stylesheets/extra.css
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css
+
+extra_javascript:
+  - javascripts/katex.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/contrib/auto-render.min.js
