@@ -93,14 +93,14 @@ plugins:
   - include-markdown:
       opening_tag: "{!"
       closing_tag: "!}"
-  - api-autonav:
-      modules: ["src/pythor"]
-      module_options:
-        ".*":
-          merge_init_into_class: true
-          show_symbol_type_heading: true # waiting for general release
-          show_symbol_type_toc: true
-      exclude: ["re: ^soundscapy$"] # ends up double-documenting top level imports, so don't auto generate things exported from pythor.__init__.py
+  # - api-autonav:
+  #     modules: ["src/pythor"]
+  #     module_options:
+  #       ".*":
+  #         merge_init_into_class: true
+  #         show_symbol_type_heading: true # waiting for general release
+  #         show_symbol_type_toc: true
+  #     exclude: ["re: ^soundscapy$"] # ends up double-documenting top level imports, so don't auto generate things exported from pythor.__init__.py
 
 extra:
   social:
