@@ -170,3 +170,5 @@ cython_debug/
 
 # package version
 _version.py
+
+.vscode/
