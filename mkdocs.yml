@@ -2,7 +2,7 @@ site_name: "rthor"
 site_description: "Documentation website for rthor"
 site_author: "Andrew Mitchell"
 copyright: Copyright &copy; 2025 Andrew Mitchell
-repo_url: "https://github.com/MitchellAcoustics/pythor/"
+repo_url: "https://github.com/MitchellAcoustics/rthor/"
 repo_name: "MitchellAcoustics/rthor"
 edit_uri: edit/main/docs/
 

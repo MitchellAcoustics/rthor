@@ -7,12 +7,12 @@
 [![License][license-badge]](./LICENSE.md)
 
 <!-- prettier-ignore-start -->
-[tests-badge]:              https://github.com/MitchellAcoustics/pythor/actions/workflows/tests.yml/badge.svg
-[tests-link]:               https://github.com/MitchellAcoustics/pythor/actions/workflows/tests.yml
-[linting-badge]:            https://github.com/MitchellAcoustics/pythor/actions/workflows/linting.yml/badge.svg
-[linting-link]:             https://github.com/MitchellAcoustics/pythor/actions/workflows/linting.yml
-[documentation-badge]:      https://github.com/MitchellAcoustics/pythor/actions/workflows/docs.yml/badge.svg
-[documentation-link]:       https://github.com/MitchellAcoustics/pythor/actions/workflows/docs.yml
+[tests-badge]:              https://github.com/MitchellAcoustics/rthor/actions/workflows/tests.yml/badge.svg
+[tests-link]:               https://github.com/MitchellAcoustics/rthor/actions/workflows/tests.yml
+[linting-badge]:            https://github.com/MitchellAcoustics/rthor/actions/workflows/linting.yml/badge.svg
+[linting-link]:             https://github.com/MitchellAcoustics/rthor/actions/workflows/linting.yml
+[documentation-badge]:      https://github.com/MitchellAcoustics/rthor/actions/workflows/docs.yml/badge.svg
+[documentation-link]:       https://github.com/MitchellAcoustics/rthor/actions/workflows/docs.yml
 [license-badge]:            https://img.shields.io/badge/License-MIT-yellow.svg
 <!-- prettier-ignore-end -->
 
@@ -70,14 +70,14 @@ pip install rthor
 ### From Source
 
 ```sh
-pip install git+https://github.com/MitchellAcoustics/pythor.git
+pip install git+https://github.com/MitchellAcoustics/rthor.git
 ```
 
 ### For Development
 
 ```sh
-git clone https://github.com/MitchellAcoustics/pythor.git
-cd pythor
+git clone https://github.com/MitchellAcoustics/rthor.git
+cd rthor
 pip install -e .[dev]
 ```
 
@@ -123,7 +123,7 @@ Compare multiple correlation matrices pairwise to determine which fits the hypot
 
 ## Documentation
 
-Full documentation is available at [https://mitchellacoustics.github.io/pythor](https://mitchellacoustics.github.io/pythor)
+Full documentation is available at [https://mitchellacoustics.github.io/rthor](https://mitchellacoustics.github.io/rthor)
 
 ## Testing
 
@@ -193,7 +193,7 @@ If you use rthor in your research, please cite both this package and the origina
   author = {Mitchell, Andrew},
   title = {rthor: Python implementation of RTHOR},
   year = {2025},
-  url = {https://github.com/MitchellAcoustics/pythor}
+  url = {https://github.com/MitchellAcoustics/rthor}
 }
 ```
 

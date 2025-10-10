@@ -45,7 +45,7 @@ license-files = ["LICENSE.md"]
 name = "rthor"
 readme = "README.md"
 requires-python = ">=3.11"
-urls.homepage = "https://github.com/MitchellAcoustics/pythor"
+urls.homepage = "https://github.com/MitchellAcoustics/rthor"
 
 [tool.coverage]
 report = {sort = "cover"}

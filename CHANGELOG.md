@@ -64,5 +64,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Original RTHOR method by Hubert & Arabie (1987)
 - "Evaluating order hypotheses within proximity matrices" - _Psychological Bulletin_, 102(1), 172-178
 
-[Unreleased]: https://github.com/MitchellAcoustics/pythor/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/MitchellAcoustics/pythor/releases/tag/v0.1.0
+[Unreleased]: https://github.com/MitchellAcoustics/rthor/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/MitchellAcoustics/rthor/releases/tag/v0.1.0

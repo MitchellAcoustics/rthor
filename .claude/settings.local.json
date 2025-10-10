@@ -9,7 +9,8 @@
       "Bash(grep:*)",
       "Bash(uv run pytest:*)",
       "Bash(git mv:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git remote set-url:*)"
     ],
     "deny": [],
     "ask": []
