@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-from pythor._validation import validate_labels, validate_order
-from pythor._vectorized import (
+
+from rthor._validation import validate_labels, validate_order
+from rthor._vectorized import (
     build_comparison_matrix,
     build_hypothesis_matrix,
     build_pairwise_comparison_matrices,
@@ -14,7 +15,7 @@ from pythor._vectorized import (
     count_pairwise_agreements,
     extract_upper_triangle_vector,
 )
-from pythor.permutations import apply_permutation, generate_permutations
+from rthor.permutations import apply_permutation, generate_permutations
 
 
 def generate_hypothesis(

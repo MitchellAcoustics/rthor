@@ -6,14 +6,15 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from pythor._core import (
+
+from rthor._core import (
     compare_multiple_matrices,
     generate_hypothesis,
     test_multiple_matrices,
 )
-from pythor._input import process_input
-from pythor.permutations import generate_permutations
-from pythor.results import ComparisonResult, RTHORResult
+from rthor._input import process_input
+from rthor.permutations import generate_permutations
+from rthor.results import ComparisonResult, RTHORResult
 
 
 def rthor_test(
@@ -60,7 +61,7 @@ def rthor_test(
     Examples:
         Test correlation matrices from file:
 
-        >>> import pythor
+        >>> import rthor
         >>> result = pythor.rthor_test(
         ...     "correlations.txt",
         ...     order="circular6",
@@ -166,7 +167,7 @@ def compare_matrices(
     Examples:
         Compare multiple correlation matrices:
 
-        >>> import pythor
+        >>> import rthor
         >>> result = pythor.compare_matrices(
         ...     "correlations.txt",
         ...     order="circular6",

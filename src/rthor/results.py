@@ -26,7 +26,7 @@ class RTHORResult:
         n_permutations: Number of permutations used in randomization test.
 
     Examples:
-        >>> import pythor
+        >>> import rthor
         >>> result = pythor.rthor_test("correlations.txt", order="circular6")
         >>> print(result.summary())
         >>> result.results  # Access results DataFrame
@@ -150,7 +150,7 @@ class ComparisonResult:
 
     Examples
     --------
-    >>> import pythor
+    >>> import rthor
     >>> result = pythor.compare_matrices("correlations.txt", order="circular6")
     >>> print(result.summary())
     >>> result.rthor_results  # Individual matrix results

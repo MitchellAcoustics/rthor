@@ -7,12 +7,13 @@ from typing import cast
 
 import numpy as np
 import pandas as pd
-from pythor._validation import (
+
+from rthor._validation import (
     validate_correlation_matrices_3d,
     validate_dataframe_list,
     validate_filepath,
 )
-from pythor.io import extract_lower_triangle, read_correlation_matrices
+from rthor.io import extract_lower_triangle, read_correlation_matrices
 
 
 def process_input(
