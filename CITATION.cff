@@ -6,5 +6,5 @@ authors:
     given-names: "Andrew"
     email: "andrew.mitchell.research@gmail.com"
 repository-code: "https://github.com/MitchellAcoustics/pythor"
-title: "pythor: Python implementation of RTHOR (Randomization test of hypothesized order relations)"
+title: "rthor: Python implementation of RTHOR (Randomization test of hypothesized order relations)"
 license: "MIT"

@@ -109,7 +109,7 @@ For a 6-variable circumplex:
 
 Adjacent pairs (1-2, 2-3, ..., 6-1) should have the strongest correlations, followed by pairs separated by one (1-3, 2-4, ...), then opposite pairs (1-4, 2-5, 3-6).
 
-pythor's `circular6` preset encodes this pattern: `[1, 2, 3, 3, 2, 2, 3, 2, 1, 1, 2, 3, 2, 1, 3]`
+rthor's `circular6` preset encodes this pattern: `[1, 2, 3, 3, 2, 2, 3, 2, 1, 1, 2, 3, 2, 1, 3]`
 
 ## Interpreting Results
 
@@ -162,7 +162,7 @@ The CI automatically accounts for this by normalizing.
 Test if interpersonal scales follow the classic two-dimensional circular structure (Leary, 1957; Wiggins, 1979):
 
 ```python
-result = pythor.rthor_test(ipc_matrix, order="circular8")
+result = rthor.rthor_test(ipc_matrix, order="circular8")
 ```
 
 ### Affect Circumplex
@@ -170,7 +170,7 @@ result = pythor.rthor_test(ipc_matrix, order="circular8")
 Test Russell's (1980) circumplex model of emotions:
 
 ```python
-result = pythor.rthor_test(emotion_matrix, order="circular8")
+result = rthor.rthor_test(emotion_matrix, order="circular8")
 ```
 
 ### Custom Theoretical Models
@@ -180,7 +180,7 @@ Test any hypothesized ordering:
 ```python
 # Hypothesis: Variables form 3 clusters with specific ordering
 custom_order = [1, 1, 2, 2, 2, 3, 3, 3, 3, 3]
-result = pythor.rthor_test(matrix, order=custom_order)
+result = rthor.rthor_test(matrix, order=custom_order)
 ```
 
 ## Advantages of RTHOR
@@ -189,7 +189,7 @@ result = pythor.rthor_test(matrix, order=custom_order)
 2. **Distribution-free**: No parametric assumptions (uses permutation test)
 3. **Flexible**: Works with any hypothesized ordering
 4. **Interpretable**: CI provides intuitive effect size
-5. **Validated**: Widely used since 1987, exact R parity in pythor
+5. **Validated**: Widely used since 1987, exact R parity in rthor
 
 ## Limitations
 

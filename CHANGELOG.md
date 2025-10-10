@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial release of pythor - Python implementation of RTHOR
+- Initial release of rthor - Python implementation of RTHOR
 - Core functionality:
   - `rthor_test()` function for testing correlation matrices against hypothesized orderings
   - `compare_matrices()` function for pairwise matrix comparisons

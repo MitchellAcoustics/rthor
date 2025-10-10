@@ -1,10 +1,10 @@
 # Input Formats
 
-pythor accepts multiple input formats to work seamlessly with different workflows. This guide covers all supported formats and their requirements.
+rthor accepts multiple input formats to work seamlessly with different workflows. This guide covers all supported formats and their requirements.
 
 ## Overview
 
-pythor accepts three main input types:
+rthor accepts three main input types:
 
 1. **NumPy arrays** - Pre-computed correlation matrices
 2. **pandas DataFrames** - Raw data (correlations computed automatically)
@@ -18,7 +18,7 @@ The simplest case - a single correlation matrix:
 
 ```python
 import numpy as np
-import pythor
+import rthor
 
 # 6×6 correlation matrix
 matrix = np.array([
@@ -30,7 +30,7 @@ matrix = np.array([
     [0.70, 0.55, 0.35, 0.40, 0.70, 1.00]
 ])
 
-result = pythor.rthor_test(matrix, order="circular6")
+result = rthor.rthor_test(matrix, order="circular6")
 ```
 
 **Requirements**:
@@ -54,7 +54,7 @@ matrix3 = np.array([...])  # Shape: (6, 6)
 matrices = np.stack([matrix1, matrix2, matrix3], axis=2)
 # Shape: (6, 6, 3)
 
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     matrices,
     order="circular6",
     labels=["Group A", "Group B", "Group C"]
@@ -81,12 +81,12 @@ matrices = np.stack([m1, m2, m3], axis=2)  # Shape: (6, 6, 3)
 
 ### Single DataFrame
 
-Pass a DataFrame with raw data - pythor computes correlations automatically:
+Pass a DataFrame with raw data - rthor computes correlations automatically:
 
 ```python
 import pandas as pd
 import numpy as np
-import pythor
+import rthor
 
 # Raw data with 6 variables and 100 observations
 np.random.seed(42)
@@ -100,7 +100,7 @@ data = pd.DataFrame({
 })
 
 # Correlations computed automatically
-result = pythor.rthor_test(data, order="circular6")
+result = rthor.rthor_test(data, order="circular6")
 ```
 
 **Requirements**:
@@ -121,7 +121,7 @@ group2_data = pd.DataFrame({...})  # 100 observations
 group3_data = pd.DataFrame({...})  # 100 observations
 
 # Test all groups
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     [group1_data, group2_data, group3_data],
     order="circular6",
     labels=["Control", "Treatment A", "Treatment B"]
@@ -143,7 +143,7 @@ Common workflow with CSV files:
 data = pd.read_csv('study_data.csv')
 
 # Test
-result = pythor.rthor_test(data, order="circular6")
+result = rthor.rthor_test(data, order="circular6")
 
 # Or load multiple files
 datasets = [
@@ -151,12 +151,12 @@ datasets = [
     pd.read_csv('group2.csv'),
     pd.read_csv('group3.csv')
 ]
-result = pythor.rthor_test(datasets, order="circular6")
+result = rthor.rthor_test(datasets, order="circular6")
 ```
 
 ## File Input
 
-For large-scale analyses or integration with other tools, pythor can read correlation matrices from text files.
+For large-scale analyses or integration with other tools, rthor can read correlation matrices from text files.
 
 ### File Format
 
@@ -182,7 +182,7 @@ This shows two 6×6 matrices concatenated.
 ### Reading from File
 
 ```python
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     "correlations.txt",
     n_matrices=2,
     n_variables=6,
@@ -227,7 +227,7 @@ matrices = np.stack([matrix1, matrix2], axis=2)
 save_correlation_matrices(matrices, 'correlations.txt')
 
 # Read back
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     'correlations.txt',
     n_matrices=2,
     n_variables=6,
@@ -237,7 +237,7 @@ result = pythor.rthor_test(
 
 ## Data Validation
 
-pythor automatically validates input data and provides helpful error messages.
+rthor automatically validates input data and provides helpful error messages.
 
 ### Correlation Matrix Validation
 
@@ -279,7 +279,7 @@ data = pd.DataFrame({
     'var1': [1, 2, np.nan],
     'var2': [4, 5, 6]
 })
-result = pythor.rthor_test(data, order="circular6")  # Works
+result = rthor.rthor_test(data, order="circular6")  # Works
 ```
 
 ## Performance Considerations
@@ -293,9 +293,9 @@ If running multiple analyses on the same data, pre-compute correlations:
 correlation_matrix = data.corr().values
 
 # Use multiple times with different orderings
-result1 = pythor.rthor_test(correlation_matrix, order="circular6")
-result2 = pythor.rthor_test(correlation_matrix, order="circular8")
-result3 = pythor.rthor_test(correlation_matrix, order=custom_order)
+result1 = rthor.rthor_test(correlation_matrix, order="circular6")
+result2 = rthor.rthor_test(correlation_matrix, order="circular8")
+result3 = rthor.rthor_test(correlation_matrix, order=custom_order)
 ```
 
 ### Memory-Efficient File Processing
@@ -313,7 +313,7 @@ for batch_start in range(0, 1000, batch_size):
         pd.read_csv(f'data_{i}.csv')
         for i in range(batch_start, batch_start + batch_size)
     ]
-    result = pythor.rthor_test(batch_data, order="circular6")
+    result = rthor.rthor_test(batch_data, order="circular6")
     result.results.to_csv(f'results_batch_{batch_start}.csv')
 ```
 
@@ -333,7 +333,7 @@ for batch_start in range(0, 1000, batch_size):
 
     ```python
     np.random.seed(42)
-    result = pythor.rthor_test(data, order="circular6")
+    result = rthor.rthor_test(data, order="circular6")
     ```
 
 !!! warning "Sample Size"
@@ -342,12 +342,12 @@ for batch_start in range(0, 1000, batch_size):
 
 !!! tip "Data Standardization"
 
-    pythor uses Pearson correlations. If your data needs transformation (e.g., log, rank), do it before passing to pythor:
+    rthor uses Pearson correlations. If your data needs transformation (e.g., log, rank), do it before passing to rthor:
 
     ```python
     from scipy.stats import rankdata
     data_ranked = data.apply(rankdata)
-    result = pythor.rthor_test(data_ranked, order="circular6")
+    result = rthor.rthor_test(data_ranked, order="circular6")
     ```
 
 ## Next Steps

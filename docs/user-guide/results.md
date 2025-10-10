@@ -7,9 +7,9 @@ This guide explains how to interpret RTHOR results and extract meaningful insigh
 The `RTHORResult` object contains all analysis outputs:
 
 ```python
-import pythor
+import rthor
 
-result = pythor.rthor_test(matrices, order="circular6")
+result = rthor.rthor_test(matrices, order="circular6")
 
 # Main results DataFrame
 print(result.results)
@@ -78,7 +78,7 @@ $$
 ### Example Interpretation
 
 ```python
-result = pythor.rthor_test(matrix, order="circular6")
+result = rthor.rthor_test(matrix, order="circular6")
 ci = result.results['ci'].iloc[0]
 
 if ci > 0.7:
@@ -141,7 +141,7 @@ Computed via permutation test:
     ```python
     import numpy as np
     np.random.seed(42)
-    result = pythor.rthor_test(matrix, order="circular6")
+    result = rthor.rthor_test(matrix, order="circular6")
     ```
 
 ## Agreements and Predictions
@@ -187,7 +187,7 @@ print(f"{ties} ties (neither agree nor disagree)")
 
 ```python
 # Test multiple matrices
-result = pythor.rthor_test(matrices, order="circular6",
+result = rthor.rthor_test(matrices, order="circular6",
                           labels=["Control", "Treatment A", "Treatment B"])
 
 # Sort by fit quality
@@ -233,7 +233,7 @@ print(f"Cohen's d = {cohens_d:.3f}")
 The `compare_matrices()` function provides additional insights:
 
 ```python
-comparison = pythor.compare_matrices(matrices, order="circular6")
+comparison = rthor.compare_matrices(matrices, order="circular6")
 
 # Individual RTHOR results
 print(comparison.rthor_results)
@@ -379,7 +379,7 @@ with open('rthor_table.tex', 'w') as f:
 > We tested whether the observed correlation matrices conformed to a hypothesized
 > circular ordering of six variables using the Randomization Test of Hypothesized
 > Order Relations (RTHOR; Hubert & Arabie, 1987). The analysis was conducted using
-> pythor (version 0.1.0).
+> rthor (version 0.1.0).
 >
 > The control group showed strong support for the circular structure
 > (CI = 0.87, p < .001), with 14 of 15 (93%) hypothesized predictions satisfied.

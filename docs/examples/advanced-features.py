@@ -7,12 +7,12 @@
 import numpy as np
 import pandas as pd
 
-import pythor
+import rthor
 
 # %% [markdown]
 # ## Custom Orderings
 #
-# While pythor provides preset orderings like "circular6" and "circular8", you can specify custom hypothesized orderings for any number of variables.
+# While rthor provides preset orderings like "circular6" and "circular8", you can specify custom hypothesized orderings for any number of variables.
 #
 # The ordering is specified as a vector where each element represents the hypothesized relationship between pairs of variables.
 
@@ -42,13 +42,13 @@ corr_linear = np.array(
 # For a simple linear order (1<2<3<4), a common pattern is:
 custom_order = [1, 2, 3, 2, 3, 3]
 
-result_custom = pythor.rthor_test(corr_linear, order=custom_order)
+result_custom = rthor.rthor_test(corr_linear, order=custom_order)
 result_custom.summary()
 
 # %% [markdown]
 # ## Working with DataFrames
 #
-# pythor can work directly with pandas DataFrames containing raw data. It will compute the correlation matrices automatically.
+# rthor can work directly with pandas DataFrames containing raw data. It will compute the correlation matrices automatically.
 
 # %%
 # Create sample datasets
@@ -82,7 +82,7 @@ data1.head()
 
 # %%
 # Test DataFrames
-result_dfs = pythor.rthor_test(
+result_dfs = rthor.rthor_test(
     [data1, data2, data3],
     order="circular6",
     labels=["Strong Structure", "Weak Structure", "Random"],
@@ -102,7 +102,7 @@ result_dfs.summary()
 
 # %%
 # Compare matrices pairwise
-comparison = pythor.compare_matrices([data1, data2, data3], order="circular6")
+comparison = rthor.compare_matrices([data1, data2, data3], order="circular6")
 comparison.summary()
 
 # %% [markdown]
@@ -134,7 +134,7 @@ comparison.comparisons
 # For large-scale analyses, you can read correlation matrices from text files:
 #
 # ```python
-# result = pythor.rthor_test(
+# result = rthor.rthor_test(
 #     "correlations.txt",
 #     n_matrices=10,
 #     n_variables=6,

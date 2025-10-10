@@ -1,9 +1,9 @@
-site_name: "pythor"
-site_description: "Documentation website for pythor"
+site_name: "rthor"
+site_description: "Documentation website for rthor"
 site_author: "Andrew Mitchell"
 copyright: Copyright &copy; 2025 Andrew Mitchell
 repo_url: "https://github.com/MitchellAcoustics/pythor/"
-repo_name: "MitchellAcoustics/pythor"
+repo_name: "MitchellAcoustics/rthor"
 edit_uri: edit/main/docs/
 
 validation:
@@ -94,13 +94,13 @@ plugins:
       opening_tag: "{!"
       closing_tag: "!}"
   # - api-autonav:
-  #     modules: ["src/pythor"]
+  #     modules: ["src/rthor"]
   #     module_options:
   #       ".*":
   #         merge_init_into_class: true
   #         show_symbol_type_heading: true # waiting for general release
   #         show_symbol_type_toc: true
-  #     exclude: ["re: ^soundscapy$"] # ends up double-documenting top level imports, so don't auto generate things exported from pythor.__init__.py
+  #     exclude: ["re: ^soundscapy$"] # ends up double-documenting top level imports, so don't auto generate things exported from rthor.__init__.py
 
 extra:
   social:

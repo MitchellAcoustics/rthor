@@ -6,7 +6,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
 from pythor._core import (
     compare_multiple_matrices,
     generate_hypothesis,

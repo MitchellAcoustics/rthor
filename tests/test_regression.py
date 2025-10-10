@@ -9,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from pythor import compare_matrices, rthor_test
+from rthor import compare_matrices, rthor_test
 
 
 class TestRthorTestRegression:

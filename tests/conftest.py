@@ -1,4 +1,4 @@
-"""Pytest configuration and fixtures for pythor tests."""
+"""Pytest configuration and fixtures for rthor tests."""
 
 import json
 from pathlib import Path

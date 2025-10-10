@@ -19,7 +19,7 @@ body:
         A minimal working example of code to reproduce the unexpected behaviour,
         this will render as `Python` code so no need for backticks.
       value: |-
-        import pythor
+        import rthor
 
         ...
       render: Python
@@ -49,7 +49,7 @@ body:
       description: |-
         Can be found by
         ```sh
-        python -c "import pythor; print(pythor.__version__)"
+        python -c "import rthor; print(rthor.__version__)"
         ```
     validations:
       required: true

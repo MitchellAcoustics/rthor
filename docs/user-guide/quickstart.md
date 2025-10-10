@@ -1,6 +1,6 @@
 # Quick Start
 
-This guide walks you through your first RTHOR analysis with pythor.
+This guide walks you through your first RTHOR analysis with rthor.
 
 ## Basic Workflow
 
@@ -17,7 +17,7 @@ Let's test whether a correlation matrix follows a circular (circumplex) pattern 
 
 ```python
 import numpy as np
-import pythor
+import rthor
 
 # Create a correlation matrix with circular structure
 # Variables 1-6 arranged in a circle
@@ -31,7 +31,7 @@ corr_matrix = np.array([
 ])
 
 # Test against circular6 preset
-result = pythor.rthor_test(corr_matrix, order="circular6")
+result = rthor.rthor_test(corr_matrix, order="circular6")
 
 # View summary
 print(result.summary())
@@ -57,7 +57,7 @@ Results:
 
 ## Working with Raw Data
 
-If you have raw data instead of correlation matrices, pythor can compute correlations automatically:
+If you have raw data instead of correlation matrices, rthor can compute correlations automatically:
 
 ```python
 import pandas as pd
@@ -74,7 +74,7 @@ data = pd.DataFrame({
 })
 
 # Test directly - correlations computed automatically
-result = pythor.rthor_test(data, order="circular6", labels=["My Data"])
+result = rthor.rthor_test(data, order="circular6", labels=["My Data"])
 print(result.summary())
 ```
 
@@ -93,7 +93,7 @@ matrix3 = (matrix3 + matrix3.T) / 2  # Make symmetric
 matrices = np.stack([matrix1, matrix2, matrix3], axis=2)
 
 # Test all at once
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     matrices,
     order="circular6",
     labels=["Strong", "Moderate", "Weak"]
@@ -129,7 +129,7 @@ To determine which matrix fits better:
 
 ```python
 # Pairwise comparisons
-comparison = pythor.compare_matrices(matrices, order="circular6")
+comparison = rthor.compare_matrices(matrices, order="circular6")
 
 print(comparison.summary())
 
@@ -156,7 +156,7 @@ Testing if interpersonal scales follow a circular pattern:
 # 8 interpersonal variables (octants)
 ipc_matrix = ...  # Your correlation matrix
 
-result = pythor.rthor_test(ipc_matrix, order="circular8")
+result = rthor.rthor_test(ipc_matrix, order="circular8")
 ```
 
 ### Case 2: Custom Hypothesis
@@ -167,7 +167,7 @@ Testing a specific linear ordering:
 # Hypothesis: Variable 1 < 2 < 3 < 4 in correlation strength
 custom_order = [1, 2, 3, 2, 3, 3]  # Ordering for 4 variables
 
-result = pythor.rthor_test(matrix, order=custom_order)
+result = rthor.rthor_test(matrix, order=custom_order)
 ```
 
 ### Case 3: File Input
@@ -175,7 +175,7 @@ result = pythor.rthor_test(matrix, order=custom_order)
 Processing many matrices from a file:
 
 ```python
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     "correlations.txt",
     n_matrices=100,
     n_variables=6,

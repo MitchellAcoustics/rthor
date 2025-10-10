@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Basic Usage
 #
-# This example demonstrates the fundamental features of pythor for testing correlation matrices.
+# This example demonstrates the fundamental features of rthor for testing correlation matrices.
 
 # %% [markdown]
 # ## Creating Sample Data
@@ -11,7 +11,7 @@
 # %%
 import numpy as np
 
-import pythor
+import rthor
 
 # %%
 # Create sample correlation matrices that follow a circular pattern
@@ -63,7 +63,7 @@ corr_matrices = np.stack([corr_matrix_1, corr_matrix_2, corr_matrix_3], axis=2)
 
 # %%
 # Test single matrix
-result_single = pythor.rthor_test(corr_matrix_1, order="circular6")
+result_single = rthor.rthor_test(corr_matrix_1, order="circular6")
 result_single.summary()
 
 # %% [markdown]
@@ -73,7 +73,7 @@ result_single.summary()
 
 # %%
 # Test multiple matrices
-result_multiple = pythor.rthor_test(
+result_multiple = rthor.rthor_test(
     corr_matrices,
     order="circular6",
     labels=["Strong Pattern", "Moderate Pattern", "Weak Pattern"],
@@ -110,7 +110,7 @@ results_df
 
 # %%
 # Compare matrices
-comparison = pythor.compare_matrices(corr_matrices, order="circular6")
+comparison = rthor.compare_matrices(corr_matrices, order="circular6")
 comparison.summary()
 
 # %%
@@ -125,14 +125,14 @@ comparison.comparisons
 # The simplest use case is testing a single correlation matrix:
 #
 # ```python
-# import pythor
+# import rthor
 # import numpy as np
 #
 # # Your correlation matrix
 # corr_matrix = np.array([...])
 #
 # # Test against circular6 preset
-# result = pythor.rthor_test(corr_matrix, order="circular6")
+# result = rthor.rthor_test(corr_matrix, order="circular6")
 # print(result.summary())
 # ```
 #
@@ -142,7 +142,7 @@ comparison.comparisons
 #
 # ```python
 # # Stack matrices into 3D array or use list of DataFrames
-# result = pythor.rthor_test(
+# result = rthor.rthor_test(
 #     matrices,
 #     order="circular6",
 #     labels=["Group 1", "Group 2", "Group 3"]

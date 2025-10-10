@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-
 from pythor._validation import validate_labels, validate_order
 from pythor._vectorized import (
     build_comparison_matrix,

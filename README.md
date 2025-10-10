@@ -1,4 +1,4 @@
-# pythor
+# rthor
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Tests status][tests-badge]][tests-link]
@@ -16,7 +16,7 @@
 [license-badge]:            https://img.shields.io/badge/License-MIT-yellow.svg
 <!-- prettier-ignore-end -->
 
-**pythor** is a Python implementation of RTHOR (Randomization Test of Hypothesized Order Relations), a statistical test for circumplex and circular models in correlation matrices.
+**rthor** is a Python implementation of RTHOR (Randomization Test of Hypothesized Order Relations), a statistical test for circumplex and circular models in correlation matrices.
 
 ## Features
 
@@ -30,11 +30,11 @@
 ## Quick Start
 
 ```python
-import pythor
+import rthor
 import pandas as pd
 
 # Test from correlation matrix file
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     "correlations.txt",
     order="circular6",
     n_matrices=3,
@@ -47,14 +47,14 @@ print(result.summary())
 print(result.results)
 
 # Test from DataFrames
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     [df1, df2, df3],
     order="circular6",
     labels=["Group A", "Group B", "Group C"]
 )
 
 # Compare multiple matrices
-comparison = pythor.compare_matrices([df1, df2, df3], order="circular6")
+comparison = rthor.compare_matrices([df1, df2, df3], order="circular6")
 print(comparison.summary())
 print(comparison.comparisons)  # Pairwise differences
 ```
@@ -64,7 +64,7 @@ print(comparison.comparisons)  # Pairwise differences
 ### From PyPI (when released)
 
 ```sh
-pip install pythor
+pip install rthor
 ```
 
 ### From Source
@@ -184,14 +184,14 @@ Centre for Advanced Research Computing, University College London
 
 ## Citation
 
-If you use pythor in your research, please cite both this package and the original R implementation:
+If you use rthor in your research, please cite both this package and the original R implementation:
 
-**pythor:**
+**rthor:**
 
 ```bibtex
-@software{mitchell_pythor_2025,
+@software{mitchell_rthor_2025,
   author = {Mitchell, Andrew},
-  title = {pythor: Python implementation of RTHOR},
+  title = {rthor: Python implementation of RTHOR},
   year = {2025},
   url = {https://github.com/MitchellAcoustics/pythor}
 }
@@ -217,4 +217,4 @@ MIT License. See [LICENSE.md](LICENSE.md) for details.
 This project is developed in collaboration with the
 [Centre for Advanced Research Computing](https://ucl.ac.uk/arc), University College London.
 
-pythor is a Python port of the R package RTHORR by Michael B. Gurtman. The implementation maintains exact numerical parity with the original R version while providing a Pythonic interface and improved performance through vectorization.
+rthor is a Python port of the R package RTHORR by Michael B. Gurtman. The implementation maintains exact numerical parity with the original R version while providing a Pythonic interface and improved performance through vectorization.

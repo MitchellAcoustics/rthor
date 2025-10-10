@@ -2,7 +2,7 @@
 
 ## Overview
 
-pythor provides a simple, high-level API for testing correlation matrices against hypothesized orderings. The main functions are:
+rthor provides a simple, high-level API for testing correlation matrices against hypothesized orderings. The main functions are:
 
 - **`rthor_test()`**: Test one or more correlation matrices
 - **`compare_matrices()`**: Compare multiple matrices pairwise
@@ -13,7 +13,7 @@ Results are returned as dataclass objects with convenient methods for viewing an
 
 ### rthor_test
 
-::: pythor.rthor_test
+::: rthor.rthor_test
 options:
 show_root_heading: true
 show_source: false
@@ -21,7 +21,7 @@ members_order: source
 
 ### compare_matrices
 
-::: pythor.compare_matrices
+::: rthor.compare_matrices
 options:
 show_root_heading: true
 show_source: false
@@ -31,7 +31,7 @@ members_order: source
 
 ### RTHORResult
 
-::: pythor.RTHORResult
+::: rthor.RTHORResult
 options:
 show_root_heading: true
 show_source: false
@@ -54,7 +54,7 @@ Methods:
 
 ### ComparisonResult
 
-::: pythor.ComparisonResult
+::: rthor.ComparisonResult
 options:
 show_root_heading: true
 show_source: false
@@ -85,41 +85,41 @@ Methods:
 
 ## Input Formats
 
-pythor accepts multiple input formats for flexibility:
+rthor accepts multiple input formats for flexibility:
 
 ### NumPy Arrays
 
 ```python
 import numpy as np
-import pythor
+import rthor
 
 # Single matrix (2D array)
 matrix = np.array([[1.0, 0.8], [0.8, 1.0]])
-result = pythor.rthor_test(matrix, order="circular6")
+result = rthor.rthor_test(matrix, order="circular6")
 
 # Multiple matrices (3D array with shape [n_vars, n_vars, n_matrices])
 matrices = np.stack([matrix1, matrix2, matrix3], axis=2)
-result = pythor.rthor_test(matrices, order="circular6")
+result = rthor.rthor_test(matrices, order="circular6")
 ```
 
 ### pandas DataFrames
 
 ```python
 import pandas as pd
-import pythor
+import rthor
 
 # DataFrames with raw data - correlations computed automatically
 df1 = pd.DataFrame({'var1': [...], 'var2': [...], ...})
 df2 = pd.DataFrame({'var1': [...], 'var2': [...], ...})
 
-result = pythor.rthor_test([df1, df2], order="circular6")
+result = rthor.rthor_test([df1, df2], order="circular6")
 ```
 
 ### File Input
 
 ```python
 # Text file with lower triangular matrices
-result = pythor.rthor_test(
+result = rthor.rthor_test(
     "correlations.txt",
     n_matrices=10,
     n_variables=6,
@@ -131,14 +131,14 @@ File format: Lower triangular matrices including diagonal, whitespace-separated 
 
 ## Preset Orderings
 
-pythor includes two preset orderings for common circumplex models:
+rthor includes two preset orderings for common circumplex models:
 
 ### circular6
 
 For 6 variables arranged in a circular pattern (e.g., interpersonal circumplex):
 
 ```python
-result = pythor.rthor_test(matrix, order="circular6")
+result = rthor.rthor_test(matrix, order="circular6")
 ```
 
 Hypothesizes that adjacent variables have stronger correlations than distant ones.
@@ -148,7 +148,7 @@ Hypothesizes that adjacent variables have stronger correlations than distant one
 For 8 variables arranged in a circular pattern:
 
 ```python
-result = pythor.rthor_test(matrix, order="circular8")
+result = rthor.rthor_test(matrix, order="circular8")
 ```
 
 Commonly used for octant models in personality and emotion research.
@@ -160,7 +160,7 @@ You can specify custom hypothesized orderings for any number of variables:
 ```python
 # For 4 variables with linear ordering: 1 < 2 < 3 < 4
 custom_order = [1, 2, 3, 2, 3, 3]
-result = pythor.rthor_test(matrix, order=custom_order)
+result = rthor.rthor_test(matrix, order=custom_order)
 ```
 
 The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length k×(k-1)/2.
@@ -196,7 +196,7 @@ The p-value represents the proportion of random permutations that achieve a CI a
 Results are already in pandas DataFrames:
 
 ```python
-result = pythor.rthor_test(matrices, order="circular6")
+result = rthor.rthor_test(matrices, order="circular6")
 
 # Filter significant results
 sig = result.results[result.results['p_value'] < 0.05]

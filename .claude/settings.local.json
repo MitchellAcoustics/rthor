@@ -7,7 +7,9 @@
       "Bash(uv run mkdocs build:*)",
       "Bash(uv run ruff check:*)",
       "Bash(grep:*)",
-      "Bash(uv run pytest:*)"
+      "Bash(uv run pytest:*)",
+      "Bash(git mv:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

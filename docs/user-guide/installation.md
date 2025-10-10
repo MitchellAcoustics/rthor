@@ -8,16 +8,16 @@
 
 ## Install from PyPI
 
-Once released, install pythor using pip:
+Once released, install rthor using pip:
 
 ```bash
-pip install pythor
+pip install rthor
 ```
 
 Or with uv:
 
 ```bash
-uv pip install pythor
+uv pip install rthor
 ```
 
 ## Install from Source
@@ -25,26 +25,26 @@ uv pip install pythor
 For the latest development version:
 
 ```bash
-git clone https://github.com/MitchellAcoustics/pythor.git
-cd pythor
+git clone https://github.com/MitchellAcoustics/rthor.git
+cd rthor
 pip install -e .
 ```
 
 Or with uv:
 
 ```bash
-git clone https://github.com/MitchellAcoustics/pythor.git
-cd pythor
+git clone https://github.com/MitchellAcoustics/rthor.git
+cd rthor
 uv pip install -e .
 ```
 
 ## Development Installation
 
-To contribute to pythor, install with development dependencies:
+To contribute to rthor, install with development dependencies:
 
 ```bash
-git clone https://github.com/MitchellAcoustics/pythor.git
-cd pythor
+git clone https://github.com/MitchellAcoustics/rthor.git
+cd rthor
 uv sync --group dev
 ```
 
@@ -73,13 +73,13 @@ This configures hooks for:
 ## Verify Installation
 
 ```python
-import pythor
-print(pythor.__version__)
+import rthor
+print(rthor.__version__)
 
 # Run a quick test
 import numpy as np
 matrix = np.array([[1.0, 0.8], [0.8, 1.0]])
-result = pythor.rthor_test(matrix, order="circular6")
+result = rthor.rthor_test(matrix, order="circular6")
 print(result.summary())
 ```
 
@@ -117,20 +117,20 @@ If you encounter NumPy installation issues on Apple Silicon:
 ```bash
 pip install --upgrade pip setuptools wheel
 pip install numpy
-pip install pythor
+pip install rthor
 ```
 
 ### Import Errors
 
 If you get import errors after installation:
 
-1. Verify installation: `pip show pythor`
+1. Verify installation: `pip show rthor`
 2. Check Python version: `python --version` (must be 3.11+)
-3. Try reinstalling: `pip uninstall pythor && pip install pythor`
+3. Try reinstalling: `pip uninstall rthor && pip install rthor`
 
 ### Type Checking Issues
 
-If using mypy or other type checkers, pythor is fully typed. If you encounter issues:
+If using mypy or other type checkers, rthor is fully typed. If you encounter issues:
 
 ```bash
 # Install type stubs for dependencies

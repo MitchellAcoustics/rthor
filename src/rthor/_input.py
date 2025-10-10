@@ -7,7 +7,6 @@ from typing import cast
 
 import numpy as np
 import pandas as pd
-
 from pythor._validation import (
     validate_correlation_matrices_3d,
     validate_dataframe_list,

@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from pythor.permutations import apply_permutation, generate_permutations
+from rthor.permutations import apply_permutation, generate_permutations
 
 
 class TestGeneratePermutations:
