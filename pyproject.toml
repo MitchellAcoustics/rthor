@@ -45,7 +45,12 @@ license-files = ["LICENSE.md"]
 name = "rthor"
 readme = "README.md"
 requires-python = ">=3.11"
-urls.homepage = "https://github.com/MitchellAcoustics/rthor"
+
+[project.gui-scripts]
+rthor = "rthor:app.main"
+
+[project.optional-dependencies]
+gui = ["fiatlight>=0.5.0", "fire>=0.7.1"]
 
 [tool.coverage]
 report = {sort = "cover"}
@@ -109,14 +114,7 @@ env_run_base = {commands = [
 ], dependency_groups = [
     "test",
 ]}
-env.docs = {commands = [
-    [
-        "mkdocs",
-        "build",
-    ],
-], dependency_groups = [
-    "docs",
-]}
+env.docs = {commands = [["mkdocs", "build"]], dependency_groups = ["docs"]}
 gh.python."3.11" = ["py311"]
 gh.python."3.12" = ["py312"]
 gh.python."3.13" = ["py313"]
