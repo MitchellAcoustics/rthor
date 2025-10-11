@@ -387,7 +387,7 @@ class TestInputValidation:
         with pytest.raises(
             ValueError, match="n_matrices and n_variables must be specified"
         ):
-            rthor_test(data=input_matrix_file, order="circular6")
+            rthor_test(data=input_matrix_file, order="circular6")  # type: ignore[invalid-argument-type]
 
     def test_labels_length_mismatch(
         self,

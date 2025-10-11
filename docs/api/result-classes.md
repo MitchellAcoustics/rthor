@@ -1,6 +1,6 @@
 # Result Classes
 
-## RTHORResult
+## [`RTHORResult`][rthor.RTHORResult]
 
 The main result object returned by [`rthor_test()`][rthor.rthor_test]. Key attributes:
 
@@ -20,9 +20,9 @@ Methods:
 ::: rthor.RTHORResult
 :::
 
-## ComparisonResult
+## [`ComparisonResult`][rthor.ComparisonResult]
 
-Result object for pairwise matrix comparisons from `compare_matrices()`. Key attributes:
+Result object for pairwise matrix comparisons from [`compare_matrices()`][rthor.compare_matrices]. Key attributes:
 
 - **`rthor_results`**: pandas DataFrame with individual RTHOR results
 - **`comparisons`**: pandas DataFrame with pairwise comparison results
@@ -30,14 +30,14 @@ Result object for pairwise matrix comparisons from `compare_matrices()`. Key att
 - **`n_variables`**: Number of variables per matrix
 - **`order`**: The hypothesized ordering used
 
-The [`comparisons`][rthor.ComparisonResult.comparisons] DataFrame includes:
+The `comparisons` DataFrame includes:
 
-- [**`both_agree`**][rthor.ComparisonResult.comparisons.both_agree]: Predictions satisfied by both matrices
-- [**`only1`**][rthor.ComparisonResult.comparisons.only1]: Predictions satisfied only by matrix 1
-- [**`only2`**][rthor.ComparisonResult.comparisons.only2]: Predictions satisfied only by matrix 2
-- [**`neither`**][rthor.ComparisonResult.comparisons.neither]: Predictions satisfied by neither
-- [**`ci`**][rthor.ComparisonResult.comparisons.ci]: Comparison CI (positive means matrix 2 fits better)
-- [**`p_value`**][rthor.ComparisonResult.comparisons.p_value]: Statistical significance of difference
+- **`both_agree`**: Predictions satisfied by both matrices
+- **`only1`**: Predictions satisfied only by matrix 1
+- **`only2`**: Predictions satisfied only by matrix 2
+- **`neither`**: Predictions satisfied by neither
+- **`ci`**: Comparison CI (positive means matrix 2 fits better)
+- **`p_value`**: Statistical significance of difference
 
 Methods:
 

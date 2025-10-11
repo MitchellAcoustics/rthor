@@ -164,4 +164,5 @@ group2_ci = result.results.loc[result.results['label'].str.contains('Group2'), '
 
 - [Basic Usage Example](../examples/basic-usage.py) - Getting started guide
 - [Advanced Features](../examples/advanced-features.py) - Custom orderings, comparisons
-- [User Guide](../user-guide/concepts.md) - Theoretical background
+- [Paper Validation](../examples/paper-validation.py) - Verification against Hubert & Arabie (1987)
+- [Core Concepts](../user-guide/concepts.md) - Theoretical background

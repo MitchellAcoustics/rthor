@@ -9,7 +9,6 @@ from rthor._validation import validate_labels, validate_order
 from rthor._vectorized import (
     build_comparison_matrix,
     build_hypothesis_matrix,
-    build_pairwise_comparison_matrices,
     calculate_comparison_ci,
     count_agreements,
     count_pairwise_agreements,
@@ -221,6 +220,9 @@ def compare_two_matrices(
 ) -> dict:
     """Compare two correlation matrices.
 
+    Notes:
+        Vectorized version of R code (`randmf.R:244-254`).
+
     Args:
         corr_mat1: First correlation matrix
         corr_mat2: Second correlation matrix
@@ -238,7 +240,8 @@ def compare_two_matrices(
     corr_vec1 = extract_upper_triangle_vector(corr_mat1)
     corr_vec2 = extract_upper_triangle_vector(corr_mat2)
 
-    comp_mat1, comp_mat2 = build_pairwise_comparison_matrices(corr_vec1, corr_vec2)
+    comp_mat1 = build_comparison_matrix(corr_vec1)
+    comp_mat2 = build_comparison_matrix(corr_vec2)
     both_agree, only1, only2, neither = count_pairwise_agreements(
         comp_mat1, comp_mat2, hypothesis_matrix
     )
@@ -258,9 +261,8 @@ def compare_two_matrices(
         perm_vec1 = extract_upper_triangle_vector(perm_mat1)
         perm_vec2 = extract_upper_triangle_vector(perm_mat2)
 
-        perm_comp1, perm_comp2 = build_pairwise_comparison_matrices(
-            perm_vec1, perm_vec2
-        )
+        perm_comp1 = build_comparison_matrix(perm_vec1)
+        perm_comp2 = build_comparison_matrix(perm_vec2)
         perm_both, perm_only1, perm_only2, perm_neither = count_pairwise_agreements(
             perm_comp1, perm_comp2, hypothesis_matrix
         )

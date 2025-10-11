@@ -174,4 +174,4 @@ result = rthor.rthor_test(matrix, order=custom_order)
 - See [Paper Validation](../examples/paper-validation.py) - Verification against Hubert & Arabie (1987)
 - Try [Basic Usage](../examples/basic-usage.py) - Getting started examples
 - Explore [Advanced Features](../examples/advanced-features.py) - Custom orderings and comparisons
-- Check [API Reference](../api.md) - Complete function documentation
+- Check [API Reference](../api/reference/input.md) - Complete function documentation

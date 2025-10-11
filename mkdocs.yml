@@ -1,6 +1,7 @@
 site_name: "rthor"
 site_description: "Documentation website for rthor"
 site_author: "Andrew Mitchell"
+site_url: https://drandrewmitchell.com/rthor/
 copyright: Copyright &copy; 2025 Andrew Mitchell
 repo_url: "https://github.com/MitchellAcoustics/rthor/"
 repo_name: "MitchellAcoustics/rthor"
@@ -15,12 +16,14 @@ theme:
   name: "material"
   features:
     - content.action.edit
+    - content.action.view
     - navigation.tabs
-    - navigation.expand
-    - navigation.path
+    # - navigation.tabs.sticky
     - navigation.top
+    - navigation.expand
+    - navigation.path # waiting for general release
     - navigation.indexes
-    - navigation.sections
+    - navigation.instant
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
@@ -53,8 +56,11 @@ nav:
       - Result Classes: api/result-classes.md
       - Reference:
           - api/reference/index.md
-          - api/reference/core.md
-          - api/reference/input.md
+          - io: api/reference/io.md
+          - _core: api/reference/core.md
+          - _input: api/reference/input.md
+          - _validation: api/reference/validation.md
+          - _vectorized: api/reference/vectorized.md
   - License: LICENSE.md
 
 markdown_extensions:
@@ -68,10 +74,15 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.details
+  - pymdownx.snippets
 
 plugins:
   - search
   - autorefs
+  - git-authors
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
   - mkdocs-jupyter:
       execute: true
       include_source: true
@@ -86,17 +97,21 @@ plugins:
           options:
             docstring_style: google
             docstring_section_style: spacy
-            separate_signature: true
+            members_order: source
             merge_init_into_class: true
-            show_symbol_type_heading: true # waiting for general release
+            modernize_annotations: true
+            overloads_only: true
+            separate_signature: true
+            show_signature: true
+            show_signature_annotations: true
+            show_signature_type_parameters: true
+            show_symbol_type_heading: true
             show_symbol_type_toc: true
             show_source: true
-            show_root_heading: true
-            show_signature: true
-            members_order: source
-            modernize_annotations: true
-            summary: true
+            show_overloads: true
             show_submodules: true
+            show_root_heading: true
+            summary: true
           paths: [src]
   - include-markdown:
       opening_tag: "{!"
@@ -114,6 +129,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: "https://github.com/MitchellAcoustics"
+  # version:
+  #   provider: mike
 
 extra_css:
   - stylesheets/extra.css

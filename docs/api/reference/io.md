@@ -1,5 +1,5 @@
 <!-- prettier-ignore -->
-# ::: rthor._core
+# ::: rthor.io
 
     options:
         filters: "^_"

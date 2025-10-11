@@ -141,4 +141,4 @@ pip install types-numpy types-pandas
 
 - [Core Concepts](concepts.md) - Understand RTHOR
 - [Basic Usage](../examples/basic-usage.py) - Get started with examples
-- [API Reference](../api.md) - Full function documentation
+- [API Reference](../api/reference/index.md) - Full function documentation

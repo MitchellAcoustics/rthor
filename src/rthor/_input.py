@@ -24,27 +24,21 @@ def process_input(
     """Process various input formats into 3D correlation matrix array.
 
     Args:
-    data : Path, str, list[pd.DataFrame], or np.ndarray
-        Input data in various formats:
-        - Path/str: File path containing correlation matrices
-        - list[pd.DataFrame]: List of DataFrames (correlations computed)
-        - np.ndarray: Pre-computed correlation matrices (2D or 3D)
-    n_matrices : int, optional
-        Number of matrices (required for file input if ambiguous)
-    n_variables : int, optional
-        Number of variables (required for file input if ambiguous)
+        data: Input data in various formats:
+
+            - Path/str: File path containing correlation matrices
+            - list[pd.DataFrame]: List of DataFrames (correlations computed)
+            - np.ndarray: Pre-computed correlation matrices (2D or 3D)
+        n_matrices: Number of matrices (required for file input if ambiguous)
+        n_variables: Number of variables (required for file input if ambiguous)
 
     Returns:
-    correlation_matrices : np.ndarray
-        3D array of shape (n_variables, n_variables, n_matrices)
-    n_variables : int
-        Number of variables
-    n_matrices : int
-        Number of matrices
+        correlation_matrices: 3D array of shape (n_variables, n_variables, n_matrices)
+        n_variables: Number of variables
+        n_matrices: Number of matrices
 
     Raises:
-    ValueError
-        If input format is invalid or parameters are missing
+        ValueError: If input format is invalid or parameters are missing
 
     """
     # Handle file path input
@@ -81,10 +75,7 @@ def _process_file_input(
         )
         raise ValueError(msg)
 
-    # Read matrices from file
     correlation_matrices = read_correlation_matrices(path, n_variables, n_matrices)
-
-    # Validate
     validate_correlation_matrices_3d(correlation_matrices)
 
     return correlation_matrices, n_variables, n_matrices
@@ -94,7 +85,6 @@ def _process_dataframe_list(
     df_list: list[pd.DataFrame],
 ) -> tuple[np.ndarray, int, int]:
     """Process list of DataFrames."""
-    # Validate
     validate_dataframe_list(df_list)
 
     n_matrices = len(df_list)
@@ -109,8 +99,6 @@ def _process_dataframe_list(
     for df in df_list_reversed:
         # Compute correlation matrix
         corr_matrix = df.corr().to_numpy()
-
-        # Extract lower triangle with diagonal
         lower_tri = extract_lower_triangle(corr_matrix, include_diagonal=True)
 
         # Prepend to list (R uses: za <- append(lower_tri, za))
@@ -118,11 +106,7 @@ def _process_dataframe_list(
 
     # Convert to array
     za = np.array(correlation_values)
-
-    # Build 3D array from flat vector (matching io.py logic)
     correlation_matrices = _build_3d_from_vector(za, n_variables, n_matrices)
-
-    # Validate
     validate_correlation_matrices_3d(correlation_matrices)
 
     return correlation_matrices, n_variables, n_matrices
@@ -158,7 +142,6 @@ def _process_array_input(
         msg = f"Expected 2D or 3D array, got {array.ndim}D"
         raise ValueError(msg)
 
-    # Validate
     validate_correlation_matrices_3d(correlation_matrices)
 
     return correlation_matrices, n_variables, n_matrices
@@ -174,15 +157,11 @@ def _build_3d_from_vector(
     Matches logic from io.py read_correlation_matrices().
 
     Args:
-    za : np.ndarray
-        Flat array of correlation values
-    n_variables : int
-        Number of variables
-    n_matrices : int
-        Number of matrices
+        za: Flat array of correlation values
+        n_variables: Number of variables
+        n_matrices: Number of matrices
 
     Returns:
-    correlation_matrices : np.ndarray
         3D array (n_variables, n_variables, n_matrices)
 
     """

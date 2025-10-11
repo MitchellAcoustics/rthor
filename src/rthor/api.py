@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import overload
 
 import numpy as np
 import pandas as pd
@@ -15,6 +16,25 @@ from rthor._core import (
 from rthor._input import process_input
 from rthor.permutations import generate_permutations
 from rthor.results import ComparisonResult, RTHORResult
+
+
+@overload
+def rthor_test(
+    data: Path | str,
+    order: str | list[int] = "circular6",
+    labels: list[str] | None = None,
+    *,
+    n_matrices: int,
+    n_variables: int,
+) -> RTHORResult: ...
+
+
+@overload
+def rthor_test(
+    data: list[pd.DataFrame] | np.ndarray,
+    order: str | list[int] = "circular6",
+    labels: list[str] | None = None,
+) -> RTHORResult: ...
 
 
 def rthor_test(
@@ -117,10 +137,7 @@ def rthor_test(
     # Process input to 3D array
     correlation_matrices, n_vars, n_mats = process_input(data, n_matrices, n_variables)
 
-    # Run tests
     results_df = test_multiple_matrices(correlation_matrices, order, labels)
-
-    # Get metadata for result object
     _, order_array, n_predictions = generate_hypothesis(order, n_vars)
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
@@ -133,6 +150,23 @@ def rthor_test(
         n_predictions=n_predictions,
         n_permutations=n_perms,
     )
+
+
+@overload
+def compare_matrices(
+    data: Path | str,
+    order: str | list[int] = "circular6",
+    *,
+    n_matrices: int,
+    n_variables: int,
+) -> ComparisonResult: ...
+
+
+@overload
+def compare_matrices(
+    data: list[pd.DataFrame] | np.ndarray,
+    order: str | list[int] = "circular6",
+) -> ComparisonResult: ...
 
 
 def compare_matrices(
@@ -213,10 +247,7 @@ def compare_matrices(
         )
         raise ValueError(msg)
 
-    # Run comparisons
     rthor_df, comparisons_df = compare_multiple_matrices(correlation_matrices, order)
-
-    # Get metadata
     _, order_array, n_predictions = generate_hypothesis(order, n_vars)
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
