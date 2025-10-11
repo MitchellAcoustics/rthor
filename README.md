@@ -24,8 +24,6 @@
 - **Multiple Input Formats**: Works with files, pandas DataFrames, or numpy arrays
 - **Flexible Analysis**: Test single matrices or compare multiple matrices pairwise
 - **Fast Performance**: Vectorized operations using NumPy for efficient computation
-- **Type-Safe**: Fully typed with comprehensive input validation
-- **Well-Documented**: Extensive docstrings and examples
 
 ## Quick Start
 
@@ -125,6 +123,16 @@ Compare multiple correlation matrices pairwise to determine which fits the hypot
 
 Full documentation is available at [https://mitchellacoustics.github.io/rthor](https://mitchellacoustics.github.io/rthor)
 
+### Validation Against Original Paper
+
+The implementation has been validated against the original Hubert & Arabie (1987) paper. See [docs/examples/paper-validation.py](docs/examples/paper-validation.py) for a detailed demonstration that replicates Table 1 from the paper and confirms exact agreement with the expected results:
+
+- ✓ 72 predictions, 61 agreements, 11 violations
+- ✓ p-value = 0.0167 (12/720)
+- ✓ CI = 0.694
+
+This validation demonstrates that `rthor` correctly implements the randomization test methodology.
+
 ## Testing
 
 Run tests across all supported Python versions:
@@ -184,9 +192,9 @@ Centre for Advanced Research Computing, University College London
 
 ## Citation
 
-If you use rthor in your research, please cite both this package and the original R implementation:
+If you use rthor in your research, please cite both this package and the original method paper:
 
-**rthor:**
+**rthor (Python implementation):**
 
 ```bibtex
 @software{mitchell_rthor_2025,
@@ -197,7 +205,22 @@ If you use rthor in your research, please cite both this package and the origina
 }
 ```
 
-**Original R RTHORR:**
+**Original RTHOR method:**
+
+```bibtex
+@article{hubert_arabie_1987,
+  title = {Evaluating order hypotheses within proximity matrices},
+  author = {Hubert, Lawrence J. and Arabie, Phipps},
+  journal = {Psychological Bulletin},
+  volume = {102},
+  number = {1},
+  pages = {172--178},
+  year = {1987},
+  doi = {10.1037/0033-2909.102.1.172}
+}
+```
+
+**R RTHORR package:**
 
 ```bibtex
 @manual{gurtman_rthorr_2021,

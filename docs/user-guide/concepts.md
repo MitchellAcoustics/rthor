@@ -6,160 +6,123 @@ RTHOR (Randomization Test of Hypothesized Order Relations) is a statistical test
 
 Developed by Hubert & Arabie (1987), RTHOR is widely used in personality, emotion, and interpersonal research to validate circumplex models.
 
-## The Problem RTHOR Solves
+## The Circumplex Problem
 
-### Circumplex Models
+Many psychological constructs organize in circular patterns (circumplexes):
 
-Many psychological constructs are organized in circular patterns (circumplexes):
-
-- **Interpersonal behavior**: Dominance-submission, love-hate dimensions
-- **Emotions**: Pleasure-displeasure, arousal-calmness
+- **Interpersonal behavior**: Dominance-submission and affiliation dimensions
+- **Emotions**: Valence and arousal dimensions
 - **Personality traits**: Various two-dimensional models
 
 In a circumplex:
 
 - Variables are arranged in a circle
 - **Adjacent** variables have strong positive correlations
-- **Opposite** variables have negative correlations
-- **Orthogonal** variables (90° apart) have near-zero correlations
+- **Opposite** variables have weak or negative correlations
+- **Intermediate** distances have intermediate correlations
 
-### The Challenge
-
-Traditional methods like correlation matrices or factor analysis don't directly test whether your data follows a hypothesized circular ordering. RTHOR provides a formal statistical test for this.
+Traditional methods like exploratory factor analysis don't directly test whether data follow a hypothesized circular ordering. RTHOR provides a formal statistical test for this.
 
 ## How RTHOR Works
 
-### 1. Hypothesized Ordering
+### 1. Specify Order Hypotheses
 
-You specify predictions about the relative magnitudes of correlations. For example, in a 6-variable circumplex:
+You define predictions about relative correlation magnitudes. For example, in a 6-variable circumplex:
 
-- r(1,2) > r(1,3) > r(1,4)
-- r(2,3) > r(2,4) > r(2,5)
-- And so on...
+- Adjacent pairs (1-2, 2-3, ..., 6-1) should have **highest** correlations
+- Alternate pairs (1-3, 2-4, ...) should have **intermediate** correlations
+- Opposite pairs (1-4, 2-5, 3-6) should have **lowest** correlations
 
-This creates a set of **order predictions** about which correlations should be larger than others.
+This creates a set of **order predictions** comparing all pairs of variable-pairs.
 
 ### 2. Count Agreements
 
-RTHOR counts how many of these predictions are satisfied by your observed correlation matrix:
+RTHOR counts how many predictions are satisfied by observed data:
 
 - **Agreement**: Predicted order matches observed order
 - **Disagreement**: Predicted order contradicts observed order
-- **Tie**: Correlations are equal (neither agree nor disagree)
+- **Tie**: Correlations are equal
 
-### 3. Compute Correspondence Index
+### 3. Compute Correspondence Index (CI)
 
-The Correspondence Index (CI) summarizes the fit:
+The CI summarizes fit (Hubert & Arabie, 1987, Eq. 3, p. 176):
 
 $$
-CI = \frac{\text{agreements} - \text{disagreements}}{\text{total predictions}}
+CI = \frac{A - D}{A + D + T}
 $$
 
-**Range**: -1 to +1
+Where:
 
-- **+1**: Perfect agreement with hypothesis
-- **0**: No better than random
-- **-1**: Perfect disagreement (opposite pattern)
+- **A** = agreements
+- **D** = disagreements
+- **T** = ties
+
+**Range**: -1 (perfect disagreement) to +1 (perfect agreement)
 
 ### 4. Permutation Test
 
-To determine if the CI is statistically significant:
+Statistical significance is determined by randomization (Hubert & Arabie, 1987, p. 175):
 
-1. Randomly permute variable labels (5000 times by default)
-2. Recompute CI for each permutation
-3. p-value = proportion of permutations with CI ≥ observed CI
+1. Generate all permutations of variable labels (or sample when n! > 50,000)
+2. For each permutation, recompute CI
+3. p-value = proportion of permutations with CI ≥ observed
 
-This tests: "Is our observed fit better than random chance?"
+This tests: "Is the observed fit better than chance?"
 
-## Understanding the Ordering Vector
-
-The ordering vector is the heart of your hypothesis. It specifies predicted relationships between **all pairs** of variables.
-
-### Example: 4 Variables
-
-For 4 variables, there are 4×(4-1)/2 = 6 pairs:
-
-1. (1,2)
-2. (1,3)
-3. (1,4)
-4. (2,3)
-5. (2,4)
-6. (3,4)
-
-A **linear ordering** (1 < 2 < 3 < 4) predicts:
-
-- r(1,2) > r(1,3) > r(1,4)
-- r(2,3) > r(2,4)
-- r(3,4) > others...
-
-This is encoded as: `[1, 2, 3, 2, 3, 3]`
-
-Each number represents the hypothesized "rank" or "tier" of that pair's correlation strength.
-
-### Circular Orderings
-
-For a 6-variable circumplex:
-
-```text
-    1
-  6   2
- 5     3
-    4
-```
-
-Adjacent pairs (1-2, 2-3, ..., 6-1) should have the strongest correlations, followed by pairs separated by one (1-3, 2-4, ...), then opposite pairs (1-4, 2-5, 3-6).
-
-rthor's `circular6` preset encodes this pattern: `[1, 2, 3, 3, 2, 2, 3, 2, 1, 1, 2, 3, 2, 1, 3]`
+The key insight: By permuting object labels (not individual predictions), the test preserves the structural integrity of order relations while providing a valid null distribution.
 
 ## Interpreting Results
 
 ### Correspondence Index (CI)
 
-**What it means**:
+**General guidelines**:
 
 - **CI > 0.7**: Strong support for hypothesis
 - **CI = 0.4-0.7**: Moderate support
-- **CI = 0.0-0.4**: Weak support
+- **CI < 0.4**: Weak support
+- **CI ≈ 0**: No better than chance
 - **CI < 0**: Data contradicts hypothesis
 
-**Important**: CI values depend on:
-
-- Number of variables (more variables → harder to achieve high CI)
-- Strength of correlations (stronger correlations → clearer patterns)
-- Complexity of hypothesis (simpler patterns easier to detect)
+**Important**: CI values depend on number of variables, correlation strength, and hypothesis complexity.
 
 ### p-values
 
-**Statistical significance**:
+**Conventional thresholds**:
 
-- **p < 0.05**: Significant support (conventional threshold)
+- **p < 0.05**: Significant support
 - **p < 0.01**: Strong support
 - **p < 0.001**: Very strong support
-- **p > 0.05**: No significant support
 
-**Interpretation**: The probability of obtaining this CI (or better) by chance alone.
+**Interpretation**: Probability of obtaining CI this high (or higher) by chance alone.
 
-**Note**: p-values depend on the permutation algorithm's random seed. For exact reproducibility, set `np.random.seed()` before running tests.
+## The Ordering Vector
 
-### Agreements vs. Predictions
+The ordering vector encodes your hypothesis. For n variables, it has length n(n-1)/2 (one value per unique pair).
 
-**Ratio matters**:
+### Example: Circular6
 
-- 45 agreements out of 50 predictions (90%) = excellent fit
-- 45 agreements out of 100 predictions (45%) = poor fit
+For a 6-variable circumplex:
 
-Always consider both:
+```text
+        1
+      6   2
+     5     3
+        4
+```
 
-- **Absolute count**: How many predictions satisfied?
-- **Proportion**: What percentage of predictions satisfied?
+The preset `circular6 = [1, 2, 3, 2, 1, 1, 2, 3, 2, 1, 2, 3, 1, 2, 1]` encodes:
 
-The CI automatically accounts for this by normalizing.
+- Pairs with value 1: Adjacent pairs (strongest correlations)
+- Pairs with value 2: Alternate pairs (intermediate)
+- Pairs with value 3: Opposite pairs (weakest)
+
+Lower numbers = predicted higher correlations.
 
 ## Common Applications
 
 ### Interpersonal Circumplex (IPC)
 
-Test if interpersonal scales follow the classic two-dimensional circular structure (Leary, 1957; Wiggins, 1979):
+Test if interpersonal scales follow the classic two-dimensional circular structure:
 
 ```python
 result = rthor.rthor_test(ipc_matrix, order="circular8")
@@ -173,72 +136,42 @@ Test Russell's (1980) circumplex model of emotions:
 result = rthor.rthor_test(emotion_matrix, order="circular8")
 ```
 
-### Custom Theoretical Models
+### Custom Models
 
 Test any hypothesized ordering:
 
 ```python
-# Hypothesis: Variables form 3 clusters with specific ordering
-custom_order = [1, 1, 2, 2, 2, 3, 3, 3, 3, 3]
+# Linear ordering: 1 < 2 < 3 < 4
+custom_order = [1, 2, 3, 2, 3, 3]
 result = rthor.rthor_test(matrix, order=custom_order)
 ```
 
-## Advantages of RTHOR
+## Method Advantages
 
-1. **Theory-driven**: Directly tests your theoretical predictions
-2. **Distribution-free**: No parametric assumptions (uses permutation test)
+1. **Theory-driven**: Directly tests theoretical predictions
+2. **Distribution-free**: No parametric assumptions (permutation test)
 3. **Flexible**: Works with any hypothesized ordering
 4. **Interpretable**: CI provides intuitive effect size
-5. **Validated**: Widely used since 1987, exact R parity in rthor
+5. **Validated**: Exact parity with R implementation
 
-## Limitations
+## References
 
-1. **Pre-specified hypothesis required**: Can't explore patterns post-hoc
-2. **Sensitive to violations**: A few strong violations can lower CI substantially
-3. **Not a fit index**: Doesn't tell you _how_ to improve your model
-4. **Correlation-based**: Assumes linear relationships between variables
+**Original Method:**
 
-## Relationship to Other Methods
+- Hubert, L. J., & Arabie, P. (1987). Evaluating order hypotheses within proximity matrices. _Psychological Bulletin_, 102(1), 172-178. <https://doi.org/10.1037/0033-2909.102.1.172>
 
-### vs. Confirmatory Factor Analysis (CFA)
+**R Implementation:**
 
-- **CFA**: Tests a full structural model with loadings and fit indices
-- **RTHOR**: Tests only the ordering of correlations (simpler, more focused)
+- Gurtman, M. B. (2021). RTHORR: Randomization Tests of Hypothesized Order Relations [R package].
 
-**Use RTHOR when**: You want to test ordinal predictions about correlations without specifying a full measurement model.
-
-### vs. Multidimensional Scaling (MDS)
-
-- **MDS**: Visualizes distances between variables
-- **RTHOR**: Statistically tests a specific hypothesis
-
-**Use both**: MDS for exploration, RTHOR for confirmation.
-
-### vs. Correlation Matrix Tests
-
-- **Correlation tests**: Test individual correlations or overall pattern
-- **RTHOR**: Tests specific ordering predictions
-
-**RTHOR advantage**: More powerful for detecting circumplex patterns.
-
-## Further Reading
-
-### Original Papers
-
-- Hubert, L. J., & Arabie, P. (1987). Evaluating order hypotheses within proximity matrices. _Psychological Bulletin_, 102(1), 172-178.
-
-### R Implementation
-
-- Yentes, R. D., & Wilhelm, F. (2018). RTHORR: Randomization Test for Hypothesized Order Relations. R package version 1.0.1.
-
-### Applications
+**Applications:**
 
 - Gurtman, M. B., & Pincus, A. L. (2003). The circumplex model: Methods and research applications. In _Handbook of psychology_ (pp. 407-428).
 - Browne, M. W. (1992). Circumplex models for correlation matrices. _Psychometrika_, 57(4), 469-497.
 
 ## Next Steps
 
-- See [Input Formats](input-formats.md) for data preparation
-- Try [Basic Usage Example](../examples/basic-usage.py)
-- Explore [Advanced Features](../examples/advanced-features.py)
-- Check [API Reference](../api.md) for function details
+- See [Paper Validation](../examples/paper-validation.py) - Verification against Hubert & Arabie (1987)
+- Try [Basic Usage](../examples/basic-usage.py) - Getting started examples
+- Explore [Advanced Features](../examples/advanced-features.py) - Custom orderings and comparisons
+- Check [API Reference](../api.md) - Complete function documentation

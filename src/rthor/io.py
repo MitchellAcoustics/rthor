@@ -13,32 +13,36 @@ def read_correlation_matrices(
     """Read correlation matrices from text file.
 
     Args:
-    filepath : Path or str
+    filepath
         Path to input file containing correlation matrices
-    n : int
+    n
         Number of variables (matrix dimension)
-    nmat : int
+    nmat
         Number of matrices in the file
 
     Returns:
-    dmatm : np.ndarray
+    dmatm
         3D array of correlation matrices (n x n x nmat)
 
     Notes:
     Translated from RTHORR/R/randall.R lines 49-67.
 
     Input file format:
+
     - Lower triangular matrices including diagonal
     - Values separated by whitespace
     - Each matrix starts with diagonal element (1.00)
     - Example for n=3:
+
         1.00
          .62 1.00
          .40 .62 1.00
 
     The R code reads this using scan() and fills the matrix in two passes:
+
     1. Upper triangle (i <= j)
     2. Lower triangle (i >= j)
+
     This creates a symmetric matrix.
 
     """

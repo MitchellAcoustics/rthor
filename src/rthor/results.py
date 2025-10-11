@@ -87,9 +87,7 @@ class RTHORResult:
     def to_dict(self) -> dict[str, Any]:
         """Convert results to dictionary for serialization.
 
-        Returns
-        -------
-        dict
+        Returns:
             Dictionary containing all result data
 
         """
@@ -122,39 +120,31 @@ class ComparisonResult:
     This class encapsulates both individual matrix RTHOR tests and pairwise
     comparisons between matrices.
 
-    Attributes
-    ----------
-    rthor_results : pd.DataFrame
-        Individual RTHOR test results for each matrix
-        (same format as RTHORResult.results)
-    comparisons : pd.DataFrame
-        Pairwise comparison results with columns:
-        - matrix1: First matrix identifier
-        - matrix2: Second matrix identifier
-        - both_agree: Count of predictions both matrices satisfy
-        - only1: Count satisfied only by matrix 1
-        - only2: Count satisfied only by matrix 2
-        - neither: Count satisfied by neither matrix
-        - ci: Comparison Correspondence Index
-        - p_value: Randomization test p-value
-    n_matrices : int
-        Number of matrices analyzed
-    n_variables : int
-        Number of variables in each matrix
-    order : np.ndarray
-        The hypothesized ordering used for analysis
-    n_predictions : int
-        Total number of hypothesized predictions
-    n_permutations : int
-        Number of permutations used in randomization test
+    Attributes:
+        rthor_results: Individual RTHOR test results for each matrix
+            (same format as RTHORResult.results)
+        comparisons: Pairwise comparison results with columns:
 
-    Examples
-    --------
-    >>> import rthor
-    >>> result = pythor.compare_matrices("correlations.txt", order="circular6")
-    >>> print(result.summary())
-    >>> result.rthor_results  # Individual matrix results
-    >>> result.comparisons  # Pairwise comparison results
+            - `matrix1`: First matrix identifier
+            - `matrix2`: Second matrix identifier
+            - `both_agree`: Count of predictions both matrices satisfy
+            - `only1`: Count satisfied only by matrix 1
+            - `only2`: Count satisfied only by matrix 2
+            - `neither`: Count satisfied by neither matrix
+            - `ci`: Comparison Correspondence Index
+            - `p_value`: Randomization test p-value
+        n_matrices: Number of matrices analyzed
+        n_variables: Number of variables in each matrix
+        order: The hypothesized ordering used for analysis
+        n_predictions: Total number of hypothesized predictions
+        n_permutations: Number of permutations used in randomization test
+
+    Examples:
+        >>> import rthor
+        >>> result = pythor.compare_matrices("correlations.txt", order="circular6")
+        >>> print(result.summary())
+        >>> result.rthor_results  # Individual matrix results
+        >>> result.comparisons  # Pairwise comparison results
 
     """
 
@@ -169,9 +159,7 @@ class ComparisonResult:
     def summary(self) -> str:
         """Generate formatted summary of results.
 
-        Returns
-        -------
-        str
+        Returns:
             Multi-line summary string with key statistics
 
         """
@@ -240,9 +228,7 @@ class ComparisonResult:
     def to_dict(self) -> dict[str, Any]:
         """Convert results to dictionary for serialization.
 
-        Returns
-        -------
-        dict
+        Returns:
             Dictionary containing all result data
 
         """

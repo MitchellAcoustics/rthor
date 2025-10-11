@@ -82,6 +82,7 @@ lint.per-file-ignores."docs/examples/*" = [
     "ERA001",
     "INP001",
     "RUF003",
+    "T201",
 ]
 lint.per-file-ignores."tests*" = ["ERA001", "INP001", "PLR2004", "S101"]
 
@@ -109,14 +110,7 @@ env_run_base = {commands = [
 ], dependency_groups = [
     "test",
 ]}
-env.docs = {commands = [
-    [
-        "mkdocs",
-        "build",
-    ],
-], dependency_groups = [
-    "docs",
-]}
+env.docs = {commands = [["mkdocs", "build"]], dependency_groups = ["docs"]}
 gh.python."3.11" = ["py311"]
 gh.python."3.12" = ["py312"]
 gh.python."3.13" = ["py313"]

@@ -20,6 +20,7 @@ theme:
     - navigation.path
     - navigation.top
     - navigation.indexes
+    - navigation.sections
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
@@ -40,17 +41,20 @@ theme:
 
 nav:
   - Overview: index.md
-  - Getting Started:
-      - Installation: user-guide/installation.md
-      - Quick Start: user-guide/quickstart.md
+  - Installation: user-guide/installation.md
   - Examples:
       - Basic Usage: examples/basic-usage.py
       - Advanced Features: examples/advanced-features.py
-  - User Guide:
-      - Core Concepts: user-guide/concepts.md
-      - Input Formats: user-guide/input-formats.md
-      - Interpreting Results: user-guide/results.md
-  - API Reference: api.md
+      - Paper Validation: examples/paper-validation.py
+  - Core Concepts: user-guide/concepts.md
+  - API Reference:
+      - Overview: api/overview.md
+      - Core Functions: api/api.md
+      - Result Classes: api/result-classes.md
+      - Reference:
+          - api/reference/index.md
+          - api/reference/core.md
+          - api/reference/input.md
   - License: LICENSE.md
 
 markdown_extensions:
@@ -86,6 +90,10 @@ plugins:
             merge_init_into_class: true
             show_symbol_type_heading: true # waiting for general release
             show_symbol_type_toc: true
+            show_source: true
+            show_root_heading: true
+            show_signature: true
+            members_order: source
             modernize_annotations: true
             summary: true
             show_submodules: true

@@ -1,91 +1,15 @@
-# API Reference
+# Overview
 
-## Overview
+`rthor` provides a simple, high-level API for testing correlation matrices against hypothesized orderings. The main functions are:
 
-rthor provides a simple, high-level API for testing correlation matrices against hypothesized orderings. The main functions are:
-
-- **`rthor_test()`**: Test one or more correlation matrices
-- **`compare_matrices()`**: Compare multiple matrices pairwise
+- [**`rthor_test()`**][rthor.rthor_test]: Test one or more correlation matrices
+- [**`compare_matrices()`**][rthor.compare_matrices]: Compare multiple matrices pairwise
 
 Results are returned as dataclass objects with convenient methods for viewing and exporting.
 
-## Core Functions
-
-### rthor_test
-
-::: rthor.rthor_test
-options:
-show_root_heading: true
-show_source: false
-members_order: source
-
-### compare_matrices
-
-::: rthor.compare_matrices
-options:
-show_root_heading: true
-show_source: false
-members_order: source
-
-## Result Classes
-
-### RTHORResult
-
-::: rthor.RTHORResult
-options:
-show_root_heading: true
-show_source: false
-members_order: source
-show_signature: false
-
-The main result object returned by `rthor_test()`. Key attributes:
-
-- **`results`**: pandas DataFrame with test results for each matrix
-- **`n_matrices`**: Number of matrices tested
-- **`n_variables`**: Number of variables per matrix
-- **`order`**: The hypothesized ordering used
-- **`n_predictions`**: Total number of predictions tested
-- **`n_permutations`**: Number of permutations (default: 5000)
-
-Methods:
-
-- **`summary()`**: Get formatted summary string
-- **`to_dict()`**: Convert to dictionary (useful for JSON export)
-
-### ComparisonResult
-
-::: rthor.ComparisonResult
-options:
-show_root_heading: true
-show_source: false
-members_order: source
-show_signature: false
-
-Result object for pairwise matrix comparisons from `compare_matrices()`. Key attributes:
-
-- **`rthor_results`**: pandas DataFrame with individual RTHOR results
-- **`comparisons`**: pandas DataFrame with pairwise comparison results
-- **`n_matrices`**: Number of matrices compared
-- **`n_variables`**: Number of variables per matrix
-- **`order`**: The hypothesized ordering used
-
-The `comparisons` DataFrame includes:
-
-- **`both_agree`**: Predictions satisfied by both matrices
-- **`only1`**: Predictions satisfied only by matrix 1
-- **`only2`**: Predictions satisfied only by matrix 2
-- **`neither`**: Predictions satisfied by neither
-- **`ci`**: Comparison CI (positive means matrix 2 fits better)
-- **`p_value`**: Statistical significance of difference
-
-Methods:
-
-- **`summary()`**: Get formatted summary string
-- **`to_dict()`**: Convert to dictionary (useful for JSON export)
-
 ## Input Formats
 
-rthor accepts multiple input formats for flexibility:
+`rthor` accepts multiple input formats for flexibility:
 
 ### NumPy Arrays
 
@@ -131,7 +55,7 @@ File format: Lower triangular matrices including diagonal, whitespace-separated 
 
 ## Preset Orderings
 
-rthor includes two preset orderings for common circumplex models:
+`rthor` includes two preset orderings for common circumplex models:
 
 ### circular6
 
@@ -165,7 +89,7 @@ result = rthor.rthor_test(matrix, order=custom_order)
 
 The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length k×(k-1)/2.
 
-See the [Advanced Features](examples/advanced-features.py) example for detailed explanation of custom orderings.
+See the [Advanced Features](../examples/advanced-features.py) example for detailed explanation of custom orderings.
 
 ## Statistical Interpretation
 
@@ -238,7 +162,6 @@ group2_ci = result.results.loc[result.results['label'].str.contains('Group2'), '
 
 ## See Also
 
-- [Basic Usage Example](examples/basic-usage.py) - Getting started guide
-- [Advanced Features](examples/advanced-features.py) - Custom orderings, comparisons
-- [Core Concepts](user-guide/concepts.md) - Theoretical background
-- [Paper Validation](examples/paper-validation.py) - Verification against Hubert & Arabie (1987)
+- [Basic Usage Example](../examples/basic-usage.py) - Getting started guide
+- [Advanced Features](../examples/advanced-features.py) - Custom orderings, comparisons
+- [User Guide](../user-guide/concepts.md) - Theoretical background
