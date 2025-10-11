@@ -61,7 +61,7 @@ print(comparison.comparisons)  # Pairwise differences
 
 ## Installation
 
-### From PyPI (when released)
+### From PyPI
 
 ```sh
 pip install rthor
@@ -123,7 +123,7 @@ Compare multiple correlation matrices pairwise to determine which fits the hypot
 
 ## Documentation
 
-Full documentation is available at [https://mitchellacoustics.github.io/rthor](https://mitchellacoustics.github.io/rthor)
+Full documentation is available at [https://drandrewmitchell.com/rthor](https://drandrewmitchell.com/rthor)
 
 ## Testing
 
@@ -158,7 +158,7 @@ This project uses:
 Install development dependencies:
 
 ```sh
-pip install -e .[dev]
+UV sync --all-extras
 ```
 
 Run pre-commit hooks:
