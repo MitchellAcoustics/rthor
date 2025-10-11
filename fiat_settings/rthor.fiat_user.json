@@ -1,0 +1,325 @@
+{
+  "user_inputs": {
+    "functions_nodes": {
+      "from_file": {
+        "filepath": {
+          "name": "filepath",
+          "data": {
+            "type": "Primitive",
+            "value": "/Users/mitch/Documents/GitHub/rthor/tests/fixtures/input.txt"
+          }
+        },
+        "order": {
+          "name": "order",
+          "data": {
+            "type": "Unspecified"
+          }
+        },
+        "n_matrices": {
+          "name": "n_matrices",
+          "data": {
+            "type": "Unspecified"
+          }
+        },
+        "n_variables": {
+          "name": "n_variables",
+          "data": {
+            "type": "Unspecified"
+          }
+        }
+      },
+      "rthor_test": {
+        "labels": {
+          "name": "labels",
+          "data": {
+            "type": "Unspecified"
+          }
+        }
+      },
+      "get_results": {}
+    }
+  },
+  "gui_options": {
+    "from_file": {
+      "function_node_with_gui": {
+        "_inputs_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_outputs_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_doc_expanded": {
+          "inside_node": false,
+          "focused": true
+        },
+        "fiat_tuning_expanded": {
+          "inside_node": false,
+          "focused": true
+        },
+        "_internal_state_gui_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_function_node": {
+          "inputs": {
+            "filepath": {
+              "cb_options": {},
+              "expanded": true
+            },
+            "order": {
+              "cb_options": {},
+              "expanded": true
+            },
+            "n_matrices": {
+              "cb_options": {},
+              "expanded": true
+            },
+            "n_variables": {
+              "cb_options": {},
+              "expanded": true
+            }
+          },
+          "outputs": {
+            "0": {
+              "cb_options": {},
+              "expanded": true
+            },
+            "1": {
+              "cb_options": {},
+              "expanded": true
+            },
+            "2": {
+              "cb_options": {},
+              "expanded": true
+            },
+            "3": {
+              "cb_options": {},
+              "expanded": true
+            }
+          }
+        },
+        "_backup_expanded_states": {
+          "inside_node": null,
+          "focused": null
+        },
+        "_focused_function_visible": false
+      },
+      "function_node": {
+        "inputs": {
+          "filepath": {
+            "cb_options": {},
+            "expanded": true
+          },
+          "order": {
+            "cb_options": {},
+            "expanded": true
+          },
+          "n_matrices": {
+            "cb_options": {},
+            "expanded": true
+          },
+          "n_variables": {
+            "cb_options": {},
+            "expanded": true
+          }
+        },
+        "outputs": {
+          "0": {
+            "cb_options": {},
+            "expanded": true
+          },
+          "1": {
+            "cb_options": {},
+            "expanded": true
+          },
+          "2": {
+            "cb_options": {},
+            "expanded": true
+          },
+          "3": {
+            "cb_options": {},
+            "expanded": true
+          }
+        }
+      }
+    },
+    "rthor_test": {
+      "function_node_with_gui": {
+        "_inputs_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_outputs_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_doc_expanded": {
+          "inside_node": false,
+          "focused": true
+        },
+        "fiat_tuning_expanded": {
+          "inside_node": false,
+          "focused": true
+        },
+        "_internal_state_gui_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_function_node": {
+          "inputs": {
+            "data": {
+              "cb_options": {},
+              "expanded": false
+            },
+            "order": {
+              "cb_options": {},
+              "expanded": false
+            },
+            "labels": {
+              "cb_options": {},
+              "expanded": true
+            },
+            "n_matrices": {
+              "cb_options": {},
+              "expanded": false
+            },
+            "n_variables": {
+              "cb_options": {},
+              "expanded": false
+            }
+          },
+          "outputs": {
+            "0": {
+              "cb_options": {},
+              "expanded": true
+            }
+          }
+        },
+        "_backup_expanded_states": {
+          "inside_node": null,
+          "focused": null
+        },
+        "_focused_function_visible": false
+      },
+      "function_node": {
+        "inputs": {
+          "data": {
+            "cb_options": {},
+            "expanded": false
+          },
+          "order": {
+            "cb_options": {},
+            "expanded": false
+          },
+          "labels": {
+            "cb_options": {},
+            "expanded": true
+          },
+          "n_matrices": {
+            "cb_options": {},
+            "expanded": false
+          },
+          "n_variables": {
+            "cb_options": {},
+            "expanded": false
+          }
+        },
+        "outputs": {
+          "0": {
+            "cb_options": {},
+            "expanded": true
+          }
+        }
+      }
+    },
+    "get_results": {
+      "function_node_with_gui": {
+        "_inputs_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_outputs_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_doc_expanded": {
+          "inside_node": false,
+          "focused": true
+        },
+        "fiat_tuning_expanded": {
+          "inside_node": false,
+          "focused": true
+        },
+        "_internal_state_gui_expanded": {
+          "inside_node": true,
+          "focused": true
+        },
+        "_function_node": {
+          "inputs": {
+            "rthor_result": {
+              "cb_options": {},
+              "expanded": false
+            }
+          },
+          "outputs": {
+            "0": {
+              "cb_options": {
+                "widget_size_em": [50.0, 15.0],
+                "column_widths_em": {
+                  "matrix": 3.5999999046325684,
+                  "predictions": 5.5333333015441895,
+                  "agreements": 5.666666507720947,
+                  "ties": 2.4000000953674316,
+                  "ci": 8.199999809265137,
+                  "p_value": 9.133333206176758,
+                  "label": 2.933333396911621
+                },
+                "rows_per_page_node": 10,
+                "rows_per_page_classic": 20,
+                "current_page_start_idx": 0,
+                "sort_by": []
+              },
+              "expanded": true
+            }
+          }
+        },
+        "_backup_expanded_states": {
+          "inside_node": null,
+          "focused": null
+        },
+        "_focused_function_visible": false
+      },
+      "function_node": {
+        "inputs": {
+          "rthor_result": {
+            "cb_options": {},
+            "expanded": false
+          }
+        },
+        "outputs": {
+          "0": {
+            "cb_options": {
+              "widget_size_em": [50.0, 15.0],
+              "column_widths_em": {
+                "matrix": 3.5999999046325684,
+                "predictions": 5.5333333015441895,
+                "agreements": 5.666666507720947,
+                "ties": 2.4000000953674316,
+                "ci": 8.199999809265137,
+                "p_value": 9.133333206176758,
+                "label": 2.933333396911621
+              },
+              "rows_per_page_node": 10,
+              "rows_per_page_classic": 20,
+              "current_page_start_idx": 0,
+              "sort_by": []
+            },
+            "expanded": true
+          }
+        }
+      }
+    }
+  }
+}
