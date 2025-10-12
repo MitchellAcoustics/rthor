@@ -308,10 +308,9 @@ class TestResultObjectMethods:
         )
 
         summary = result.summary()
-        assert isinstance(summary, str)
-        assert "RTHOR Analysis Summary" in summary
-        assert "Matrices analyzed: 3" in summary
-        assert "Variables per matrix: 6" in summary
+        assert isinstance(summary, dict)
+        assert summary["n_matrices"] == 3
+        assert summary["n_variables"] == 6
 
     def test_comparison_result_summary(
         self,
@@ -326,9 +325,9 @@ class TestResultObjectMethods:
         )
 
         summary = result.summary()
-        assert isinstance(summary, str)
-        assert "Matrix Comparison Analysis Summary" in summary
-        assert "Matrices analyzed: 3" in summary
+        assert isinstance(summary, dict)
+        assert summary["n_matrices"] == 3
+        assert summary["n_permutations"] == 720
 
     def test_rthor_result_to_dict(
         self,
