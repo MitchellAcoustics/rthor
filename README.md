@@ -333,13 +333,14 @@ If you use rthor in your research, please cite both this package and the origina
 
 **rthor (Python implementation):**
 
-````bibtex
+```bibtex
 @software{Mitchell2025rthor,
   author  = {Mitchell, Andrew},
   license = {MIT},
   title   = {{rthor: Python implementation of RTHOR (Randomization test of hypothesized order relations)}},
   url     = {https://github.com/MitchellAcoustics/rthor}
-}```
+}
+```
 
 **Original RTHOR method:**
 
@@ -353,7 +354,8 @@ If you use rthor in your research, please cite both this package and the origina
   volume  = {102},
   journal = {Psychological Bulletin},
   doi     = {10.1037/0033-2909.102.1.172}
-}```
+}
+```
 
 **R RTHORR package:**
 
@@ -365,7 +367,8 @@ If you use rthor in your research, please cite both this package and the origina
   year   = {2025},
   note   = {R package version 0.1.3, commit c3edb36287c77733ec0a23236b478cc53c1cac0f},
   url    = {https://github.com/michaellynnmorris/RTHORR}
-}```
+}
+```
 
 ## License
 
@@ -377,4 +380,3 @@ This project is developed in collaboration with the
 [Centre for Advanced Research Computing](https://ucl.ac.uk/arc), University College London.
 
 `rthor` is a Python port of the R package RTHORR by Michael B. Gurtman. The implementation maintains exact numerical parity with the original R version while providing a Pythonic interface and improved performance through vectorization.
-````
