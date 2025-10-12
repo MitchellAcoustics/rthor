@@ -1,4 +1,4 @@
-"""Formatting utilities for displaying RTHOR results."""
+"""Compact formatting utilities for displaying RTHOR results."""
 
 from __future__ import annotations
 
@@ -8,24 +8,141 @@ from rthor._utils import is_installed, requires
 
 
 def print_results(results: pd.DataFrame, *, use_rich: bool = True) -> None:
-    """Print RTHOR test results in a formatted table.
-
-    Args:
-        results: DataFrame from test() containing test results
-        use_rich: If True and rich is installed, use rich formatting.
-            If False or rich not available, use plain text.
-
-    Examples:
-        >>> import rthor
-        >>> from rthor.formatting import print_results
-        >>> df = rthor.test(data, order="circular6")
-        >>> print_results(df)
-
-    """
+    """Print RTHOR test results in a compact, interpretable format."""
     if use_rich and is_installed("rich"):
         _print_results_rich(results)
     else:
         _print_results_plain(results)
+
+
+def _interpret_ci(ci: float) -> tuple[str, str]:
+    """Interpret CI value and return (interpretation, quality)."""
+    if ci >= 0.7:
+        return "Excellent fit", "excellent"
+    if ci >= 0.5:
+        return "Good fit", "good"
+    if ci >= 0.3:
+        return "Moderate fit", "moderate"
+    if ci >= 0.1:
+        return "Weak fit", "weak"
+    if ci >= 0:
+        return "Minimal fit", "minimal"
+    return "Poor fit", "poor"
+
+
+def _print_results_plain(results: pd.DataFrame) -> None:
+    """Generate concise plain text output of RTHOR results."""
+    n_mats = len(results)
+    n_vars = int(results["n_variables"].iloc[0])
+    n_preds = int(results["predictions"].iloc[0])
+    n_perms = int(results["n_permutations"].iloc[0])
+
+    print("=" * 70)  # noqa: T201
+    print("RTHOR TEST RESULTS")  # noqa: T201
+    print("=" * 70)  # noqa: T201
+    print(  # noqa: T201
+        f"{n_mats} {'matrix' if n_mats == 1 else 'matrices'} • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations"
+    )
+    print()  # noqa: T201
+
+    # Results for each matrix
+    for idx, (_, row) in enumerate(results.iterrows(), 1):
+        label = row["label"] if row["label"] else f"Matrix {row['matrix']}"
+        ci = row["ci"]
+        p_val = row["p_value"]
+        agreements = int(row["agreements"])
+        violations = n_preds - agreements - int(row["ties"])
+
+        # Interpretation
+        interpretation, _ = _interpret_ci(ci)
+
+        # Significance
+        if p_val < 0.001:
+            sig = "p < .001 ***"
+        elif p_val < 0.01:
+            sig = "p < .01 **"
+        elif p_val < 0.05:
+            sig = "p < .05 *"
+        else:
+            sig = f"p = {p_val:.3f} ns"
+
+        print(f"[{idx}] {label}")  # noqa: T201
+        print(f"    CI = {ci:.3f} ({interpretation}) • {sig}")  # noqa: T201
+        print(  # noqa: T201
+            f"    {agreements}/{n_preds} satisfied ({agreements / n_preds * 100:.0f}%), {violations}/{n_preds} violated ({violations / n_preds * 100:.0f}%)"
+        )
+        print()  # noqa: T201
+
+    print("=" * 70)  # noqa: T201
+
+
+def _print_results_rich(results: pd.DataFrame) -> None:
+    """Create compact rich formatted output of RTHOR results."""
+    requires("rich", reason="use_rich=True", extras="rich")
+    from rich import box
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.text import Text
+
+    n_mats = len(results)
+    n_vars = int(results["n_variables"].iloc[0])
+    n_preds = int(results["predictions"].iloc[0])
+    n_perms = int(results["n_permutations"].iloc[0])
+
+    console = Console()
+
+    # Header
+    console.print("\n[bold cyan]RTHOR TEST RESULTS[/]")
+    console.print(
+        f"[dim]{n_mats} {'matrix' if n_mats == 1 else 'matrices'} • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations[/]\n"
+    )
+
+    # Results for each matrix
+    for idx, (_, row) in enumerate(results.iterrows(), 1):
+        label = row["label"] if row["label"] else f"Matrix {row['matrix']}"
+        ci = row["ci"]
+        p_val = row["p_value"]
+        agreements = int(row["agreements"])
+        violations = n_preds - agreements - int(row["ties"])
+
+        # Interpretation
+        interpretation, quality = _interpret_ci(ci)
+
+        # Color based on quality
+        if quality in ("excellent", "good"):
+            ci_color = "bright_green"
+        elif quality == "moderate":
+            ci_color = "yellow"
+        else:
+            ci_color = "red"
+
+        # Significance
+        if p_val < 0.001:
+            sig = "[bright_red]p < .001 ***[/]"
+        elif p_val < 0.01:
+            sig = "[yellow]p < .01 **[/]"
+        elif p_val < 0.05:
+            sig = "[green]p < .05 *[/]"
+        else:
+            sig = f"[dim]p = {p_val:.3f} ns[/]"
+
+        result_text = Text()
+        result_text.append(f"[{idx}] {label}\n", style="bold white")
+        result_text.append("    CI = ", style="white")
+        result_text.append(f"{ci:.3f}", style=f"bold {ci_color}")
+        result_text.append(f" ({interpretation}) • {sig}\n", style="white")
+        result_text.append(
+            f"    {agreements}/{n_preds} satisfied ({agreements / n_preds * 100:.0f}%), ",
+            style="green",
+        )
+        result_text.append(
+            f"{violations}/{n_preds} violated ({violations / n_preds * 100:.0f}%)\n",
+            style="red",
+        )
+
+        console.print(Panel(result_text, box=box.ROUNDED, padding=(0, 1)))
+
+    console.print()
 
 
 def print_comparison(
@@ -34,180 +151,36 @@ def print_comparison(
     *,
     use_rich: bool = True,
 ) -> None:
-    """Print comparison results in formatted tables.
-
-    Args:
-        individual: DataFrame with individual matrix results
-        pairwise: DataFrame with pairwise comparison results
-        use_rich: If True and rich is installed, use rich formatting.
-            If False or rich not available, use plain text.
-
-    Examples:
-        >>> import rthor
-        >>> from rthor.formatting import print_comparison
-        >>> individual, pairwise = rthor.compare(data, order="circular6")
-        >>> print_comparison(individual, pairwise)
-
-    """
+    """Print comparison results in a compact, interpretable format."""
     if use_rich and is_installed("rich"):
         _print_comparison_rich(individual, pairwise)
     else:
         _print_comparison_plain(individual, pairwise)
 
 
-def _print_results_plain(results: pd.DataFrame) -> None:
-    """Generate plain text summary of RTHOR results."""
-    # Extract metadata from first row
-    n_perms = int(results["n_permutations"].iloc[0])
-    n_vars = int(results["n_variables"].iloc[0])
-    n_mats = len(results)
-    n_preds = int(results["predictions"].iloc[0])
-
-    lines = [
-        "RTHOR Analysis Summary",
-        "=" * 50,
-        f"Matrices analyzed: {n_mats}",
-        f"Variables per matrix: {n_vars}",
-        f"Hypothesized predictions: {n_preds}",
-        f"Permutations tested: {n_perms}",
-        "",
-        "Results:",
-        "-" * 50,
-    ]
-
-    # Add key statistics
-    for _, row in results.iterrows():
-        label = row["label"] if row["label"] else f"Matrix {row['matrix']}"
-        ci = row["ci"]
-        p_val = row["p_value"]
-        sig = (
-            "***"
-            if p_val < 0.001
-            else "**"
-            if p_val < 0.01
-            else "*"
-            if p_val < 0.05
-            else ""
-        )
-        lines.append(f"{label:30s} CI={ci:7.4f}  p={p_val:.4f} {sig}")
-
-    lines.extend(
-        [
-            "",
-            "Significance codes: *** p<0.001, ** p<0.01, * p<0.05",
-        ]
-    )
-
-    print("\n".join(lines))  # noqa: T201
-
-
-def _print_results_rich(results: pd.DataFrame) -> None:
-    """Create and print a rich table displaying RTHOR results."""
-    requires("rich", reason="use_rich=True", extras="rich")
-    import rich.box  # noqa: PLC0415
-    import rich.table  # noqa: PLC0415
-    from rich.console import Console  # noqa: PLC0415
-
-    # Extract metadata
-    n_perms = int(results["n_permutations"].iloc[0])
-    n_vars = int(results["n_variables"].iloc[0])
-    n_mats = len(results)
-    n_preds = int(results["predictions"].iloc[0])
-
-    # Create metadata table
-    meta_table = rich.table.Table(
-        title="RTHOR Analysis Results",
-        box=rich.box.DOUBLE_EDGE,
-        show_header=True,
-        header_style="bold magenta",
-    )
-    meta_table.add_column("Metric", style="dim")
-    meta_table.add_column("Value", style="bold cyan")
-    meta_table.add_row("Matrices analyzed", str(n_mats))
-    meta_table.add_row("Variables per matrix", str(n_vars))
-    meta_table.add_row("Hypothesized predictions", str(n_preds))
-    meta_table.add_row("Permutations tested", str(n_perms))
-
-    # Create results table
-    results_table = rich.table.Table(
-        title="Individual Matrix Results",
-        box=rich.box.SIMPLE,
-        show_header=True,
-        header_style="bold yellow",
-    )
-
-    results_table.add_column("Matrix", justify="right", style="cyan")
-    results_table.add_column("Label", style="white")
-    results_table.add_column("CI", justify="right", style="green")
-    results_table.add_column("p-value", justify="right", style="yellow")
-    results_table.add_column("Sig.", justify="center", style="bold red")
-    results_table.add_column("Predictions", justify="right", style="dim")
-    results_table.add_column("Agreements", justify="right", style="dim")
-
-    # Add rows for each matrix
-    for _, row in results.iterrows():
-        label = row["label"] if row["label"] else f"Matrix {row['matrix']}"
-        ci = row["ci"]
-        p_val = row["p_value"]
-
-        # Determine significance
-        if p_val < 0.001:
-            sig = "***"
-            sig_style = "bold red"
-        elif p_val < 0.01:
-            sig = "**"
-            sig_style = "bold yellow"
-        elif p_val < 0.05:
-            sig = "*"
-            sig_style = "bold"
-        else:
-            sig = ""
-            sig_style = "dim"
-
-        results_table.add_row(
-            str(row["matrix"]),
-            label,
-            f"{ci:.4f}",
-            f"{p_val:.4f}",
-            f"[{sig_style}]{sig}[/]",
-            str(row["predictions"]),
-            str(row["agreements"]),
-        )
-
-    results_table.caption = "Significance codes: *** p<0.001, ** p<0.01, * p<0.05"
-    results_table.caption_style = "dim italic"
-
-    console = Console()
-    console.print(meta_table)
-    console.print()
-    console.print(results_table)
-
-
 def _print_comparison_plain(individual: pd.DataFrame, pairwise: pd.DataFrame) -> None:
-    """Generate plain text summary of comparison results."""
-    # Extract metadata
-    n_perms = int(individual["n_permutations"].iloc[0])
-    n_vars = int(individual["n_variables"].iloc[0])
+    """Generate concise plain text output of comparison results."""
     n_mats = len(individual)
+    n_vars = int(individual["n_variables"].iloc[0])
     n_preds = int(individual["predictions"].iloc[0])
+    n_perms = int(individual["n_permutations"].iloc[0])
 
-    lines = [
-        "Matrix Comparison Analysis Summary",
-        "=" * 60,
-        f"Matrices analyzed: {n_mats}",
-        f"Variables per matrix: {n_vars}",
-        f"Hypothesized predictions: {n_preds}",
-        f"Permutations tested: {n_perms}",
-        "",
-        "Individual Matrix Results:",
-        "-" * 60,
-    ]
+    print("=" * 70)  # noqa: T201
+    print("RTHOR MATRIX COMPARISON")  # noqa: T201
+    print("=" * 70)  # noqa: T201
+    print(  # noqa: T201
+        f"{n_mats} matrices • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations"
+    )
+    print()  # noqa: T201
 
     # Individual results
+    print("INDIVIDUAL FIT:")  # noqa: T201
     for _, row in individual.iterrows():
-        mat_id = row["matrix"]
+        mat_id = int(row["matrix"])
         ci = row["ci"]
         p_val = row["p_value"]
+        interpretation, _ = _interpret_ci(ci)
+
         sig = (
             "***"
             if p_val < 0.001
@@ -215,24 +188,30 @@ def _print_comparison_plain(individual: pd.DataFrame, pairwise: pd.DataFrame) ->
             if p_val < 0.01
             else "*"
             if p_val < 0.05
-            else ""
+            else "ns"
         )
-        lines.append(f"Matrix {mat_id:2d}  CI={ci:7.4f}  p={p_val:.4f} {sig}")
-
-    lines.extend(
-        [
-            "",
-            "Pairwise Comparisons:",
-            "-" * 60,
-        ]
-    )
+        print(f"  Matrix {mat_id}: CI = {ci:.3f} ({interpretation}) [{sig}]")  # noqa: T201
+    print()  # noqa: T201
 
     # Pairwise comparisons
+    print("PAIRWISE COMPARISONS:")  # noqa: T201
     for _, row in pairwise.iterrows():
         m1 = int(row["matrix1"])
         m2 = int(row["matrix2"])
         ci = row["ci"]
         p_val = row["p_value"]
+        both = int(row["both_agree"])
+        only1 = int(row["only1"])
+        only2 = int(row["only2"])
+
+        # Interpret the comparison
+        if abs(ci) < 0.05:
+            winner = "Similar fit"
+        elif ci > 0:
+            winner = f"Matrix {m2} better"
+        else:
+            winner = f"Matrix {m1} better"
+
         sig = (
             "***"
             if p_val < 0.001
@@ -240,123 +219,122 @@ def _print_comparison_plain(individual: pd.DataFrame, pairwise: pd.DataFrame) ->
             if p_val < 0.01
             else "*"
             if p_val < 0.05
-            else ""
+            else "ns"
         )
-        lines.append(f"Matrix {m1} vs {m2}  CI={ci:7.4f}  p={p_val:.4f} {sig}")
 
-    lines.extend(
-        [
-            "",
-            "Significance codes: *** p<0.001, ** p<0.01, * p<0.05",
-        ]
-    )
+        print(  # noqa: T201
+            f"  {m1} vs {m2}: {winner} (CI = {ci:+.3f}) [{sig}] | Both: {both}, Only {m1}: {only1}, Only {m2}: {only2}"
+        )
 
-    print("\n".join(lines))  # noqa: T201
+    print()  # noqa: T201
+    print("=" * 70)  # noqa: T201
 
 
 def _print_comparison_rich(individual: pd.DataFrame, pairwise: pd.DataFrame) -> None:
-    """Create and print rich tables for comparison results."""
+    """Create compact rich formatted output of comparison results."""
     requires("rich", reason="use_rich=True", extras="rich")
-    import rich.box  # noqa: PLC0415
-    import rich.table  # noqa: PLC0415
-    from rich.console import Console  # noqa: PLC0415
+    from rich import box
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.text import Text
 
-    # Extract metadata
-    n_perms = int(individual["n_permutations"].iloc[0])
-    n_vars = int(individual["n_variables"].iloc[0])
     n_mats = len(individual)
+    n_vars = int(individual["n_variables"].iloc[0])
     n_preds = int(individual["predictions"].iloc[0])
-
-    # Create metadata table
-    meta_table = rich.table.Table(
-        title="Matrix Comparison Analysis",
-        box=rich.box.DOUBLE_EDGE,
-        show_header=True,
-        header_style="bold magenta",
-    )
-    meta_table.add_column("Metric", style="dim")
-    meta_table.add_column("Value", style="bold cyan")
-    meta_table.add_row("Matrices analyzed", str(n_mats))
-    meta_table.add_row("Variables per matrix", str(n_vars))
-    meta_table.add_row("Hypothesized predictions", str(n_preds))
-    meta_table.add_row("Permutations tested", str(n_perms))
-
-    # Create individual results table
-    individual_table = rich.table.Table(
-        title="Individual Matrix Results",
-        box=rich.box.SIMPLE,
-        show_header=True,
-        header_style="bold yellow",
-    )
-    individual_table.add_column("Matrix", justify="right", style="cyan")
-    individual_table.add_column("CI", justify="right", style="green")
-    individual_table.add_column("p-value", justify="right", style="yellow")
-    individual_table.add_column("Sig.", justify="center", style="bold red")
-    individual_table.add_column("Predictions", justify="right", style="dim")
-    individual_table.add_column("Agreements", justify="right", style="dim")
-
-    for _, row in individual.iterrows():
-        sig, sig_style = _get_significance(row["p_value"])
-        individual_table.add_row(
-            str(row["matrix"]),
-            f"{row['ci']:.4f}",
-            f"{row['p_value']:.4f}",
-            f"[{sig_style}]{sig}[/]",
-            str(row["predictions"]),
-            str(row["agreements"]),
-        )
-
-    individual_table.caption = "Significance codes: *** p<0.001, ** p<0.01, * p<0.05"
-    individual_table.caption_style = "dim italic"
-
-    # Create pairwise comparison table
-    pairwise_table = rich.table.Table(
-        title="Pairwise Comparisons",
-        box=rich.box.SIMPLE,
-        show_header=True,
-        header_style="bold yellow",
-    )
-    pairwise_table.add_column("Matrix 1", justify="right", style="cyan")
-    pairwise_table.add_column("Matrix 2", justify="right", style="cyan")
-    pairwise_table.add_column("Both", justify="right", style="dim")
-    pairwise_table.add_column("Only 1", justify="right", style="dim")
-    pairwise_table.add_column("Only 2", justify="right", style="dim")
-    pairwise_table.add_column("Neither", justify="right", style="dim")
-    pairwise_table.add_column("CI", justify="right", style="green")
-    pairwise_table.add_column("p-value", justify="right", style="yellow")
-    pairwise_table.add_column("Sig.", justify="center", style="bold red")
-
-    for _, row in pairwise.iterrows():
-        sig, sig_style = _get_significance(row["p_value"])
-        pairwise_table.add_row(
-            str(int(row["matrix1"])),
-            str(int(row["matrix2"])),
-            str(row["both_agree"]),
-            str(row["only1"]),
-            str(row["only2"]),
-            str(row["neither"]),
-            f"{row['ci']:.4f}",
-            f"{row['p_value']:.4f}",
-            f"[{sig_style}]{sig}[/]",
-        )
-
-    pairwise_table.caption = "Significance codes: *** p<0.001, ** p<0.01, * p<0.05"
-    pairwise_table.caption_style = "dim italic"
+    n_perms = int(individual["n_permutations"].iloc[0])
 
     console = Console()
-    console.print(meta_table)
-    console.print()
-    console.print(individual_table)
-    console.print()
-    console.print(pairwise_table)
 
+    # Header
+    console.print("\n[bold cyan]RTHOR MATRIX COMPARISON[/]")
+    console.print(
+        f"[dim]{n_mats} matrices • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations[/]\n"
+    )
 
-def _get_significance(p_value: float) -> tuple[str, str]:
-    """Get significance symbol and style based on p-value."""
-    if p_value < 0.001:
-        return "***", "bold red"
-    if p_value < 0.01:
-        return "**", "bold yellow"
-    if p_value < 0.05:
-        return "*", "bold"
-    return "", "dim"
+    # Individual results
+    indiv_text = Text()
+    indiv_text.append("INDIVIDUAL FIT\n", style="bold yellow")
+    for _, row in individual.iterrows():
+        mat_id = int(row["matrix"])
+        ci = row["ci"]
+        p_val = row["p_value"]
+        interpretation, quality = _interpret_ci(ci)
+
+        ci_color = (
+            "bright_green"
+            if quality in ("excellent", "good")
+            else "yellow"
+            if quality == "moderate"
+            else "red"
+        )
+        sig = (
+            "***"
+            if p_val < 0.001
+            else "**"
+            if p_val < 0.01
+            else "*"
+            if p_val < 0.05
+            else "ns"
+        )
+
+        indiv_text.append(f"  Matrix {mat_id}: CI = ", style="white")
+        indiv_text.append(f"{ci:.3f}", style=ci_color)
+        indiv_text.append(f" ({interpretation}) [{sig}]\n", style="white")
+
+    console.print(Panel(indiv_text, box=box.ROUNDED, padding=(0, 1)))
+    console.print()
+
+    # Pairwise comparisons
+    console.print("[bold yellow]PAIRWISE COMPARISONS[/]")
+    for _, row in pairwise.iterrows():
+        m1 = int(row["matrix1"])
+        m2 = int(row["matrix2"])
+        ci = row["ci"]
+        p_val = row["p_value"]
+        both = int(row["both_agree"])
+        only1 = int(row["only1"])
+        only2 = int(row["only2"])
+
+        comp_text = Text()
+        comp_text.append(f"{m1} vs {m2}: ", style="cyan")
+
+        # Interpret the comparison
+        if abs(ci) < 0.05:
+            winner = "Similar fit"
+            ci_color = "yellow"
+        elif ci > 0:
+            winner = f"Matrix {m2} better"
+            ci_color = "green"
+        else:
+            winner = f"Matrix {m1} better"
+            ci_color = "green"
+
+        sig_color = (
+            "bright_red"
+            if p_val < 0.001
+            else "yellow"
+            if p_val < 0.01
+            else "green"
+            if p_val < 0.05
+            else "dim"
+        )
+        sig = (
+            "***"
+            if p_val < 0.001
+            else "**"
+            if p_val < 0.01
+            else "*"
+            if p_val < 0.05
+            else "ns"
+        )
+
+        comp_text.append(f"{winner}", style=ci_color)
+        comp_text.append(f" (CI = {ci:+.3f}) ", style="white")
+        comp_text.append(f"[{sig}]", style=sig_color)
+        comp_text.append(
+            f" | Both: {both}, Only {m1}: {only1}, Only {m2}: {only2}", style="dim"
+        )
+
+        console.print(Panel(comp_text, box=box.ROUNDED, padding=(0, 1)))
+
+    console.print()

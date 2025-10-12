@@ -39,11 +39,11 @@ A tuple of two DataFrames: `(individual_results, pairwise_comparisons)`
 
 ## Formatting Functions
 
-Optional functions for pretty-printing results:
+Optional functions for compact, interpretable result display:
 
 ### [`print_results()`][rthor.print_results]
 
-Print formatted table of test() results:
+Print compact, interpreted output of test() results with CI interpretation and significance:
 
 ```python
 import rthor
@@ -60,7 +60,7 @@ df = rthor.test(data, order="circular6", print_results=True)
 
 ### [`print_comparison()`][rthor.print_comparison]
 
-Print formatted tables for comparison results:
+Print compact, interpreted output of comparison results with winner determination:
 
 ```python
 individual, pairwise = rthor.compare(data, order="circular6")

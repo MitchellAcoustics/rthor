@@ -63,8 +63,7 @@ corr_matrices = np.stack([corr_matrix_1, corr_matrix_2, corr_matrix_3], axis=2)
 
 # %%
 # Test single matrix
-df_single = rthor.test(corr_matrix_1, order="circular6")
-rthor.print_results(df_single)
+df_single = rthor.test(corr_matrix_1, order="circular6", print_results=True)
 
 # %% [markdown]
 # ## Testing Multiple Matrices
