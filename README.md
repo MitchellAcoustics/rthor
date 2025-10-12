@@ -303,7 +303,7 @@ This project uses:
 Install development dependencies:
 
 ```sh
-UV sync --all-extras
+uv sync --all-extras
 ```
 
 Run pre-commit hooks:
