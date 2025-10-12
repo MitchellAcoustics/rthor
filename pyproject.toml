@@ -100,7 +100,7 @@ lint.per-file-ignores."docs/examples/*" = [
     "RUF003",
     "T201",
 ]
-lint.per-file-ignores."src/rthor/api.py" = ["PT028"]
+lint.per-file-ignores."src/rthor/rthor.py" = ["PT028"]
 lint.per-file-ignores."tests*" = ["ERA001", "INP001", "PLR2004", "S101"]
 
 [tool.setuptools_scm]

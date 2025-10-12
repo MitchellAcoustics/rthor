@@ -1,8 +1,8 @@
 """rthor - Python implementation of RTHOR."""
 
 from ._version import __version__
-from .api import compare, test
 from .formatting import print_comparison, print_results
+from .rthor import compare, test
 
 __all__ = [
     "__version__",
