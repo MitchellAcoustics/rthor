@@ -2,9 +2,9 @@
 
 ## DataFrame Results
 
-Both [`test()`][rthor.test] and [`compare()`][rthor.compare] return pandas DataFrames containing all test results and metadata.
+Both [`rthor.test()`][rthor.test] and [`rthor.compare()`][rthor.compare] return pandas DataFrames containing all test results and metadata.
 
-### test() Returns
+### `rthor.test()` Returns
 
 A single DataFrame with columns:
 
@@ -20,7 +20,7 @@ A single DataFrame with columns:
 
 Each row represents one tested matrix. Metadata columns (`n_permutations`, `n_variables`) are repeated for tidy data principles.
 
-### compare() Returns
+### `rthor.compare()` Returns
 
 A tuple of two DataFrames: `(individual_results, pairwise_comparisons)`
 
@@ -43,7 +43,7 @@ Optional functions for compact, interpretable result display:
 
 ### [`print_results()`][rthor.print_results]
 
-Print compact, interpreted output of test() results with CI interpretation and significance:
+Print compact, interpreted output of `rthor.test()` results with CI interpretation and significance:
 
 ```python
 import rthor

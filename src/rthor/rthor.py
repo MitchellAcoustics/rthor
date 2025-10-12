@@ -217,9 +217,9 @@ def compare(
         print_results: If True, print formatted results tables before returning.
 
     Returns:
-        Tuple of two DataFrames: (individual_results, pairwise_comparisons)
+        individual_results: Results of individual RTHOR tests for each matrix.
 
-        **individual_results** contains columns:
+            Columns:
 
             - `matrix`: Matrix identifier (1-indexed)
             - `predictions`: Number of hypothesized predictions
@@ -230,19 +230,20 @@ def compare(
             - `label`: Descriptive label for matrix
             - `n_permutations`: Number of permutations tested
             - `n_variables`: Number of variables per matrix
+        pairwise_comparisons: Results of pairwise comparisons between matrices.
 
-        **pairwise_comparisons** contains columns:
+            Columns:
 
-            - `matrix1`: First matrix identifier
-            - `matrix2`: Second matrix identifier
-            - `both_agree`: Predictions both matrices satisfy
-            - `only1`: Predictions only matrix 1 satisfies
-            - `only2`: Predictions only matrix 2 satisfies
-            - `neither`: Predictions neither matrix satisfies
-            - `ci`: Comparison Correspondence Index
-            - `p_value`: Randomization test p-value
-            - `n_permutations`: Number of permutations tested
-            - `n_variables`: Number of variables per matrix
+                - `matrix1`: First matrix identifier
+                - `matrix2`: Second matrix identifier
+                - `both_agree`: Predictions both matrices satisfy
+                - `only1`: Predictions only matrix 1 satisfies
+                - `only2`: Predictions only matrix 2 satisfies
+                - `neither`: Predictions neither matrix satisfies
+                - `ci`: Comparison Correspondence Index
+                - `p_value`: Randomization test p-value
+                - `n_permutations`: Number of permutations tested
+                - `n_variables`: Number of variables per matrix
 
     Examples:
         Compare multiple correlation matrices:

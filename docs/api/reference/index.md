@@ -4,7 +4,7 @@ This section documents the internal modules and functions used in the `rthor` pa
 
 ## Module Structure
 
-- **[`rthor`](rthor.md)**: Main user-facing module containing `test()` and `compare()` functions
+- **[`rthor`](../rthor.md)**: Main user-facing module containing `test()` and `compare()` functions
 - **[`_core`](core.md)**: Core statistical algorithm implementations
 - **[`_input`](input.md)**: Input processing and correlation matrix handling
 - **[`_permutations`](permutations.md)**: Permutation generation and application

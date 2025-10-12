@@ -50,29 +50,35 @@ result_custom = rthor.test(corr_linear, order=custom_order, print_results=True)
 # rthor can work directly with pandas DataFrames containing raw data. It will compute the correlation matrices automatically.
 
 # %%
-# Create sample datasets
+# Create sample datasets with varying degrees of circular structure
 np.random.seed(42)
 
-# Dataset 1: Strong circular structure
-n_samples = 100
-angles = np.linspace(0, 2 * np.pi, 6, endpoint=False)
+n_samples = 200
+# Variable positions around the circle (6 positions, 60 degrees apart)
+angles_vars = np.linspace(0, 2 * np.pi, 6, endpoint=False)
 
+# Dataset 1: Excellent fit - strong circular structure
+# Each observation has a circular position, variables measure proximity to that position
+person_angles1 = np.random.uniform(0, 2 * np.pi, n_samples)
 data1 = pd.DataFrame(
     {
-        f"var{i + 1}": np.sin(angles[i]) + np.random.normal(0, 0.3, n_samples)
+        f"var{i + 1}": np.cos(person_angles1 - angles_vars[i])
+        + np.random.normal(0, 0.3, n_samples)
         for i in range(6)
     }
 )
 
-# Dataset 2: Weaker circular structure (more noise)
+# Dataset 2: Good fit - circular structure with substantial noise
+person_angles2 = np.random.uniform(0, 2 * np.pi, n_samples)
 data2 = pd.DataFrame(
     {
-        f"var{i + 1}": np.sin(angles[i]) + np.random.normal(0, 0.6, n_samples)
+        f"var{i + 1}": np.cos(person_angles2 - angles_vars[i])
+        + np.random.normal(0, 2.5, n_samples)
         for i in range(6)
     }
 )
 
-# Dataset 3: Random (no structure)
+# Dataset 3: Minimal fit - no circular structure (random data)
 data3 = pd.DataFrame(
     {f"var{i + 1}": np.random.normal(0, 1, n_samples) for i in range(6)}
 )
@@ -84,12 +90,12 @@ data1.head()
 result_dfs = rthor.test(
     [data1, data2, data3],
     order="circular6",
-    labels=["Strong Structure", "Weak Structure", "Random"],
+    labels=["Excellent Fit", "Good Fit", "Minimal Fit"],
     print_results=True,
 )
 
 # %% [markdown]
-# Notice how the CI values and p-values reflect the strength of the circular structure in each dataset.
+# Notice how the CI values and p-values reflect the degree of fit to the circular pattern. The first dataset shows excellent fit with strong circular structure, the second shows good fit despite substantial noise, and the third shows minimal fit as it contains only random data.
 
 # %% [markdown]
 # ## Pairwise Matrix Comparisons
@@ -101,7 +107,9 @@ result_dfs = rthor.test(
 
 # %%
 # Compare matrices pairwise
-individual, pairwise = rthor.compare([data1, data2, data3], order="circular6")
+individual, pairwise = rthor.compare(
+    [data1, data2, data3], order="circular6", print_results=True
+)
 
 # %% [markdown]
 # ### Individual Results

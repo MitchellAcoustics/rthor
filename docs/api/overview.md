@@ -2,8 +2,8 @@
 
 `rthor` provides a simple, high-level API for testing correlation matrices against hypothesized orderings. The main functions are:
 
-- [**`test()`**][rthor.test]: Test one or more correlation matrices
-- [**`compare()`**][rthor.compare]: Compare multiple matrices pairwise
+- [**`rthor.test()`**][rthor.test]: Test one or more correlation matrices
+- [**`rthor.compare()`**][rthor.compare]: Compare multiple matrices pairwise
 
 Results are returned as pandas DataFrames for easy integration with data analysis workflows.
 
@@ -87,7 +87,7 @@ custom_order = [1, 2, 3, 2, 3, 3]
 result = rthor.test(matrix, order=custom_order)
 ```
 
-The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length k×(k-1)/2.
+The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length $k×(k-1)/2$.
 
 See the [Advanced Features](../examples/advanced-features.py) example for detailed explanation of custom orderings.
 
@@ -143,7 +143,7 @@ with open("results.json", "w") as f:
 
 ```python
 # Extract CI values for further analysis
-ci_values = result['ci'].values
+ci_values = result['ci']
 
 # Get matrix with best fit
 best_matrix = result.loc[result['ci'].idxmax(), 'label']
@@ -152,13 +152,6 @@ best_matrix = result.loc[result['ci'].idxmax(), 'label']
 group1_ci = result.loc[result['label'].str.contains('Group1'), 'ci']
 group2_ci = result.loc[result['label'].str.contains('Group2'), 'ci']
 ```
-
-## Performance Notes
-
-- Vectorized operations using NumPy for efficiency
-- Optimized for matrices with 4-20 variables
-- Memory-efficient permutation algorithm
-- Pre-computed correlations recommended for repeated analyses
 
 ## See Also
 
