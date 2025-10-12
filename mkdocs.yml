@@ -44,13 +44,14 @@ theme:
     repo: fontawesome/brands/github
 
 nav:
-  - Overview: index.md
-  - Installation: user-guide/installation.md
-  - Examples:
+  - Overview:
+      - index.md
+      - Installation: installation.md
+  - User Guide:
+      - Core Concepts: user-guide/concepts.md
       - Basic Usage: examples/basic-usage.py
       - Advanced Features: examples/advanced-features.py
       - Paper Validation: examples/paper-validation.py
-  - Core Concepts: user-guide/concepts.md
   - API Reference:
       - Overview: api/overview.md
       - Core Functions: api/rthor.md
