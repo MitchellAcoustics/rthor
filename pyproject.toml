@@ -53,7 +53,13 @@ readme = "README.md"
 requires-python = ">=3.11"
 
 [project.optional-dependencies]
+all = ["rthor[rich]"]
 rich = ["rich>=14.1.0"]
+
+[project.urls]
+documentation = "https://drandrewmitchell.com/rthor"
+homepage = "https://drandrewmitchell.com/rthor"
+repository = "https://github.com/MitchellAcoustics/rthor"
 
 [tool.coverage]
 report = {sort = "cover"}
@@ -106,19 +112,3 @@ overrides."project.classifiers".inline_arrays = false
 overrides."tool.coverage.paths.source".inline_arrays = false
 overrides."tool.tox.env.docs.commands".inline_arrays = false
 overrides."tool.tox.env_run_base.commands".inline_arrays = false
-
-[tool.tox]
-env_list = ["py311", "py312", "py313"]
-env_run_base = {commands = [
-    [
-        "pytest",
-        "--cov",
-        "--cov-report=xml",
-    ],
-], dependency_groups = [
-    "test",
-]}
-env.docs = {commands = [["mkdocs", "build"]], dependency_groups = ["docs"]}
-gh.python."3.11" = ["py311"]
-gh.python."3.12" = ["py312"]
-gh.python."3.13" = ["py313"]

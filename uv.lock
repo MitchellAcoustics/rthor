@@ -2118,6 +2118,9 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+all = [
+    { name = "rich" },
+]
 rich = [
     { name = "rich" },
 ]
@@ -2171,8 +2174,9 @@ requires-dist = [
     { name = "numpy", specifier = ">=1.24.0" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "rich", marker = "extra == 'rich'", specifier = ">=14.1.0" },
+    { name = "rthor", extras = ["rich"], marker = "extra == 'all'" },
 ]
-provides-extras = ["rich"]
+provides-extras = ["rich", "all"]
 
 [package.metadata.requires-dev]
 dev = [
