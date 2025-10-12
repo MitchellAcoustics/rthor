@@ -309,13 +309,13 @@ uv sync --all-extras
 Run pre-commit hooks:
 
 ```sh
-prek run
+uv run prek run -a
 ```
 
 Build documentation:
 
 ```sh
-mkdocs serve
+uv run mkdocs serve
 ```
 
 ## Project Team
