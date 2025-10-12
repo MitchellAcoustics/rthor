@@ -64,7 +64,7 @@ corr_matrices = np.stack([corr_matrix_1, corr_matrix_2, corr_matrix_3], axis=2)
 # %%
 # Test single matrix
 result_single = rthor.rthor_test(corr_matrix_1, order="circular6")
-result_single.summary()
+result_single.summary(print_table=True)
 
 # %% [markdown]
 # ## Testing Multiple Matrices
@@ -78,7 +78,7 @@ result_multiple = rthor.rthor_test(
     order="circular6",
     labels=["Strong Pattern", "Moderate Pattern", "Weak Pattern"],
 )
-result_multiple.summary()
+result_multiple.summary(print_table=True)
 
 # %% [markdown]
 # ## Accessing Results
@@ -88,7 +88,7 @@ result_multiple.summary()
 # %%
 # Display results DataFrame
 results_df = result_multiple.results
-results_df
+results_df.round(3)
 
 # %% [markdown]
 # ## Understanding the Results
@@ -111,11 +111,11 @@ results_df
 # %%
 # Compare matrices
 comparison = rthor.compare_matrices(corr_matrices, order="circular6")
-comparison.summary()
+comparison.summary(print_table=True)
 
 # %%
 # Display pairwise comparisons
-comparison.comparisons
+comparison.comparisons.round(3)
 
 # %% [markdown]
 # ## Key Concepts

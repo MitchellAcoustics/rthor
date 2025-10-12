@@ -43,7 +43,7 @@ corr_linear = np.array(
 custom_order = [1, 2, 3, 2, 3, 3]
 
 result_custom = rthor.rthor_test(corr_linear, order=custom_order)
-result_custom.summary()
+result_custom.summary(print_table=True)
 
 # %% [markdown]
 # ## Working with DataFrames
@@ -87,7 +87,7 @@ result_dfs = rthor.rthor_test(
     order="circular6",
     labels=["Strong Structure", "Weak Structure", "Random"],
 )
-result_dfs.summary()
+result_dfs.summary(print_table=True)
 
 # %% [markdown]
 # Notice how the CI values and p-values reflect the strength of the circular structure in each dataset.
@@ -103,7 +103,7 @@ result_dfs.summary()
 # %%
 # Compare matrices pairwise
 comparison = rthor.compare_matrices([data1, data2, data3], order="circular6")
-comparison.summary()
+comparison.summary(print_table=True)
 
 # %% [markdown]
 # ### Individual Results
@@ -111,7 +111,7 @@ comparison.summary()
 # First, let's look at how each matrix performed individually:
 
 # %%
-comparison.rthor_results
+comparison.rthor_results.round(3)
 
 # %% [markdown]
 # ### Pairwise Comparisons
@@ -126,7 +126,7 @@ comparison.rthor_results
 # - **p_value**: Significance of the difference
 
 # %%
-comparison.comparisons
+comparison.comparisons.round(3)
 
 # %% [markdown]
 # ## Reading from Files
@@ -166,3 +166,5 @@ comparison.comparisons
 # - Explore the [API Reference](../api.md) for complete function documentation
 # - Read the [User Guide](../user-guide/concepts.md) for theoretical background
 # - Check the [Input Formats](../user-guide/input-formats.md) guide for data preparation
+
+# %%

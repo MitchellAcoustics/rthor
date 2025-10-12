@@ -86,6 +86,9 @@
 # %%
 import numpy as np
 import pandas as pd
+from rich import print  # noqa: A004
+from rich.console import Console
+from rich.table import Table
 
 import rthor
 
@@ -153,29 +156,45 @@ adjacent_corrs = [correlations[i, j] for i, j in adjacent_pairs]
 alternate_corrs = [correlations[i, j] for i, j in alternate_pairs]
 opposite_corrs = [correlations[i, j] for i, j in opposite_pairs]
 
-print("\n=== Pattern Analysis ===")
-print("\nAdjacent pairs (should be HIGHEST correlations):")
+# %% [markdown]
+
+# ### Pattern Analysis
+#
+# Adjacent pairs (should be HIGHEST correlations)
+
+# %%
 print(
     f"  Mean: {np.mean(adjacent_corrs):.3f}, "
     f"Range: [{min(adjacent_corrs):.3f}, {max(adjacent_corrs):.3f}]"
 )
 print(f"  Values: {[f'{c:.3f}' for c in adjacent_corrs]}")
 
-print("\nAlternate pairs (should be INTERMEDIATE correlations):")
+# %% [markdown]
+
+# Alternate pairs (should be INTERMEDIATE correlations)
+
+# %%
 print(
     f"  Mean: {np.mean(alternate_corrs):.3f}, "
     f"Range: [{min(alternate_corrs):.3f}, {max(alternate_corrs):.3f}]"
 )
 print(f"  Values: {[f'{c:.3f}' for c in alternate_corrs]}")
 
-print("\nOpposite pairs (should be LOWEST correlations):")
+# %% [markdown]
+
+# Opposite pairs (should be LOWEST correlations):
+
+# %%
+
 print(
     f"  Mean: {np.mean(opposite_corrs):.3f}, "
     f"Range: [{min(opposite_corrs):.3f}, {max(opposite_corrs):.3f}]"
 )
 print(f"  Values: {[f'{c:.3f}' for c in opposite_corrs]}")
 
-print("\n✓ Pattern consistent with circumplex: Adjacent > Alternate > Opposite")
+# %% [markdown]
+
+# ✓ Pattern consistent with circumplex: Adjacent > Alternate > Opposite
 
 # %% [markdown]
 # ## Running the RTHOR Test
@@ -188,8 +207,7 @@ result = rthor.rthor_test(
     data=correlations, order="circular6", labels=["Rounds et al. 1979"]
 )
 
-print("\n=== RTHOR Test Results ===")
-print(result.summary())
+result.summary(print_table=True)
 
 # %% [markdown]
 # ## Validating Against Paper's Expected Results
@@ -203,23 +221,28 @@ print(result.summary())
 #
 # The paper states:
 #
-# > "there are 11 violations of the 72 order conjectures characterized by F_H"
+# > there are 11 violations of the 72 order conjectures characterized by F_H
 #
 # And (page 175, Table 2):
 #
-# > "Using 6 and 11 violations (or 42 and 61 agreements), respectively, both
-# > p values are 12/720 = 1/60 = .02"
+# > Using 6 and 11 violations (or 42 and 61 agreements), respectively, both
+# > p values are 12/720 = 1/60 = .02
+
+# %% [markdown]
+# ## Validation Against Paper
+#
+# ### Expected (from paper):
+# Total predictions: 72
+#
+# Agreements: 61
+#
+# Violations: 11
+#
+# p-value: 0.0167 (12/720)
+#
+# ### Observed (from rthor):
 
 # %%
-# Verify against paper's reported values
-print("\n=== Validation Against Paper ===")
-print("\nExpected (from paper):")
-print("  Total predictions: 72")
-print("  Agreements: 61")
-print("  Violations: 11")
-print("  p-value: 0.0167 (12/720)")
-
-print("\nObserved (from rthor):")
 print(f"  Total predictions: {result.n_predictions}")
 print(f"  Agreements: {result.results['agreements'].to_numpy()[0]}")
 violations = (
@@ -230,11 +253,16 @@ violations = (
 print(f"  Violations: {violations}")
 print(f"  p-value: {result.results['p_value'].to_numpy()[0]:.4f}")
 
-# Check if results match
+# %% [markdown]
+
+# ### Check if results match
+
+# %%
+
 expected_agreements = 61
-observed_agreements = result.results["agreements"].to_numpy()[0]
+observed_agreements = result.results["agreements"][0]
 expected_pvalue = 12 / 720
-observed_pvalue = result.results["p_value"].to_numpy()[0]
+observed_pvalue = result.results["p_value"][0]
 
 print("\n=== Verification Status ===")
 if result.n_predictions == 72:
@@ -270,29 +298,22 @@ print("\n✓ Implementation validated against Hubert & Arabie (1987) Table 1")
 # These violations primarily involve the Conventional (C) type, suggesting some
 # deviation from perfect circumplex structure.
 
-# %%
-# Example violations from the paper
-# Note: Paper uses 1-indexing, we show 0-indexed Python equivalents
-paper_violations = [
-    "(R,C) vs (R,A): r(R,C)=0.29 should be > r(R,A)=0.36",
-    "(R,C) vs (R,S): r(R,C)=0.29 should be > r(R,S)=0.30",
-    "(R,C) vs (R,E): r(R,C)=0.29 should be > r(R,E)=0.43",
-    "(I,C) vs (I,E): r(I,C)=0.08 should be > r(I,E)=0.26",
-    "(A,S) vs (A,E): r(A,S)=0.40 should be > r(A,E)=0.41",
-    "(S,C) vs (S,R): r(S,C)=0.20 should be > r(S,R)=0.30",
-]
+# %% [markdown]
 
-print("\n=== Sample Violations from Paper ===")
-print("\nThe paper (p. 173-174) identifies these violations:")
-print("(These show the Conventional type has unexpected relationships)\n")
-
-for i, violation in enumerate(paper_violations, 1):
-    print(f"{i}. {violation}")
-
-print(
-    "\nDespite these violations, the overall pattern still strongly supports"
-    "\nthe circumplex hypothesis (p < 0.02)."
-)
+### Sample Violations from Paper
+#
+# The paper (p. 173-174) identifies these violations:
+# (These show the Conventional type has unexpected relationships)
+#
+# 1. (R,C) vs (R,A): r(R,C)=0.29 should be > r(R,A)=0.36
+# 2. (R,C) vs (R,S): r(R,C)=0.29 should be > r(R,S)=0.30
+# 3. (R,C) vs (R,E): r(R,C)=0.29 should be > r(R,E)=0.43
+# 4. (I,C) vs (I,E): r(I,C)=0.08 should be > r(I,E)=0.26
+# 5. (A,S) vs (A,E): r(A,S)=0.40 should be > r(A,E)=0.41
+# 6. (S,C) vs (S,R): r(S,C)=0.20 should be > r(S,R)=0.30
+#
+# Despite these violations, the overall pattern still strongly supports
+# the circumplex hypothesis (p < 0.02).
 
 # %% [markdown]
 # ## The Correspondence Index (CI)
@@ -311,21 +332,36 @@ print(
 # This provides an effect size measure ranging from -1 (perfect disagreement)
 # to +1 (perfect agreement).
 
+# ### Calculate CI components
+
 # %%
-# Calculate CI components
 A = result.results["agreements"].to_numpy()[0]
 T = result.results["ties"].to_numpy()[0]
 D = result.n_predictions - A - T
 CI = result.results["ci"].to_numpy()[0]
 
-print("\n=== Correspondence Index Breakdown ===")
-print(f"\nAgreements (A): {A}")
-print(f"Disagreements (D): {D}")
-print(f"Ties (T): {T}")
-print(f"Total predictions: {A + D + T}")
-print("\nCI = (A - D) / (A + D + T)")
-print(f"CI = ({A} - {D}) / {A + D + T}")
-print(f"CI = {CI:.3f}")
+# Create rich table for CI breakdown
+
+console = Console()
+
+# Create components table
+ci_table = Table(
+    title="Correspondence Index Breakdown",
+    show_header=True,
+    header_style="bold magenta",
+)
+ci_table.add_column("Component", style="cyan")
+ci_table.add_column("Value", justify="right", style="green")
+ci_table.add_column("Description", style="dim")
+
+ci_table.add_row("A (Agreements)", str(A), "Predictions satisfied by data")
+ci_table.add_row("D (Disagreements)", str(D), "Predictions violated by data")
+ci_table.add_row("T (Ties)", str(T), "Equal correlations (no prediction)")
+ci_table.add_row("Total predictions", str(A + D + T), "A + D + T", style="bold")
+ci_table.add_row("CI", f"{CI:.3f}", "(A - D) / (A + D + T)", style="bold yellow")
+
+console.print()
+console.print(ci_table)
 
 # Verify calculation
 manual_ci = (A - D) / (A + D + T)
@@ -348,24 +384,56 @@ print(
 # (page 175, Table 2).
 
 # %%
-print("\n=== Permutation Test Details ===")
-print(f"\nTotal permutations tested: {result.n_permutations}")
-print("For n=6 variables, there are 6! = 720 possible permutations.")
-print(f"\nObserved agreements: {A}")
-
-# Calculate how many permutations had equal or better fit
+# Calculate permutation test statistics
 n_extreme = int(result.results["p_value"].to_numpy()[0] * result.n_permutations)
-print(f"Permutations with ≥ {A} agreements: {n_extreme}")
-print(
-    f"\np-value = {n_extreme}/{result.n_permutations} = "
-    f"{result.results['p_value'].to_numpy()[0]:.4f}"
+expected_agreements = result.n_predictions / 2  # 50% when no ties
+observed_pvalue = result.results["p_value"].to_numpy()[0]
+
+# Create permutation test table
+perm_table = Table(
+    title="Permutation Test Details",
+    show_header=True,
+    header_style="bold magenta",
+)
+perm_table.add_column("Metric", style="cyan")
+perm_table.add_column("Value", justify="right", style="green")
+perm_table.add_column("Description", style="dim")
+
+perm_table.add_row(
+    "Total permutations",
+    str(result.n_permutations),
+    "6! = 720 for n=6 variables",
+)
+perm_table.add_row(
+    "Observed agreements",
+    str(A),
+    "Predictions satisfied",
+    style="bold",
+)
+perm_table.add_row(
+    "Expected (null H₀)",
+    f"{expected_agreements:.1f}",
+    "50% when random ordering",
+)
+perm_table.add_row(
+    "Excess agreements",
+    f"{A - expected_agreements:.1f}",
+    "Above chance level",
+)
+perm_table.add_row(
+    "Permutations ≥ observed",
+    str(n_extreme),
+    f"≥ {A} agreements",
+)
+perm_table.add_row(
+    "p-value",
+    f"{observed_pvalue:.4f}",
+    f"{n_extreme}/{result.n_permutations}",
+    style="bold yellow",
 )
 
-# Expected value under null hypothesis (page 175-176)
-expected_agreements = result.n_predictions / 2  # 50% when no ties
-print(f"\nExpected agreements under H₀ (random ordering): {expected_agreements:.1f}")
-print(f"Observed agreements: {A}")
-print(f"Excess: {A - expected_agreements:.1f} agreements above chance")
+console.print()
+console.print(perm_table)
 
 print("\n✓ Result is statistically significant (p < 0.05)")
 print("✓ The circumplex hypothesis is supported by the data")
@@ -392,6 +460,7 @@ print("✓ The circumplex hypothesis is supported by the data")
 # ## Further Reading
 #
 # - [Core Concepts](../user-guide/concepts.md) - Detailed methodology explanation
-# - [API Reference](../api.md) - Complete function documentation
+# - [API Overview](../api/overview.md) - Complete function documentation
+# - [Result Classes](../api/result-classes.md) - Working with RTHOR results
 # - [Basic Usage](basic-usage.py) - Getting started with rthor
 # - [Advanced Features](advanced-features.py) - Custom orderings and comparisons
