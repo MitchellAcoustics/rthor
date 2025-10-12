@@ -1,48 +1,108 @@
-# Result Classes
+# Results and Formatting
 
-## [`RTHORResult`][rthor.RTHORResult]
+## DataFrame Results
 
-The main result object returned by [`rthor_test()`][rthor.rthor_test]. Key attributes:
+Both [`rthor_test()`][rthor.rthor_test] and [`compare_matrices()`][rthor.compare_matrices] return pandas DataFrames containing all test results and metadata.
 
-- **`results`**: Pandas DataFrame with test results for each matrix
-- **`n_matrices`**: Number of matrices tested
+### rthor_test() Returns
+
+A single DataFrame with columns:
+
+- **`matrix`**: Matrix identifier (1-indexed)
+- **`predictions`**: Number of hypothesized predictions
+- **`agreements`**: Number of predictions satisfied
+- **`ties`**: Number of tied correlations
+- **`ci`**: Correspondence Index (-1 to +1)
+- **`p_value`**: Randomization test p-value
+- **`label`**: Descriptive label for matrix
+- **`n_permutations`**: Number of permutations tested
 - **`n_variables`**: Number of variables per matrix
-- **`order`**: The hypothesized ordering used
-- **`n_predictions`**: Total number of predictions tested
-- **`n_permutations`**: Number of permutations (default: 5000)
 
-Methods:
+Each row represents one tested matrix. Metadata columns (`n_permutations`, `n_variables`) are repeated for tidy data principles.
 
-- [**`summary()`**][rthor.RTHORResult.summary]: Get formatted summary string
-- [**`to_dict()`**][rthor.RTHORResult.to_dict]: Convert to dictionary (useful for JSON export)
+### compare_matrices() Returns
 
-<!-- prettier-ignore -->
-::: rthor.RTHORResult
-:::
+A tuple of two DataFrames: `(individual_results, pairwise_comparisons)`
 
-## [`ComparisonResult`][rthor.ComparisonResult]
+**individual_results** has the same structure as rthor_test() output.
 
-Result object for pairwise matrix comparisons from [`compare_matrices()`][rthor.compare_matrices]. Key attributes:
+**pairwise_comparisons** DataFrame columns:
 
-- **`rthor_results`**: pandas DataFrame with individual RTHOR results
-- **`comparisons`**: pandas DataFrame with pairwise comparison results
-- **`n_matrices`**: Number of matrices compared
-- **`n_variables`**: Number of variables per matrix
-- **`order`**: The hypothesized ordering used
-
-The `comparisons` DataFrame includes:
-
+- **`matrix1`**, **`matrix2`**: Matrix identifiers being compared
 - **`both_agree`**: Predictions satisfied by both matrices
 - **`only1`**: Predictions satisfied only by matrix 1
 - **`only2`**: Predictions satisfied only by matrix 2
 - **`neither`**: Predictions satisfied by neither
 - **`ci`**: Comparison CI (positive means matrix 2 fits better)
 - **`p_value`**: Statistical significance of difference
+- **`n_permutations`**, **`n_variables`**: Metadata columns
 
-Methods:
+## Formatting Functions
 
-- [**`summary()`**][rthor.ComparisonResult.summary]: Get formatted summary string
-- [**`to_dict()`**][rthor.ComparisonResult.to_dict]: Convert to dictionary (useful for JSON export)
+Optional functions for pretty-printing results:
 
-::: rthor.ComparisonResult
+### [`print_results()`][rthor.print_results]
+
+Print formatted table of rthor_test() results:
+
+```python
+import rthor
+
+df = rthor.rthor_test(data, order="circular6")
+rthor.print_results(df)  # Pretty-print the results
+```
+
+Or use the convenience parameter:
+
+```python
+df = rthor.rthor_test(data, order="circular6", print_results=True)
+```
+
+### [`print_comparison()`][rthor.print_comparison]
+
+Print formatted tables for comparison results:
+
+```python
+individual, pairwise = rthor.compare_matrices(data, order="circular6")
+rthor.print_comparison(individual, pairwise)
+```
+
+Or use the convenience parameter:
+
+```python
+individual, pairwise = rthor.compare_matrices(
+    data, order="circular6", print_results=True
+)
+```
+
+Both functions support rich formatting (if the `rich` package is installed) or plain text.
+
+## Working with DataFrames
+
+Since results are standard pandas DataFrames, you can use all pandas functionality:
+
+```python
+# Filter significant results
+significant = df[df['p_value'] < 0.05]
+
+# Export to various formats
+df.to_csv("results.csv")
+df.to_excel("results.xlsx")
+df.to_latex("results.tex")
+
+# Get specific values
+n_perms = df['n_permutations'].iloc[0]
+mean_ci = df['ci'].mean()
+
+# Plotting
+import matplotlib.pyplot as plt
+df.plot.bar(x='label', y='ci')
+```
+
+<!-- prettier-ignore -->
+::: rthor.formatting.print_results
+:::
+
+<!-- prettier-ignore -->
+::: rthor.formatting.print_comparison
 :::

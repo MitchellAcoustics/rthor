@@ -29,10 +29,9 @@
 
 ```python
 import rthor
-import pandas as pd
 
 # Test from correlation matrix file
-result = rthor.rthor_test(
+df = rthor.rthor_test(
     "correlations.txt",
     order="circular6",
     n_matrices=3,
@@ -40,21 +39,28 @@ result = rthor.rthor_test(
     labels=["Sample 1", "Sample 2", "Sample 3"]
 )
 
-# View results
-print(result.summary())
-print(result.results)
+# View results (returns a pandas DataFrame)
+print(df)
+df[df['p_value'] < 0.05]  # Filter significant results
+
+# Or print formatted results
+rthor.print_results(df)
 
 # Test from DataFrames
-result = rthor.rthor_test(
+df = rthor.rthor_test(
     [df1, df2, df3],
     order="circular6",
-    labels=["Group A", "Group B", "Group C"]
+    labels=["Group A", "Group B", "Group C"],
+    print_results=True  # Print formatted results automatically
 )
 
 # Compare multiple matrices
-comparison = rthor.compare_matrices([df1, df2, df3], order="circular6")
-print(comparison.summary())
-print(comparison.comparisons)  # Pairwise differences
+individual, pairwise = rthor.compare_matrices(
+    [df1, df2, df3],
+    order="circular6",
+    print_results=True
+)
+print(pairwise)  # View pairwise comparison results
 ```
 
 ## Installation
@@ -108,8 +114,9 @@ Test whether correlation matrices conform to a hypothesized ordering.
 - `labels`: Optional descriptive labels for matrices
 - `n_matrices`: Number of matrices (required for file input)
 - `n_variables`: Number of variables (required for file input)
+- `print_results`: If True, print formatted results table
 
-**Returns:** `RTHORResult` object with results DataFrame and metadata
+**Returns:** pandas DataFrame with columns: matrix, predictions, agreements, ties, ci, p_value, label, n_permutations, n_variables
 
 ### [`compare_matrices()`][rthor.compare_matrices]
 
@@ -117,7 +124,7 @@ Compare multiple correlation matrices pairwise to determine which fits the hypot
 
 **Parameters:** Same as `rthor_test()` but requires at least 2 matrices
 
-**Returns:** `ComparisonResult` object with individual results and pairwise comparisons
+**Returns:** Tuple of two pandas DataFrames: (individual_results, pairwise_comparisons)
 
 ## Documentation
 

@@ -98,7 +98,7 @@ def _print_results_plain(results: pd.DataFrame) -> None:
         ]
     )
 
-    print("\n".join(lines))
+    print("\n".join(lines))  # noqa: T201
 
 
 def _print_results_rich(results: pd.DataFrame) -> None:
@@ -251,7 +251,7 @@ def _print_comparison_plain(individual: pd.DataFrame, pairwise: pd.DataFrame) ->
         ]
     )
 
-    print("\n".join(lines))
+    print("\n".join(lines))  # noqa: T201
 
 
 def _print_comparison_rich(individual: pd.DataFrame, pairwise: pd.DataFrame) -> None:

@@ -13,6 +13,12 @@ from rthor._core import (
     test_multiple_matrices,
 )
 from rthor._input import process_input
+from rthor.formatting import (
+    print_comparison as print_comparison_fn,
+)
+from rthor.formatting import (
+    print_results as print_results_fn,
+)
 from rthor.permutations import generate_permutations
 
 
@@ -41,6 +47,8 @@ def rthor_test(
     labels: list[str] | None = None,
     n_matrices: int | None = None,
     n_variables: int | None = None,
+    *,
+    print_results: bool = False,
 ) -> pd.DataFrame:
     """Randomization Test of Hypothesized Order Relations (RTHOR).
 
@@ -88,6 +96,7 @@ def rthor_test(
             of matrices.
         n_matrices: Number of matrices in file (required for file input only).
         n_variables: Number of variables per matrix (required for file input only).
+        print_results: If True, print formatted results table before returning.
 
     Returns:
         DataFrame with test results containing columns:
@@ -146,7 +155,7 @@ def rthor_test(
 
     """
     # Process input to 3D array
-    correlation_matrices, n_vars, n_mats = process_input(data, n_matrices, n_variables)
+    correlation_matrices, n_vars, _ = process_input(data, n_matrices, n_variables)
 
     results_df = test_multiple_matrices(correlation_matrices, order, labels)
     permutations = generate_permutations(n_vars)
@@ -155,6 +164,10 @@ def rthor_test(
     # Add metadata columns
     results_df["n_permutations"] = n_perms
     results_df["n_variables"] = n_vars
+
+    # Print formatted results if requested
+    if print_results:
+        print_results_fn(results_df)
 
     return results_df
 
@@ -181,6 +194,8 @@ def compare_matrices(
     order: str | list[int] = "circular6",
     n_matrices: int | None = None,
     n_variables: int | None = None,
+    *,
+    print_results: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Pairwise comparison of multiple correlation matrices using RTHOR.
 
@@ -193,6 +208,7 @@ def compare_matrices(
         order: Hypothesized ordering (same as [`rthor_test`][rthor.rthor_test]).
         n_matrices: Number of matrices (required for file input).
         n_variables: Number of variables (required for file input).
+        print_results: If True, print formatted results tables before returning.
 
     Returns:
         Tuple of two DataFrames: (individual_results, pairwise_comparisons)
@@ -237,7 +253,9 @@ def compare_matrices(
 
         Compare from DataFrames:
 
-        >>> individual, pairwise = rthor.compare_matrices([df1, df2, df3], order="circular6")
+        >>> individual, pairwise = rthor.compare_matrices(
+        ...     [df1, df2, df3], order="circular6"
+        ... )
 
     Note:
         This function performs two types of tests:
@@ -262,8 +280,10 @@ def compare_matrices(
 
     """
     # Process input to 3D array
-    correlation_matrices, n_vars, n_mats = process_input(data, n_matrices, n_variables)
+    correlation_matrices, n_vars, _ = process_input(data, n_matrices, n_variables)
 
+    # Check we have at least 2 matrices
+    n_mats = correlation_matrices.shape[2]
     if n_mats < 2:
         msg = (
             f"Matrix comparison requires at least 2 matrices, got {n_mats}. "
@@ -280,5 +300,9 @@ def compare_matrices(
     rthor_df["n_variables"] = n_vars
     comparisons_df["n_permutations"] = n_perms
     comparisons_df["n_variables"] = n_vars
+
+    # Print formatted results if requested
+    if print_results:
+        print_comparison_fn(rthor_df, comparisons_df)
 
     return rthor_df, comparisons_df

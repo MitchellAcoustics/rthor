@@ -63,8 +63,8 @@ corr_matrices = np.stack([corr_matrix_1, corr_matrix_2, corr_matrix_3], axis=2)
 
 # %%
 # Test single matrix
-result_single = rthor.rthor_test(corr_matrix_1, order="circular6")
-result_single.summary(print_table=True)
+df_single = rthor.rthor_test(corr_matrix_1, order="circular6")
+rthor.print_results(df_single)
 
 # %% [markdown]
 # ## Testing Multiple Matrices
@@ -72,23 +72,22 @@ result_single.summary(print_table=True)
 # Now let's test all three matrices simultaneously and provide descriptive labels.
 
 # %%
-# Test multiple matrices
-result_multiple = rthor.rthor_test(
+# Test multiple matrices with automatic printing
+df_multiple = rthor.rthor_test(
     corr_matrices,
     order="circular6",
     labels=["Strong Pattern", "Moderate Pattern", "Weak Pattern"],
+    print_results=True,
 )
-result_multiple.summary(print_table=True)
 
 # %% [markdown]
 # ## Accessing Results
 #
-# The results are stored in a pandas DataFrame for easy analysis and export.
+# The results are in a pandas DataFrame for easy analysis and export.
 
 # %%
 # Display results DataFrame
-results_df = result_multiple.results
-results_df.round(3)
+df_multiple.round(3)
 
 # %% [markdown]
 # ## Understanding the Results
@@ -110,12 +109,13 @@ results_df.round(3)
 
 # %%
 # Compare matrices
-comparison = rthor.compare_matrices(corr_matrices, order="circular6")
-comparison.summary(print_table=True)
+individual, pairwise = rthor.compare_matrices(
+    corr_matrices, order="circular6", print_results=True
+)
 
 # %%
 # Display pairwise comparisons
-comparison.comparisons.round(3)
+pairwise.round(3)
 
 # %% [markdown]
 # ## Key Concepts
@@ -132,8 +132,7 @@ comparison.comparisons.round(3)
 # corr_matrix = np.array([...])
 #
 # # Test against circular6 preset
-# result = rthor.rthor_test(corr_matrix, order="circular6")
-# print(result.summary())
+# df = rthor.rthor_test(corr_matrix, order="circular6", print_results=True)
 # ```
 #
 # ### Testing Multiple Matrices
@@ -142,11 +141,14 @@ comparison.comparisons.round(3)
 #
 # ```python
 # # Stack matrices into 3D array or use list of DataFrames
-# result = rthor.rthor_test(
+# df = rthor.rthor_test(
 #     matrices,
 #     order="circular6",
 #     labels=["Group 1", "Group 2", "Group 3"]
 # )
+# # Work with the DataFrame
+# df[df['p_value'] < 0.05]  # Filter significant results
+# df.to_csv('results.csv')  # Export
 # ```
 #
 # ### Understanding the Correspondence Index (CI)
