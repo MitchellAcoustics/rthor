@@ -203,9 +203,12 @@ print(f"  Values: {[f'{c:.3f}' for c in opposite_corrs]}")
 
 # %%
 # Run RTHOR test with circular6 ordering
-result = rthor.test(data=correlations, order="circular6", labels=["Rounds et al. 1979"])
-
-result.summary(print_table=True)
+result = rthor.test(
+    data=correlations,
+    order="circular6",
+    labels=["Rounds et al. 1979"],
+    print_results=True,
+)
 
 # %% [markdown]
 # ## Validating Against Paper's Expected Results
@@ -241,15 +244,15 @@ result.summary(print_table=True)
 # ### Observed (from rthor):
 
 # %%
-print(f"  Total predictions: {result.n_predictions}")
-print(f"  Agreements: {result.results['agreements'].to_numpy()[0]}")
+print(f"  Total predictions: {result['predictions'].iloc[0]}")
+print(f"  Agreements: {result['agreements'].iloc[0]}")
 violations = (
-    result.n_predictions
-    - result.results["agreements"].to_numpy()[0]
-    - result.results["ties"].to_numpy()[0]
+    result["predictions"].iloc[0]
+    - result["agreements"].iloc[0]
+    - result["ties"].iloc[0]
 )
 print(f"  Violations: {violations}")
-print(f"  p-value: {result.results['p_value'].to_numpy()[0]:.4f}")
+print(f"  p-value: {result['p_value'].iloc[0]:.4f}")
 
 # %% [markdown]
 
@@ -258,15 +261,17 @@ print(f"  p-value: {result.results['p_value'].to_numpy()[0]:.4f}")
 # %%
 
 expected_agreements = 61
-observed_agreements = result.results["agreements"][0]
+observed_agreements = result["agreements"][0]
 expected_pvalue = 12 / 720
-observed_pvalue = result.results["p_value"][0]
+observed_pvalue = result["p_value"][0]
 
 print("\n=== Verification Status ===")
-if result.n_predictions == 72:
+if result["predictions"].iloc[0] == 72:
     print("✓ Predictions count matches (72)")
 else:
-    print(f"✗ Predictions count mismatch: expected 72, got {result.n_predictions}")
+    print(
+        f"✗ Predictions count mismatch: expected 72, got {result['predictions'].iloc[0]}"
+    )
 
 if observed_agreements == expected_agreements:
     print("✓ Agreements match (61)")
@@ -333,10 +338,10 @@ print("\n✓ Implementation validated against Hubert & Arabie (1987) Table 1")
 # ### Calculate CI components
 
 # %%
-A = result.results["agreements"].to_numpy()[0]
-T = result.results["ties"].to_numpy()[0]
-D = result.n_predictions - A - T
-CI = result.results["ci"].to_numpy()[0]
+A = result["agreements"].iloc[0]
+T = result["ties"].iloc[0]
+D = result["predictions"].iloc[0] - A - T
+CI = result["ci"].iloc[0]
 
 # Create rich table for CI breakdown
 
@@ -383,9 +388,9 @@ print(
 
 # %%
 # Calculate permutation test statistics
-n_extreme = int(result.results["p_value"].to_numpy()[0] * result.n_permutations)
-expected_agreements = result.n_predictions / 2  # 50% when no ties
-observed_pvalue = result.results["p_value"].to_numpy()[0]
+n_extreme = int(result["p_value"].iloc[0] * result["n_permutations"].iloc[0])
+expected_agreements = result["predictions"].iloc[0] / 2  # 50% when no ties
+observed_pvalue = result["p_value"].iloc[0]
 
 # Create permutation test table
 perm_table = Table(
@@ -399,7 +404,7 @@ perm_table.add_column("Description", style="dim")
 
 perm_table.add_row(
     "Total permutations",
-    str(result.n_permutations),
+    str(result["n_permutations"].iloc[0]),
     "6! = 720 for n=6 variables",
 )
 perm_table.add_row(
@@ -426,7 +431,7 @@ perm_table.add_row(
 perm_table.add_row(
     "p-value",
     f"{observed_pvalue:.4f}",
-    f"{n_extreme}/{result.n_permutations}",
+    f"{n_extreme}/{result['n_permutations'].iloc[0]}",
     style="bold yellow",
 )
 

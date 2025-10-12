@@ -5,7 +5,7 @@
 - [**`test()`**][rthor.test]: Test one or more correlation matrices
 - [**`compare()`**][rthor.compare]: Compare multiple matrices pairwise
 
-Results are returned as dataclass objects with convenient methods for viewing and exporting.
+Results are returned as pandas DataFrames for easy integration with data analysis workflows.
 
 ## Input Formats
 
@@ -115,18 +115,18 @@ The p-value represents the proportion of random permutations that achieve a CI a
 
 ## Export and Integration
 
-### To pandas
+### Working with DataFrames
 
-Results are already in pandas DataFrames:
+Results are pandas DataFrames with full pandas functionality:
 
 ```python
 result = rthor.test(matrices, order="circular6")
 
 # Filter significant results
-sig = result.results[result.results['p_value'] < 0.05]
+sig = result[result['p_value'] < 0.05]
 
 # Export to CSV
-result.results.to_csv("results.csv", index=False)
+result.to_csv("results.csv", index=False)
 ```
 
 ### To Dictionary/JSON
@@ -134,7 +134,7 @@ result.results.to_csv("results.csv", index=False)
 ```python
 import json
 
-result_dict = result.to_dict()
+result_dict = result.to_dict(orient='records')
 with open("results.json", "w") as f:
     json.dump(result_dict, f, indent=2)
 ```
@@ -143,14 +143,14 @@ with open("results.json", "w") as f:
 
 ```python
 # Extract CI values for further analysis
-ci_values = result.results['ci'].values
+ci_values = result['ci'].values
 
 # Get matrix with best fit
-best_matrix = result.results.loc[result.results['ci'].idxmax(), 'label']
+best_matrix = result.loc[result['ci'].idxmax(), 'label']
 
 # Compare groups
-group1_ci = result.results.loc[result.results['label'].str.contains('Group1'), 'ci']
-group2_ci = result.results.loc[result.results['label'].str.contains('Group2'), 'ci']
+group1_ci = result.loc[result['label'].str.contains('Group1'), 'ci']
+group2_ci = result.loc[result['label'].str.contains('Group2'), 'ci']
 ```
 
 ## Performance Notes

@@ -42,8 +42,7 @@ corr_linear = np.array(
 # For a simple linear order (1<2<3<4), a common pattern is:
 custom_order = [1, 2, 3, 2, 3, 3]
 
-result_custom = rthor.test(corr_linear, order=custom_order)
-result_custom.summary(print_table=True)
+result_custom = rthor.test(corr_linear, order=custom_order, print_results=True)
 
 # %% [markdown]
 # ## Working with DataFrames
@@ -86,8 +85,8 @@ result_dfs = rthor.test(
     [data1, data2, data3],
     order="circular6",
     labels=["Strong Structure", "Weak Structure", "Random"],
+    print_results=True,
 )
-result_dfs.summary(print_table=True)
 
 # %% [markdown]
 # Notice how the CI values and p-values reflect the strength of the circular structure in each dataset.
