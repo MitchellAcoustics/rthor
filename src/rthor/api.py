@@ -23,25 +23,28 @@ from rthor.formatting import (
 
 
 @overload
-def rthor_test(
+def test(
     data: Path | str,
     order: str | list[int] = "circular6",
     labels: list[str] | None = None,
     *,
     n_matrices: int,
     n_variables: int,
+    print_results: bool = False,
 ) -> pd.DataFrame: ...
 
 
 @overload
-def rthor_test(
+def test(
     data: list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
     labels: list[str] | None = None,
+    *,
+    print_results: bool = False,
 ) -> pd.DataFrame: ...
 
 
-def rthor_test(
+def test(
     data: Path | str | list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
     labels: list[str] | None = None,
@@ -115,7 +118,7 @@ def rthor_test(
         Test correlation matrices from file:
 
         >>> import rthor
-        >>> df = rthor.rthor_test(
+        >>> df = rthor.test(
         ...     "correlations.txt",
         ...     order="circular6",
         ...     n_matrices=3,
@@ -127,7 +130,7 @@ def rthor_test(
 
         Test from raw data DataFrames:
 
-        >>> df = rthor.rthor_test(
+        >>> df = rthor.test(
         ...     [df1, df2, df3],
         ...     order="circular6",
         ...     labels=["Group A", "Group B", "Group C"]
@@ -136,7 +139,7 @@ def rthor_test(
         Test with custom ordering:
 
         >>> custom_order = [1, 2, 3, 2, 1, 1, 2, 3, 2, 1]  # For 5 variables
-        >>> df = rthor.rthor_test(data, order=custom_order)
+        >>> df = rthor.test(data, order=custom_order)
 
         Test single correlation matrix:
 
@@ -144,10 +147,10 @@ def rthor_test(
         >>> corr_matrix = np.array([[1.0, 0.8, 0.6],
         ...                          [0.8, 1.0, 0.7],
         ...                          [0.6, 0.7, 1.0]])
-        >>> df = rthor.rthor_test(corr_matrix, order=[1, 2, 1])
+        >>> df = rthor.test(corr_matrix, order=[1, 2, 1])
 
     See Also:
-        - [`compare_matrices`][rthor.compare_matrices]:
+        - [`compare`][rthor.compare]:
             For pairwise comparisons between matrices
 
         - [`randall.R` in RTHORR](https://github.com/mgurtman/RTHORR/blob/main/R/randall.R):
@@ -173,23 +176,26 @@ def rthor_test(
 
 
 @overload
-def compare_matrices(
+def compare(
     data: Path | str,
     order: str | list[int] = "circular6",
     *,
     n_matrices: int,
     n_variables: int,
+    print_results: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]: ...
 
 
 @overload
-def compare_matrices(
+def compare(
     data: list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
+    *,
+    print_results: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]: ...
 
 
-def compare_matrices(
+def compare(
     data: Path | str | list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
     n_matrices: int | None = None,
@@ -242,7 +248,7 @@ def compare_matrices(
         Compare multiple correlation matrices:
 
         >>> import rthor
-        >>> individual, pairwise = rthor.compare_matrices(
+        >>> individual, pairwise = rthor.compare(
         ...     "correlations.txt",
         ...     order="circular6",
         ...     n_matrices=3,
@@ -253,7 +259,7 @@ def compare_matrices(
 
         Compare from DataFrames:
 
-        >>> individual, pairwise = rthor.compare_matrices(
+        >>> individual, pairwise = rthor.compare(
         ...     [df1, df2, df3], order="circular6"
         ... )
 
@@ -261,7 +267,7 @@ def compare_matrices(
         This function performs two types of tests:
 
         **Individual tests**: Each matrix is tested against the hypothesis
-        independently (same as [`rthor_test`][rthor.rthor_test])
+        independently (same as [`test`][rthor.test])
 
         **Pairwise comparisons**: Each pair of matrices is compared to determine
         if they differ in their fit to the hypothesis. The comparison CI indicates
@@ -275,7 +281,7 @@ def compare_matrices(
         identically to assess whether the observed difference could occur by chance.
 
     See Also:
-        [`rthor_test`][rthor.rthor_test]:
+        [`test`][rthor.test]:
             For testing matrices without pairwise comparisons
 
     """
@@ -287,7 +293,7 @@ def compare_matrices(
     if n_mats < 2:
         msg = (
             f"Matrix comparison requires at least 2 matrices, got {n_mats}. "
-            f"Use rthor_test() for single matrix analysis."
+            f"Use test() for single matrix analysis."
         )
         raise ValueError(msg)
 

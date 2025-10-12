@@ -63,7 +63,7 @@ corr_matrices = np.stack([corr_matrix_1, corr_matrix_2, corr_matrix_3], axis=2)
 
 # %%
 # Test single matrix
-df_single = rthor.rthor_test(corr_matrix_1, order="circular6")
+df_single = rthor.test(corr_matrix_1, order="circular6")
 rthor.print_results(df_single)
 
 # %% [markdown]
@@ -73,7 +73,7 @@ rthor.print_results(df_single)
 
 # %%
 # Test multiple matrices with automatic printing
-df_multiple = rthor.rthor_test(
+df_multiple = rthor.test(
     corr_matrices,
     order="circular6",
     labels=["Strong Pattern", "Moderate Pattern", "Weak Pattern"],
@@ -109,7 +109,7 @@ df_multiple.round(3)
 
 # %%
 # Compare matrices
-individual, pairwise = rthor.compare_matrices(
+individual, pairwise = rthor.compare(
     corr_matrices, order="circular6", print_results=True
 )
 
@@ -132,7 +132,7 @@ pairwise.round(3)
 # corr_matrix = np.array([...])
 #
 # # Test against circular6 preset
-# df = rthor.rthor_test(corr_matrix, order="circular6", print_results=True)
+# df = rthor.test(corr_matrix, order="circular6", print_results=True)
 # ```
 #
 # ### Testing Multiple Matrices
@@ -141,7 +141,7 @@ pairwise.round(3)
 #
 # ```python
 # # Stack matrices into 3D array or use list of DataFrames
-# df = rthor.rthor_test(
+# df = rthor.test(
 #     matrices,
 #     order="circular6",
 #     labels=["Group 1", "Group 2", "Group 3"]

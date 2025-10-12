@@ -125,7 +125,7 @@ Lower numbers = predicted higher correlations.
 Test if interpersonal scales follow the classic two-dimensional circular structure:
 
 ```python
-result = rthor.rthor_test(ipc_matrix, order="circular8")
+result = rthor.test(ipc_matrix, order="circular8")
 ```
 
 ### Affect Circumplex
@@ -133,7 +133,7 @@ result = rthor.rthor_test(ipc_matrix, order="circular8")
 Test Russell's (1980) circumplex model of emotions:
 
 ```python
-result = rthor.rthor_test(emotion_matrix, order="circular8")
+result = rthor.test(emotion_matrix, order="circular8")
 ```
 
 ### Custom Models
@@ -143,7 +143,7 @@ Test any hypothesized ordering:
 ```python
 # Linear ordering: 1 < 2 < 3 < 4
 custom_order = [1, 2, 3, 2, 3, 3]
-result = rthor.rthor_test(matrix, order=custom_order)
+result = rthor.test(matrix, order=custom_order)
 ```
 
 ## Method Advantages

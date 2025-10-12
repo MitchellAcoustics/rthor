@@ -42,7 +42,7 @@ corr_linear = np.array(
 # For a simple linear order (1<2<3<4), a common pattern is:
 custom_order = [1, 2, 3, 2, 3, 3]
 
-result_custom = rthor.rthor_test(corr_linear, order=custom_order)
+result_custom = rthor.test(corr_linear, order=custom_order)
 result_custom.summary(print_table=True)
 
 # %% [markdown]
@@ -82,7 +82,7 @@ data1.head()
 
 # %%
 # Test DataFrames
-result_dfs = rthor.rthor_test(
+result_dfs = rthor.test(
     [data1, data2, data3],
     order="circular6",
     labels=["Strong Structure", "Weak Structure", "Random"],
@@ -95,15 +95,14 @@ result_dfs.summary(print_table=True)
 # %% [markdown]
 # ## Pairwise Matrix Comparisons
 #
-# The `compare_matrices()` function performs two analyses:
+# The `compare()` function performs two analyses:
 #
 # 1. Individual RTHOR tests for each matrix
 # 2. Pairwise comparisons to determine which matrix fits better
 
 # %%
 # Compare matrices pairwise
-comparison = rthor.compare_matrices([data1, data2, data3], order="circular6")
-comparison.summary(print_table=True)
+individual, pairwise = rthor.compare([data1, data2, data3], order="circular6")
 
 # %% [markdown]
 # ### Individual Results
@@ -111,7 +110,7 @@ comparison.summary(print_table=True)
 # First, let's look at how each matrix performed individually:
 
 # %%
-comparison.rthor_results.round(3)
+individual.round(3)
 
 # %% [markdown]
 # ### Pairwise Comparisons
@@ -126,7 +125,7 @@ comparison.rthor_results.round(3)
 # - **p_value**: Significance of the difference
 
 # %%
-comparison.comparisons.round(3)
+pairwise.round(3)
 
 # %% [markdown]
 # ## Reading from Files
@@ -134,7 +133,7 @@ comparison.comparisons.round(3)
 # For large-scale analyses, you can read correlation matrices from text files:
 #
 # ```python
-# result = rthor.rthor_test(
+# result = rthor.test(
 #     "correlations.txt",
 #     n_matrices=10,
 #     n_variables=6,

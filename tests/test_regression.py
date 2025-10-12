@@ -4,24 +4,26 @@ These tests ensure that the Python implementation produces identical results
 to the original R implementation.
 """
 
+from contextlib import suppress
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from rthor import compare_matrices, rthor_test
+from rthor import compare, test
+from rthor.formatting import print_comparison, print_results
 
 
 class TestRthorTestRegression:
-    """Test rthor_test() function against R outputs."""
+    """Test test() function against R outputs."""
 
     def test_rthor_test_from_file_matches_r(
         self,
         input_matrix_file: Path,
         expected_randall_output: pd.DataFrame,
     ) -> None:
-        """Test that rthor_test() with file input matches R randall() output."""
-        result = rthor_test(
+        """Test that test() with file input matches R randall() output."""
+        result = test(
             data=input_matrix_file,
             n_matrices=3,
             n_variables=6,
@@ -74,8 +76,8 @@ class TestRthorTestRegression:
         df_list: list[pd.DataFrame],
         expected_randall_from_df_output: pd.DataFrame,
     ) -> None:
-        """Test rthor_test() with DataFrame input matches R randall_from_df()."""
-        result = rthor_test(
+        """Test test() with DataFrame input matches R randall_from_df()."""
+        result = test(
             data=df_list,
             order="circular6",
             labels=["whole sample", "t1", "t2", "t3", "t4"],
@@ -119,15 +121,15 @@ class TestRthorTestRegression:
 
 
 class TestCompareMatricesRegression:
-    """Test compare_matrices() function against R outputs."""
+    """Test compare() function against R outputs."""
 
     def test_compare_matrices_from_file_matches_r(
         self,
         input_matrix_file: Path,
         expected_randmf_output: dict[str, pd.DataFrame],
     ) -> None:
-        """Test that compare_matrices() with file input matches R randmf() output."""
-        individual, pairwise = compare_matrices(
+        """Test that compare() with file input matches R randmf() output."""
+        individual, pairwise = compare(
             data=input_matrix_file,
             n_matrices=3,
             n_variables=6,
@@ -213,8 +215,8 @@ class TestCompareMatricesRegression:
         df_list: list[pd.DataFrame],
         expected_randmf_from_df_output: dict[str, pd.DataFrame],
     ) -> None:
-        """Test compare_matrices() with DataFrame input matches R randmf_from_df()."""
-        individual, pairwise = compare_matrices(
+        """Test compare() with DataFrame input matches R randmf_from_df()."""
+        individual, pairwise = compare(
             data=df_list,
             order="circular6",
         )
@@ -293,9 +295,7 @@ class TestFormattingFunctions:
         input_matrix_file: Path,
     ) -> None:
         """Test that print_results() works with plain and rich output."""
-        from rthor.formatting import print_results
-
-        result = rthor_test(
+        result = test(
             data=input_matrix_file,
             n_matrices=3,
             n_variables=6,
@@ -307,19 +307,15 @@ class TestFormattingFunctions:
         print_results(result, use_rich=False)
 
         # Test with rich if available (should not raise)
-        try:
+        with suppress(ImportError):
             print_results(result, use_rich=True)
-        except ImportError:
-            pass  # OK if rich not installed
 
     def test_print_comparison(
         self,
         input_matrix_file: Path,
     ) -> None:
         """Test that print_comparison() works."""
-        from rthor.formatting import print_comparison
-
-        individual, pairwise = compare_matrices(
+        individual, pairwise = compare(
             data=input_matrix_file,
             n_matrices=3,
             n_variables=6,
@@ -330,10 +326,8 @@ class TestFormattingFunctions:
         print_comparison(individual, pairwise, use_rich=False)
 
         # Test with rich if available (should not raise)
-        try:
+        with suppress(ImportError):
             print_comparison(individual, pairwise, use_rich=True)
-        except ImportError:
-            pass  # OK if rich not installed
 
 
 class TestInputValidation:
@@ -345,7 +339,7 @@ class TestInputValidation:
     ) -> None:
         """Test that invalid order preset raises error."""
         with pytest.raises(ValueError, match="Unknown order preset"):
-            rthor_test(
+            test(
                 data=input_matrix_file,
                 n_matrices=3,
                 n_variables=6,
@@ -361,7 +355,7 @@ class TestInputValidation:
         df_5col = [df.iloc[:, :5] for df in df_list]
 
         with pytest.raises(ValueError, match=r"circular6.*6 variables"):
-            rthor_test(
+            test(
                 data=df_5col,
                 order="circular6",  # Wrong! This requires 6 variables, but we have 5
             )
@@ -374,7 +368,7 @@ class TestInputValidation:
         with pytest.raises(
             ValueError, match="n_matrices and n_variables must be specified"
         ):
-            rthor_test(data=input_matrix_file, order="circular6")  # type: ignore[invalid-argument-type]
+            test(data=input_matrix_file, order="circular6")  # type: ignore[invalid-argument-type]
 
     def test_labels_length_mismatch(
         self,
@@ -382,7 +376,7 @@ class TestInputValidation:
     ) -> None:
         """Test that wrong number of labels raises error."""
         with pytest.raises(ValueError, match=r"Number of labels.*doesn't match"):
-            rthor_test(
+            test(
                 data=input_matrix_file,
                 n_matrices=3,
                 n_variables=6,
@@ -396,4 +390,4 @@ class TestInputValidation:
     ) -> None:
         """Test that compare_matrices requires at least 2 matrices."""
         with pytest.raises(ValueError, match="requires at least 2 matrices"):
-            compare_matrices(data=[df_list[0]], order="circular6")
+            compare(data=[df_list[0]], order="circular6")

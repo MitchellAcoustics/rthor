@@ -2,9 +2,9 @@
 
 ## DataFrame Results
 
-Both [`rthor_test()`][rthor.rthor_test] and [`compare_matrices()`][rthor.compare_matrices] return pandas DataFrames containing all test results and metadata.
+Both [`test()`][rthor.test] and [`compare()`][rthor.compare] return pandas DataFrames containing all test results and metadata.
 
-### rthor_test() Returns
+### test() Returns
 
 A single DataFrame with columns:
 
@@ -20,11 +20,11 @@ A single DataFrame with columns:
 
 Each row represents one tested matrix. Metadata columns (`n_permutations`, `n_variables`) are repeated for tidy data principles.
 
-### compare_matrices() Returns
+### compare() Returns
 
 A tuple of two DataFrames: `(individual_results, pairwise_comparisons)`
 
-**individual_results** has the same structure as rthor_test() output.
+**individual_results** has the same structure as test() output.
 
 **pairwise_comparisons** DataFrame columns:
 
@@ -43,19 +43,19 @@ Optional functions for pretty-printing results:
 
 ### [`print_results()`][rthor.print_results]
 
-Print formatted table of rthor_test() results:
+Print formatted table of test() results:
 
 ```python
 import rthor
 
-df = rthor.rthor_test(data, order="circular6")
+df = rthor.test(data, order="circular6")
 rthor.print_results(df)  # Pretty-print the results
 ```
 
 Or use the convenience parameter:
 
 ```python
-df = rthor.rthor_test(data, order="circular6", print_results=True)
+df = rthor.test(data, order="circular6", print_results=True)
 ```
 
 ### [`print_comparison()`][rthor.print_comparison]
@@ -63,14 +63,14 @@ df = rthor.rthor_test(data, order="circular6", print_results=True)
 Print formatted tables for comparison results:
 
 ```python
-individual, pairwise = rthor.compare_matrices(data, order="circular6")
+individual, pairwise = rthor.compare(data, order="circular6")
 rthor.print_comparison(individual, pairwise)
 ```
 
 Or use the convenience parameter:
 
 ```python
-individual, pairwise = rthor.compare_matrices(
+individual, pairwise = rthor.compare(
     data, order="circular6", print_results=True
 )
 ```

@@ -3,7 +3,7 @@
 
     options:
         members:
-            - rthor_test
-            - compare_matrices
+            - test
+            - compare
 
 \bibliography

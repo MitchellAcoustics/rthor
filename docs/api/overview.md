@@ -2,8 +2,8 @@
 
 `rthor` provides a simple, high-level API for testing correlation matrices against hypothesized orderings. The main functions are:
 
-- [**`rthor_test()`**][rthor.rthor_test]: Test one or more correlation matrices
-- [**`compare_matrices()`**][rthor.compare_matrices]: Compare multiple matrices pairwise
+- [**`test()`**][rthor.test]: Test one or more correlation matrices
+- [**`compare()`**][rthor.compare]: Compare multiple matrices pairwise
 
 Results are returned as dataclass objects with convenient methods for viewing and exporting.
 
@@ -19,11 +19,11 @@ import rthor
 
 # Single matrix (2D array)
 matrix = np.array([[1.0, 0.8], [0.8, 1.0]])
-result = rthor.rthor_test(matrix, order="circular6")
+result = rthor.test(matrix, order="circular6")
 
 # Multiple matrices (3D array with shape [n_vars, n_vars, n_matrices])
 matrices = np.stack([matrix1, matrix2, matrix3], axis=2)
-result = rthor.rthor_test(matrices, order="circular6")
+result = rthor.test(matrices, order="circular6")
 ```
 
 ### pandas DataFrames
@@ -36,14 +36,14 @@ import rthor
 df1 = pd.DataFrame({'var1': [...], 'var2': [...], ...})
 df2 = pd.DataFrame({'var1': [...], 'var2': [...], ...})
 
-result = rthor.rthor_test([df1, df2], order="circular6")
+result = rthor.test([df1, df2], order="circular6")
 ```
 
 ### File Input
 
 ```python
 # Text file with lower triangular matrices
-result = rthor.rthor_test(
+result = rthor.test(
     "correlations.txt",
     n_matrices=10,
     n_variables=6,
@@ -62,7 +62,7 @@ File format: Lower triangular matrices including diagonal, whitespace-separated 
 For 6 variables arranged in a circular pattern (e.g., interpersonal circumplex):
 
 ```python
-result = rthor.rthor_test(matrix, order="circular6")
+result = rthor.test(matrix, order="circular6")
 ```
 
 Hypothesizes that adjacent variables have stronger correlations than distant ones.
@@ -72,7 +72,7 @@ Hypothesizes that adjacent variables have stronger correlations than distant one
 For 8 variables arranged in a circular pattern:
 
 ```python
-result = rthor.rthor_test(matrix, order="circular8")
+result = rthor.test(matrix, order="circular8")
 ```
 
 Commonly used for octant models in personality and emotion research.
@@ -84,7 +84,7 @@ You can specify custom hypothesized orderings for any number of variables:
 ```python
 # For 4 variables with linear ordering: 1 < 2 < 3 < 4
 custom_order = [1, 2, 3, 2, 3, 3]
-result = rthor.rthor_test(matrix, order=custom_order)
+result = rthor.test(matrix, order=custom_order)
 ```
 
 The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length k×(k-1)/2.
@@ -120,7 +120,7 @@ The p-value represents the proportion of random permutations that achieve a CI a
 Results are already in pandas DataFrames:
 
 ```python
-result = rthor.rthor_test(matrices, order="circular6")
+result = rthor.test(matrices, order="circular6")
 
 # Filter significant results
 sig = result.results[result.results['p_value'] < 0.05]

@@ -79,7 +79,7 @@ print(rthor.__version__)
 # Run a quick test
 import numpy as np
 matrix = np.array([[1.0, 0.8], [0.8, 1.0]])
-result = rthor.rthor_test(matrix, order="circular6")
+result = rthor.test(matrix, order="circular6")
 print(result.summary())
 ```
 

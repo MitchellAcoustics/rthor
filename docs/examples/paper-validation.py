@@ -203,9 +203,7 @@ print(f"  Values: {[f'{c:.3f}' for c in opposite_corrs]}")
 
 # %%
 # Run RTHOR test with circular6 ordering
-result = rthor.rthor_test(
-    data=correlations, order="circular6", labels=["Rounds et al. 1979"]
-)
+result = rthor.test(data=correlations, order="circular6", labels=["Rounds et al. 1979"])
 
 result.summary(print_table=True)
 

@@ -31,7 +31,7 @@
 import rthor
 
 # Test from correlation matrix file
-df = rthor.rthor_test(
+df = rthor.test(
     "correlations.txt",
     order="circular6",
     n_matrices=3,
@@ -47,7 +47,7 @@ df[df['p_value'] < 0.05]  # Filter significant results
 rthor.print_results(df)
 
 # Test from DataFrames
-df = rthor.rthor_test(
+df = rthor.test(
     [df1, df2, df3],
     order="circular6",
     labels=["Group A", "Group B", "Group C"],
@@ -55,7 +55,7 @@ df = rthor.rthor_test(
 )
 
 # Compare multiple matrices
-individual, pairwise = rthor.compare_matrices(
+individual, pairwise = rthor.compare(
     [df1, df2, df3],
     order="circular6",
     print_results=True
@@ -103,7 +103,7 @@ The test uses a randomization approach to compute p-values, comparing the observ
 
 ## Key Functions
 
-### [`rthor_test()`][rthor.rthor_test]
+### [`test()`][rthor.test]
 
 Test whether correlation matrices conform to a hypothesized ordering.
 
@@ -118,11 +118,11 @@ Test whether correlation matrices conform to a hypothesized ordering.
 
 **Returns:** pandas DataFrame with columns: matrix, predictions, agreements, ties, ci, p_value, label, n_permutations, n_variables
 
-### [`compare_matrices()`][rthor.compare_matrices]
+### [`compare()`][rthor.compare]
 
 Compare multiple correlation matrices pairwise to determine which fits the hypothesis better.
 
-**Parameters:** Same as `rthor_test()` but requires at least 2 matrices
+**Parameters:** Same as `test()` but requires at least 2 matrices
 
 **Returns:** Tuple of two pandas DataFrames: (individual_results, pairwise_comparisons)
 
