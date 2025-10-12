@@ -1,5 +1,9 @@
+# Permutations
+
+Permutation generation functions are in the internal `_permutations` module.
+
 <!-- prettier-ignore -->
-# ::: rthor.permutations
+# ::: rthor._permutations
 
     options:
         filters: "^_"

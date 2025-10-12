@@ -57,12 +57,12 @@ nav:
       - Result Classes: api/result-classes.md
       - Reference:
           - api/reference/index.md
-          - io: api/reference/io.md
-          - permutations: api/reference/permutations.md
-          - _core: api/reference/core.md
           - _input: api/reference/input.md
+          - _permutations: api/reference/permutations.md
+          - _core: api/reference/core.md
           - _validation: api/reference/validation.md
           - _vectorized: api/reference/vectorized.md
+          - I/O Functions: api/reference/io.md
   - License: LICENSE.md
 
 markdown_extensions:
