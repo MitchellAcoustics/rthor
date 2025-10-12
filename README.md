@@ -235,7 +235,7 @@ The test uses a randomization approach to compute p-values, comparing the observ
 
 ## Key Functions
 
-### [`rthor.test()`][rthor.test]
+### `rthor.test()`
 
 Test whether correlation matrices conform to a hypothesized ordering.
 
@@ -250,7 +250,7 @@ Test whether correlation matrices conform to a hypothesized ordering.
 
 **Returns:** pandas DataFrame with columns: matrix, predictions, agreements, ties, ci, p_value, label, n_permutations, n_variables
 
-### [`rthor.compare()`][rthor.compare]
+### `rthor.compare()`
 
 Compare multiple correlation matrices pairwise to determine which fits the hypothesis better.
 
