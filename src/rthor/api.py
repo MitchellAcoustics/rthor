@@ -13,13 +13,13 @@ from rthor._core import (
     test_multiple_matrices,
 )
 from rthor._input import process_input
+from rthor._permutations import generate_permutations
 from rthor.formatting import (
     print_comparison as print_comparison_fn,
 )
 from rthor.formatting import (
     print_results as print_results_fn,
 )
-from rthor.permutations import generate_permutations
 
 
 @overload

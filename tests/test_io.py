@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
-from rthor.io import extract_lower_triangle, read_correlation_matrices
+from rthor._input import extract_lower_triangle, read_correlation_matrices
 
 
 class TestReadCorrelationMatrices:

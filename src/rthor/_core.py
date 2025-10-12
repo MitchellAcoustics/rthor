@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from rthor._permutations import apply_permutation, generate_permutations
 from rthor._validation import validate_labels, validate_order
 from rthor._vectorized import (
     build_comparison_matrix,
@@ -14,7 +15,6 @@ from rthor._vectorized import (
     count_pairwise_agreements,
     extract_upper_triangle_vector,
 )
-from rthor.permutations import apply_permutation, generate_permutations
 
 
 def generate_hypothesis(
