@@ -333,21 +333,39 @@ If you use rthor in your research, please cite both this package and the origina
 
 **rthor (Python implementation):**
 
-```bibtex
----8<-- "docs/refs.bib:Mitchell2025rthor"
-```
+````bibtex
+@software{Mitchell2025rthor,
+  author  = {Mitchell, Andrew},
+  license = {MIT},
+  title   = {{rthor: Python implementation of RTHOR (Randomization test of hypothesized order relations)}},
+  url     = {https://github.com/MitchellAcoustics/rthor}
+}```
 
 **Original RTHOR method:**
 
 ```bibtex
----8<-- "docs/refs.bib:Hubert1987Evaluating"
-```
+@article{Hubert1987Evaluating,
+  author  = {Hubert, Lawrence and Arabie, Phipps},
+  year    = {1987},
+  month   = {07},
+  pages   = {172-178},
+  title   = {Evaluating Order Hypotheses Within Proximity Matrices},
+  volume  = {102},
+  journal = {Psychological Bulletin},
+  doi     = {10.1037/0033-2909.102.1.172}
+}```
 
 **R RTHORR package:**
 
 ```bibtex
----8<-- "docs/refs.bib:Tracey2025RTHORR"
-```
+@software{Tracey2025RTHORR,
+  title  = {RTHORR: randomization test of hypothesized order relations (RTHOR) and
+            comparisons},
+  author = {Terence J. G. Tracey and Michael L. Morris},
+  year   = {2025},
+  note   = {R package version 0.1.3, commit c3edb36287c77733ec0a23236b478cc53c1cac0f},
+  url    = {https://github.com/michaellynnmorris/RTHORR}
+}```
 
 ## License
 
@@ -359,3 +377,4 @@ This project is developed in collaboration with the
 [Centre for Advanced Research Computing](https://ucl.ac.uk/arc), University College London.
 
 `rthor` is a Python port of the R package RTHORR by Michael B. Gurtman. The implementation maintains exact numerical parity with the original R version while providing a Pythonic interface and improved performance through vectorization.
+````
