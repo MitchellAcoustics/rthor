@@ -11,14 +11,14 @@ def print_results(results: pd.DataFrame, *, use_rich: bool = True) -> None:
     """Print RTHOR test results in a formatted table.
 
     Args:
-        results: DataFrame from rthor_test() containing test results
+        results: DataFrame from test() containing test results
         use_rich: If True and rich is installed, use rich formatting.
             If False or rich not available, use plain text.
 
     Examples:
         >>> import rthor
         >>> from rthor.formatting import print_results
-        >>> df = rthor.rthor_test(data, order="circular6")
+        >>> df = rthor.test(data, order="circular6")
         >>> print_results(df)
 
     """
@@ -45,7 +45,7 @@ def print_comparison(
     Examples:
         >>> import rthor
         >>> from rthor.formatting import print_comparison
-        >>> individual, pairwise = rthor.compare_matrices(data, order="circular6")
+        >>> individual, pairwise = rthor.compare(data, order="circular6")
         >>> print_comparison(individual, pairwise)
 
     """

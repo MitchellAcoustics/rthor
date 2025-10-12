@@ -288,8 +288,8 @@ def extract_lower_triangle(
         Lower triangular values in row-major order
 
     Notes:
-        Used by [`rthor_test`][rthor.rthor_test] and
-        [`compare_matrices`][rthor.compare_matrices] via
+        Used by [`rthor.test`][rthor.test] and
+        [`rthor.compare`][rthor.compare] via
         [`process_input`][rthor._input.process_input]
         to convert correlation matrices computed from DataFrames into the
         format expected by the file reading functions.

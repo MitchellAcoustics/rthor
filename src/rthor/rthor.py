@@ -150,7 +150,7 @@ def test(
         >>> df = rthor.test(corr_matrix, order=[1, 2, 1])
 
     See Also:
-        - [`compare`][rthor.compare]:
+        - [`rthor.compare`][rthor.compare]:
             For pairwise comparisons between matrices
 
         - [`randall.R` in RTHORR](https://github.com/mgurtman/RTHORR/blob/main/R/randall.R):
@@ -210,8 +210,8 @@ def compare(
     matrices differ significantly from each other.
 
     Args:
-        data: Input data (same formats as [`rthor_test`][rthor.rthor_test]).
-        order: Hypothesized ordering (same as [`rthor_test`][rthor.rthor_test]).
+        data: Input data (same formats as [`rthor.test`][rthor.test]).
+        order: Hypothesized ordering (same as [`rthor.test`][rthor.test]).
         n_matrices: Number of matrices (required for file input).
         n_variables: Number of variables (required for file input).
         print_results: If True, print formatted results tables before returning.
@@ -267,7 +267,7 @@ def compare(
         This function performs two types of tests:
 
         **Individual tests**: Each matrix is tested against the hypothesis
-        independently (same as [`test`][rthor.test])
+        independently (same as [`rthor.test`][rthor.test])
 
         **Pairwise comparisons**: Each pair of matrices is compared to determine
         if they differ in their fit to the hypothesis. The comparison CI indicates
@@ -281,7 +281,7 @@ def compare(
         identically to assess whether the observed difference could occur by chance.
 
     See Also:
-        [`test`][rthor.test]:
+        [`rthor.test`][rthor.test]:
             For testing matrices without pairwise comparisons
 
     """
