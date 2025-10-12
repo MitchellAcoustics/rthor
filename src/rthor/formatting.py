@@ -15,19 +15,19 @@ def print_results(results: pd.DataFrame, *, use_rich: bool = True) -> None:
         _print_results_plain(results)
 
 
-def _interpret_ci(ci: float) -> tuple[str, str]:
-    """Interpret CI value and return (interpretation, quality)."""
+def _interpret_ci(ci: float) -> tuple[str, str, str]:
+    """Interpret CI value and return (interpretation, quality, symbol)."""
     if ci >= 0.7:
-        return "Excellent fit", "excellent"
+        return "Excellent fit", "excellent", "✓"
     if ci >= 0.5:
-        return "Good fit", "good"
+        return "Good fit", "good", "↗"
     if ci >= 0.3:
-        return "Moderate fit", "moderate"
+        return "Moderate fit", "moderate", "→"
     if ci >= 0.1:
-        return "Weak fit", "weak"
+        return "Weak fit", "weak", "↘"
     if ci >= 0:
-        return "Minimal fit", "minimal"
-    return "Poor fit", "poor"
+        return "Minimal fit", "minimal", "⚠"
+    return "Poor fit", "poor", "✗"
 
 
 def _print_results_plain(results: pd.DataFrame) -> None:
@@ -54,7 +54,7 @@ def _print_results_plain(results: pd.DataFrame) -> None:
         violations = n_preds - agreements - int(row["ties"])
 
         # Interpretation
-        interpretation, _ = _interpret_ci(ci)
+        interpretation, _, _ = _interpret_ci(ci)
 
         # Significance
         if p_val < 0.001:
@@ -91,11 +91,14 @@ def _print_results_rich(results: pd.DataFrame) -> None:
 
     console = Console()
 
-    # Header
-    console.print("\n[bold cyan]RTHOR TEST RESULTS[/]")
+    # Header with better hierarchy
+    console.print()
+    console.print("[bold white on blue] RTHOR TEST RESULTS [/]", justify="center")
     console.print(
-        f"[dim]{n_mats} {'matrix' if n_mats == 1 else 'matrices'} • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations[/]\n"
+        f"[dim]{n_mats} {'matrix' if n_mats == 1 else 'matrices'} • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations[/]",
+        justify="center",
     )
+    console.print()
 
     # Results for each matrix
     for idx, (_, row) in enumerate(results.iterrows(), 1):
@@ -106,7 +109,7 @@ def _print_results_rich(results: pd.DataFrame) -> None:
         violations = n_preds - agreements - int(row["ties"])
 
         # Interpretation
-        interpretation, quality = _interpret_ci(ci)
+        interpretation, quality, symbol = _interpret_ci(ci)
 
         # Color based on quality
         if quality in ("excellent", "good"):
@@ -132,7 +135,9 @@ def _print_results_rich(results: pd.DataFrame) -> None:
 
         result_text = Text()
         result_text.append(f"[{idx}] {label}\n", style="bold white")
-        result_text.append("    CI = ", style="white")
+        result_text.append("    ", style="white")
+        result_text.append(f"{symbol} ", style=ci_color)  # Add symbol
+        result_text.append("CI = ", style="white")
         result_text.append(f"{ci:.3f}", style=f"bold {ci_color}")
         result_text.append(f" ({interpretation}) • ", style="white")
         result_text.append(sig_text, style=sig_color)
@@ -147,6 +152,12 @@ def _print_results_rich(results: pd.DataFrame) -> None:
         )
 
         console.print(Panel(result_text, box=box.ROUNDED, padding=(0, 1)))
+
+    # Add interpretation hint
+    console.print(
+        "[dim italic]ℹ️  Higher CI values indicate better fit to the hypothesis (range: -1 to +1)[/]"  # noqa: RUF001
+    )
+    console.print()
 
     console.print()
 
@@ -185,7 +196,7 @@ def _print_comparison_plain(individual: pd.DataFrame, pairwise: pd.DataFrame) ->
         mat_id = int(row["matrix"])
         ci = row["ci"]
         p_val = row["p_value"]
-        interpretation, _ = _interpret_ci(ci)
+        interpretation, _, _ = _interpret_ci(ci)
 
         sig = (
             "***"
@@ -242,6 +253,7 @@ def _print_comparison_rich(individual: pd.DataFrame, pairwise: pd.DataFrame) -> 
     from rich import box
     from rich.console import Console
     from rich.panel import Panel
+    from rich.table import Table
     from rich.text import Text
 
     n_mats = len(individual)
@@ -251,20 +263,33 @@ def _print_comparison_rich(individual: pd.DataFrame, pairwise: pd.DataFrame) -> 
 
     console = Console()
 
-    # Header
-    console.print("\n[bold cyan]RTHOR MATRIX COMPARISON[/]")
+    # Header with better hierarchy
+    console.print()
+    console.print("[bold white on blue] RTHOR MATRIX COMPARISON [/]", justify="center")
     console.print(
-        f"[dim]{n_mats} matrices • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations[/]\n"
+        f"[dim]{n_mats} matrices • {n_vars} variables • {n_preds} predictions • {n_perms:,} permutations[/]",
+        justify="center",
     )
+    console.print()
 
-    # Individual results
-    indiv_text = Text()
-    indiv_text.append("INDIVIDUAL FIT\n", style="bold yellow")
+    # Individual results as compact table
+    indiv_table = Table(
+        title="Individual Fit",
+        box=box.SIMPLE,
+        show_header=True,
+        header_style="bold yellow",
+    )
+    indiv_table.add_column("Matrix", justify="center", style="cyan")
+    indiv_table.add_column("", justify="center", width=2)  # Symbol column
+    indiv_table.add_column("CI", justify="right")
+    indiv_table.add_column("Interpretation", justify="left")
+    indiv_table.add_column("Sig.", justify="center", width=4)
+
     for _, row in individual.iterrows():
         mat_id = int(row["matrix"])
         ci = row["ci"]
         p_val = row["p_value"]
-        interpretation, quality = _interpret_ci(ci)
+        interpretation, quality, symbol = _interpret_ci(ci)
 
         ci_color = (
             "bright_green"
@@ -283,11 +308,15 @@ def _print_comparison_rich(individual: pd.DataFrame, pairwise: pd.DataFrame) -> 
             else "ns"
         )
 
-        indiv_text.append(f"  Matrix {mat_id}: CI = ", style="white")
-        indiv_text.append(f"{ci:.3f}", style=ci_color)
-        indiv_text.append(f" ({interpretation}) [{sig}]\n", style="white")
+        indiv_table.add_row(
+            str(mat_id),
+            f"[{ci_color}]{symbol}[/]",
+            f"[{ci_color}]{ci:.3f}[/]",
+            interpretation,
+            f"[dim]{sig}[/]",
+        )
 
-    console.print(Panel(indiv_text, box=box.ROUNDED, padding=(0, 1)))
+    console.print(indiv_table)
     console.print()
 
     # Pairwise comparisons
@@ -343,4 +372,9 @@ def _print_comparison_rich(individual: pd.DataFrame, pairwise: pd.DataFrame) -> 
 
         console.print(Panel(comp_text, box=box.ROUNDED, padding=(0, 1)))
 
+    # Add interpretation hint
+    console.print()
+    console.print(
+        "[dim italic]Info: Positive CI means matrix 2 fits better, negative means matrix 1 fits better[/]"
+    )
     console.print()
