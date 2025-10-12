@@ -29,20 +29,17 @@ class TestRthorTestRegression:
             labels=["sample_one", "sample_two", "sample_three"],
         )
 
-        # Check result type
-        assert result.__class__.__name__ == "RTHORResult"
-        assert isinstance(result.results, pd.DataFrame)
+        # Check result type - now a DataFrame
+        assert isinstance(result, pd.DataFrame)
 
-        # Check metadata
-        assert result.n_matrices == 3
-        assert result.n_variables == 6
-        assert result.n_predictions == 72
-
-        # Check DataFrame structure
-        assert result.results.shape == expected_randall_output.shape
+        # Check metadata columns
+        assert result["n_variables"].iloc[0] == 6
+        assert result["n_permutations"].iloc[0] == 720
+        assert result["predictions"].iloc[0] == 72
+        assert len(result) == 3
 
         # Map new column names to old for comparison
-        results_mapped = result.results.rename(
+        results_mapped = result.rename(
             columns={
                 "matrix": "mat",
                 "predictions": "pred",
@@ -85,12 +82,12 @@ class TestRthorTestRegression:
         )
 
         # Check result type and metadata
-        assert result.__class__.__name__ == "RTHORResult"
-        assert result.n_matrices == 5
-        assert result.n_variables == 6
+        assert isinstance(result, pd.DataFrame)
+        assert len(result) == 5
+        assert result["n_variables"].iloc[0] == 6
 
         # Map column names
-        results_mapped = result.results.rename(
+        results_mapped = result.rename(
             columns={
                 "matrix": "mat",
                 "predictions": "pred",
@@ -130,24 +127,23 @@ class TestCompareMatricesRegression:
         expected_randmf_output: dict[str, pd.DataFrame],
     ) -> None:
         """Test that compare_matrices() with file input matches R randmf() output."""
-        result = compare_matrices(
+        individual, pairwise = compare_matrices(
             data=input_matrix_file,
             n_matrices=3,
             n_variables=6,
             order="circular6",
         )
 
-        # Check result type
-        assert result.__class__.__name__ == "ComparisonResult"
-        assert isinstance(result.rthor_results, pd.DataFrame)
-        assert isinstance(result.comparisons, pd.DataFrame)
+        # Check result types - now tuples of DataFrames
+        assert isinstance(individual, pd.DataFrame)
+        assert isinstance(pairwise, pd.DataFrame)
 
-        # Check metadata
-        assert result.n_matrices == 3
-        assert result.n_variables == 6
+        # Check metadata in DataFrames
+        assert len(individual) == 3
+        assert individual["n_variables"].iloc[0] == 6
 
         # Test RTHOR results (individual matrix tests)
-        rthor_mapped = result.rthor_results.rename(
+        rthor_mapped = individual.rename(
             columns={
                 "matrix": "mat",
                 "predictions": "pred",
@@ -159,7 +155,6 @@ class TestCompareMatricesRegression:
         )
 
         rthor_expected = expected_randmf_output["RTHOR"]
-        # Note: rthor_mapped has 7 columns (includes label), rthor_expected has 6
         assert (
             rthor_mapped.shape[0] == rthor_expected.shape[0]
         )  # Same number of matrices
@@ -176,7 +171,7 @@ class TestCompareMatricesRegression:
             )
 
         # Test comparisons results
-        comp_mapped = result.comparisons.rename(
+        comp_mapped = pairwise.rename(
             columns={
                 "matrix1": "mat1",
                 "matrix2": "mat2",
@@ -190,8 +185,6 @@ class TestCompareMatricesRegression:
         )
 
         comp_expected = expected_randmf_output["comparisons"]
-        # Note: comp_mapped has 8 columns (includes p_value separately),
-        # comp_expected may have 6 (p combined with CI in some formats)
         assert (
             comp_mapped.shape[0] == comp_expected.shape[0]
         )  # Same number of comparisons
@@ -221,18 +214,19 @@ class TestCompareMatricesRegression:
         expected_randmf_from_df_output: dict[str, pd.DataFrame],
     ) -> None:
         """Test compare_matrices() with DataFrame input matches R randmf_from_df()."""
-        result = compare_matrices(
+        individual, pairwise = compare_matrices(
             data=df_list,
             order="circular6",
         )
 
-        # Check result type
-        assert result.__class__.__name__ == "ComparisonResult"
-        assert result.n_matrices == 5
-        assert result.n_variables == 6
+        # Check result types
+        assert isinstance(individual, pd.DataFrame)
+        assert isinstance(pairwise, pd.DataFrame)
+        assert len(individual) == 5
+        assert individual["n_variables"].iloc[0] == 6
 
         # Test RTHOR results
-        rthor_mapped = result.rthor_results.rename(
+        rthor_mapped = individual.rename(
             columns={
                 "matrix": "mat",
                 "predictions": "pred",
@@ -256,7 +250,7 @@ class TestCompareMatricesRegression:
             )
 
         # Test comparisons
-        comp_mapped = result.comparisons.rename(
+        comp_mapped = pairwise.rename(
             columns={
                 "matrix1": "mat1",
                 "matrix2": "mat2",
@@ -291,14 +285,16 @@ class TestCompareMatricesRegression:
             )
 
 
-class TestResultObjectMethods:
-    """Test result object methods work correctly."""
+class TestFormattingFunctions:
+    """Test formatting functions work correctly."""
 
-    def test_rthor_result_summary(
+    def test_print_results(
         self,
         input_matrix_file: Path,
     ) -> None:
-        """Test that RTHORResult.summary() generates output."""
+        """Test that print_results() works with plain and rich output."""
+        from rthor.formatting import print_results
+
         result = rthor_test(
             data=input_matrix_file,
             n_matrices=3,
@@ -307,45 +303,37 @@ class TestResultObjectMethods:
             labels=["A", "B", "C"],
         )
 
-        summary = result.summary()
-        assert isinstance(summary, dict)
-        assert summary["n_matrices"] == 3
-        assert summary["n_variables"] == 6
+        # Test plain text output (should not raise)
+        print_results(result, use_rich=False)
 
-    def test_comparison_result_summary(
+        # Test with rich if available (should not raise)
+        try:
+            print_results(result, use_rich=True)
+        except ImportError:
+            pass  # OK if rich not installed
+
+    def test_print_comparison(
         self,
         input_matrix_file: Path,
     ) -> None:
-        """Test that ComparisonResult.summary() generates output."""
-        result = compare_matrices(
+        """Test that print_comparison() works."""
+        from rthor.formatting import print_comparison
+
+        individual, pairwise = compare_matrices(
             data=input_matrix_file,
             n_matrices=3,
             n_variables=6,
             order="circular6",
         )
 
-        summary = result.summary()
-        assert isinstance(summary, dict)
-        assert summary["n_matrices"] == 3
-        assert summary["n_permutations"] == 720
+        # Test plain text output (should not raise)
+        print_comparison(individual, pairwise, use_rich=False)
 
-    def test_rthor_result_to_dict(
-        self,
-        input_matrix_file: Path,
-    ) -> None:
-        """Test that RTHORResult.to_dict() works."""
-        result = rthor_test(
-            data=input_matrix_file,
-            n_matrices=3,
-            n_variables=6,
-            order="circular6",
-        )
-
-        result_dict = result.to_dict()
-        assert isinstance(result_dict, dict)
-        assert "results" in result_dict
-        assert "n_matrices" in result_dict
-        assert result_dict["n_matrices"] == 3
+        # Test with rich if available (should not raise)
+        try:
+            print_comparison(individual, pairwise, use_rich=True)
+        except ImportError:
+            pass  # OK if rich not installed
 
 
 class TestInputValidation:
