@@ -59,7 +59,7 @@ print(comparison.comparisons)  # Pairwise differences
 
 ## Installation
 
-### From PyPI (when released)
+### From PyPI
 
 ```sh
 pip install rthor
@@ -164,7 +164,7 @@ This project uses:
 Install development dependencies:
 
 ```sh
-pip install -e .[dev]
+UV sync --all-extras
 ```
 
 Run pre-commit hooks:
