@@ -24,6 +24,7 @@ theme:
     - navigation.path # waiting for general release
     - navigation.indexes
     - navigation.instant
+    - content.code.copy
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
@@ -57,6 +58,7 @@ nav:
       - Reference:
           - api/reference/index.md
           - io: api/reference/io.md
+          - permutations: api/reference/permutations.md
           - _core: api/reference/core.md
           - _input: api/reference/input.md
           - _validation: api/reference/validation.md
@@ -65,6 +67,8 @@ nav:
 
 markdown_extensions:
   - admonition
+  - footnotes
+  - pymdownx.details
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.tasklist
@@ -79,6 +83,9 @@ markdown_extensions:
 plugins:
   - search
   - autorefs
+  - bibtex:
+      bib_file: docs/refs.bib
+      enable_inline_citations: false
   - git-authors
   - git-revision-date-localized:
       enable_creation_date: true

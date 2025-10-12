@@ -1,8 +1,9 @@
-# Core Functions
-
 <!-- prettier-ignore -->
-::: rthor.rthor_test
-:::
+# ::: rthor
 
-::: rthor.compare_matrices
-:::
+    options:
+        members:
+            - rthor_test
+            - compare_matrices
+
+\bibliography

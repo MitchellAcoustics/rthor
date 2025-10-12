@@ -20,7 +20,7 @@
 
 ## Features
 
-- **Exact R Parity**: Produces numerically identical results to the original R RTHORR package
+- **Exact Parity with RTHORR**: Produces numerically identical results to the original [RTHORR package](https://github.com/michaellynnmorris/RTHORR)
 - **Multiple Input Formats**: Works with files, pandas DataFrames, or numpy arrays
 - **Flexible Analysis**: Test single matrices or compare multiple matrices pairwise
 - **Fast Performance**: Vectorized operations using NumPy for efficient computation
@@ -87,7 +87,7 @@ pip install -e .[dev]
 
 ## What is RTHOR?
 
-RTHOR (Randomization Test of Hypothesized Order Relations) is a statistical method for testing whether correlation matrices conform to a hypothesized ordering of variables. This is particularly useful for:
+RTHOR (Randomization Test of Hypothesized Order Relations) is a statistical method for testing whether correlation matrices conform to a hypothesized ordering of variables [@Tracey2025RTHORR;@Tracey1997RANDALL]. This is particularly useful for:
 
 - **Circumplex Models**: Variables arranged in a circular pattern (e.g., interpersonal behavior, emotions)
 - **Circular Structures**: Testing theoretical predictions about variable ordering
@@ -97,7 +97,7 @@ The test uses a randomization approach to compute p-values, comparing the observ
 
 ## Key Functions
 
-### `rthor_test()`
+### [`rthor_test()`][rthor.rthor_test]
 
 Test whether correlation matrices conform to a hypothesized ordering.
 
@@ -111,7 +111,7 @@ Test whether correlation matrices conform to a hypothesized ordering.
 
 **Returns:** `RTHORResult` object with results DataFrame and metadata
 
-### `compare_matrices()`
+### [`compare_matrices()`][rthor.compare_matrices]
 
 Compare multiple correlation matrices pairwise to determine which fits the hypothesis better.
 
@@ -121,17 +121,15 @@ Compare multiple correlation matrices pairwise to determine which fits the hypot
 
 ## Documentation
 
-Full documentation is available at [https://mitchellacoustics.github.io/rthor](https://mitchellacoustics.github.io/rthor)
+Full documentation is available at [https://drandrewmitchell.com/rthor](https://drandrewmitchell.com/rthor)
 
 ### Validation Against Original Paper
 
-The implementation has been validated against the original Hubert & Arabie (1987) paper. See [docs/examples/paper-validation.py](docs/examples/paper-validation.py) for a detailed demonstration that replicates Table 1 from the paper and confirms exact agreement with the expected results:
+The implementation has been validated against the original Hubert & Arabie (1987) [@Hubert1987Evaluating] paper. See [docs/examples/paper-validation.py](docs/examples/paper-validation.py) for a detailed demonstration that replicates Table 1 from the paper and confirms exact agreement with the expected results:
 
 - ✓ 72 predictions, 61 agreements, 11 violations
 - ✓ p-value = 0.0167 (12/720)
 - ✓ CI = 0.694
-
-This validation demonstrates that `rthor` correctly implements the randomization test methodology.
 
 ## Testing
 
@@ -197,38 +195,19 @@ If you use rthor in your research, please cite both this package and the origina
 **rthor (Python implementation):**
 
 ```bibtex
-@software{mitchell_rthor_2025,
-  author = {Mitchell, Andrew},
-  title = {rthor: Python implementation of RTHOR},
-  year = {2025},
-  url = {https://github.com/MitchellAcoustics/rthor}
-}
+---8<-- "docs/refs.bib:Mitchell2025rthor"
 ```
 
 **Original RTHOR method:**
 
 ```bibtex
-@article{hubert_arabie_1987,
-  title = {Evaluating order hypotheses within proximity matrices},
-  author = {Hubert, Lawrence J. and Arabie, Phipps},
-  journal = {Psychological Bulletin},
-  volume = {102},
-  number = {1},
-  pages = {172--178},
-  year = {1987},
-  doi = {10.1037/0033-2909.102.1.172}
-}
+---8<-- "docs/refs.bib:Hubert1987Evaluating"
 ```
 
 **R RTHORR package:**
 
 ```bibtex
-@manual{gurtman_rthorr_2021,
-  title = {RTHORR: Randomization Tests of Hypothesized Order Relations},
-  author = {Gurtman, Michael B.},
-  year = {2021},
-  note = {R package version 1.0.0}
-}
+---8<-- "docs/refs.bib:Tracey2025RTHORR"
 ```
 
 ## License
@@ -240,4 +219,4 @@ MIT License. See [LICENSE.md](LICENSE.md) for details.
 This project is developed in collaboration with the
 [Centre for Advanced Research Computing](https://ucl.ac.uk/arc), University College London.
 
-rthor is a Python port of the R package RTHORR by Michael B. Gurtman. The implementation maintains exact numerical parity with the original R version while providing a Pythonic interface and improved performance through vectorization.
+`rthor` is a Python port of the R package RTHORR by Michael B. Gurtman. The implementation maintains exact numerical parity with the original R version while providing a Pythonic interface and improved performance through vectorization.
