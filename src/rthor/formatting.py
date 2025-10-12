@@ -118,19 +118,25 @@ def _print_results_rich(results: pd.DataFrame) -> None:
 
         # Significance
         if p_val < 0.001:
-            sig = "[bright_red]p < .001 ***[/]"
+            sig_text = "p < .001 ***"
+            sig_color = "bright_red"
         elif p_val < 0.01:
-            sig = "[yellow]p < .01 **[/]"
+            sig_text = "p < .01 **"
+            sig_color = "yellow"
         elif p_val < 0.05:
-            sig = "[green]p < .05 *[/]"
+            sig_text = "p < .05 *"
+            sig_color = "green"
         else:
-            sig = f"[dim]p = {p_val:.3f} ns[/]"
+            sig_text = f"p = {p_val:.3f} ns"
+            sig_color = "dim"
 
         result_text = Text()
         result_text.append(f"[{idx}] {label}\n", style="bold white")
         result_text.append("    CI = ", style="white")
         result_text.append(f"{ci:.3f}", style=f"bold {ci_color}")
-        result_text.append(f" ({interpretation}) • {sig}\n", style="white")
+        result_text.append(f" ({interpretation}) • ", style="white")
+        result_text.append(sig_text, style=sig_color)
+        result_text.append("\n", style="white")
         result_text.append(
             f"    {agreements}/{n_preds} satisfied ({agreements / n_preds * 100:.0f}%), ",
             style="green",
