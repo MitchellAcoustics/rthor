@@ -57,14 +57,11 @@ def validate_correlation_matrix(
     """Validate that a matrix is a valid correlation matrix.
 
     Args:
-    matrix : np.ndarray
-        Matrix to validate
-    matrix_id : int, optional
-        Matrix identifier for error messages
+        matrix: Matrix to validate
+        matrix_id: Matrix identifier for error messages
 
     Raises:
-    ValueError
-        If matrix is not a valid correlation matrix
+        ValueError: If matrix is not a valid correlation matrix
 
     """
     prefix = f"Matrix {matrix_id}: " if matrix_id is not None else ""
@@ -107,21 +104,18 @@ def validate_order(
     """Validate and process order specification.
 
     Args:
-    order : str or list[int] or np.ndarray
-        Order specification. Can be:
-        - "circular6": Preset for 6-variable circular model
-        - "circular8": Preset for 8-variable circular model
-        - Custom array/list of integers
-    n_variables : int
-        Number of variables in correlation matrices
+        order: Order specification. Can be:
+
+            - "circular6": Preset for 6-variable circular model
+            - "circular8": Preset for 8-variable circular model
+            - Custom array/list of integers
+        n_variables: Number of variables in correlation matrices
 
     Returns:
-    order_array : np.ndarray
-        Processed order array (int32)
+        order_array: Processed order array (int32)
 
     Raises:
-    ValueError
-        If order specification is invalid
+        ValueError: If order specification is invalid
 
     """
     # Handle preset strings
@@ -185,18 +179,14 @@ def validate_labels(
     """Validate and process matrix labels.
 
     Args:
-    labels : list[str] or None
-        Matrix labels, or None to auto-generate
-    n_matrices : int
-        Number of matrices
+        labels: Matrix labels, or None to auto-generate
+        n_matrices: Number of matrices
 
     Returns:
-    labels : list[str]
-        Processed labels (auto-generated if input was None)
+        labels: Processed labels (auto-generated if input was None)
 
     Raises:
-    ValueError
-        If number of labels doesn't match number of matrices
+        ValueError: If number of labels doesn't match number of matrices
 
     """
     if labels is None:
@@ -216,18 +206,14 @@ def validate_filepath(filepath: Path | str) -> Path:
     """Validate filepath exists and is readable.
 
     Args:
-    filepath : Path or str
-        Path to file
+        filepath: Path to file
 
     Returns:
-    path : Path
-        Validated Path object
+        path: Validated Path object
 
     Raises:
-    FileNotFoundError
-        If file doesn't exist
-    ValueError
-        If path is not a file
+        FileNotFoundError: If file doesn't exist
+        ValueError: If path is not a file
 
     """
     path = Path(filepath)
@@ -247,12 +233,10 @@ def validate_dataframe_list(df_list: list[pd.DataFrame]) -> None:
     """Validate list of DataFrames for RTHOR analysis.
 
     Args:
-    df_list : list[pd.DataFrame]
-        List of DataFrames
+        df_list: List of DataFrames
 
     Raises:
-    ValueError
-        If DataFrames are invalid or inconsistent
+        ValueError: If DataFrames are invalid or inconsistent
 
     """
     if not df_list:
@@ -298,12 +282,10 @@ def validate_correlation_matrices_3d(
     """Validate 3D array of correlation matrices.
 
     Args:
-    matrices : np.ndarray
-        3D array of shape (n, n, n_matrices)
+        matrices: 3D array of shape (n, n, n_matrices)
 
     Raises:
-    ValueError
-        If array is invalid
+        ValueError: If array is invalid
 
     """
     if matrices.ndim != 3:

@@ -13,33 +13,34 @@ def read_correlation_matrices(
     """Read correlation matrices from text file.
 
     Args:
-    filepath : Path or str
-        Path to input file containing correlation matrices
-    n : int
-        Number of variables (matrix dimension)
-    nmat : int
-        Number of matrices in the file
+        filepath: Path to input file containing correlation matrices
+        n: Number of variables (matrix dimension)
+        nmat: Number of matrices in the file
 
     Returns:
-    dmatm : np.ndarray
         3D array of correlation matrices (n x n x nmat)
 
     Notes:
-    Translated from RTHORR/R/randall.R lines 49-67.
+        Translated from [`RTHORR/R/randall.R`](https://github.com/michaellynnmorris/RTHORR/blob/c3edb36287c77733ec0a23236b478cc53c1cac0f/R/randall.R#L49)
+        lines 49-67.
 
-    Input file format:
-    - Lower triangular matrices including diagonal
-    - Values separated by whitespace
-    - Each matrix starts with diagonal element (1.00)
-    - Example for n=3:
-        1.00
-         .62 1.00
-         .40 .62 1.00
+        Input file format:
 
-    The R code reads this using scan() and fills the matrix in two passes:
-    1. Upper triangle (i <= j)
-    2. Lower triangle (i >= j)
-    This creates a symmetric matrix.
+        - Lower triangular matrices including diagonal
+        - Values separated by whitespace
+        - Each matrix starts with diagonal element (1.00)
+        - Example for n=3:
+
+            1.00
+            .62 1.00
+            .40 .62 1.00
+
+        The R code reads this using `scan()` and fills the matrix in two passes:
+
+        1. Upper triangle (i <= j)
+        2. Lower triangle (i >= j)
+
+        This creates a symmetric matrix.
 
     """
     filepath = Path(filepath)
@@ -89,26 +90,26 @@ def read_correlation_matrices(
 
 def extract_lower_triangle(
     corr_matrix: np.ndarray,
-    include_diagonal: bool = True,  # noqa: FBT001, FBT002
+    *,
+    include_diagonal: bool = True,
 ) -> np.ndarray:
     """Extract lower triangular values from correlation matrix.
 
     Args:
-    corr_matrix : np.ndarray
-        Correlation matrix (n x n)
-    include_diagonal : bool, default=True
-        Whether to include diagonal values
+        corr_matrix: Correlation matrix (n x n)
+        include_diagonal: Whether to include diagonal values
 
     Returns:
-    values : np.ndarray
         Lower triangular values in row-major order
 
     Notes:
-    Used by randall_from_df and randmf_from_df to convert
-    correlation matrices computed from DataFrames into the
-    format expected by the file reading functions.
+        Used by [`rthor_test`][rthor.rthor_test] and
+        [`compare_matrices`][rthor.compare_matrices] via
+        [`process_input`][rthor._input.process_input]
+        to convert correlation matrices computed from DataFrames into the
+        format expected by the file reading functions.
 
-    Matches R's gdata::lowerTriangle(cor_df, diag=TRUE, byrow=TRUE)
+        Matches R's `gdata::lowerTriangle(cor_df, diag=TRUE, byrow=TRUE)`
 
     """
     n = corr_matrix.shape[0]

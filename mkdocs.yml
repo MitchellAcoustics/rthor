@@ -1,6 +1,7 @@
 site_name: "rthor"
 site_description: "Documentation website for rthor"
 site_author: "Andrew Mitchell"
+site_url: https://drandrewmitchell.com/rthor/
 copyright: Copyright &copy; 2025 Andrew Mitchell
 repo_url: "https://github.com/MitchellAcoustics/rthor/"
 repo_name: "MitchellAcoustics/rthor"
@@ -15,11 +16,15 @@ theme:
   name: "material"
   features:
     - content.action.edit
+    - content.action.view
     - navigation.tabs
-    - navigation.expand
-    - navigation.path
+    # - navigation.tabs.sticky
     - navigation.top
+    - navigation.expand
+    - navigation.path # waiting for general release
     - navigation.indexes
+    - navigation.instant
+    - content.code.copy
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
@@ -40,21 +45,30 @@ theme:
 
 nav:
   - Overview: index.md
-  - Getting Started:
-      - Installation: user-guide/installation.md
-      - Quick Start: user-guide/quickstart.md
+  - Installation: user-guide/installation.md
   - Examples:
       - Basic Usage: examples/basic-usage.py
       - Advanced Features: examples/advanced-features.py
-  - User Guide:
-      - Core Concepts: user-guide/concepts.md
-      - Input Formats: user-guide/input-formats.md
-      - Interpreting Results: user-guide/results.md
-  - API Reference: api.md
+      - Paper Validation: examples/paper-validation.py
+  - Core Concepts: user-guide/concepts.md
+  - API Reference:
+      - Overview: api/overview.md
+      - Core Functions: api/api.md
+      - Result Classes: api/result-classes.md
+      - Reference:
+          - api/reference/index.md
+          - io: api/reference/io.md
+          - permutations: api/reference/permutations.md
+          - _core: api/reference/core.md
+          - _input: api/reference/input.md
+          - _validation: api/reference/validation.md
+          - _vectorized: api/reference/vectorized.md
   - License: LICENSE.md
 
 markdown_extensions:
   - admonition
+  - footnotes
+  - pymdownx.details
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.tasklist
@@ -64,10 +78,18 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.details
+  - pymdownx.snippets
 
 plugins:
   - search
   - autorefs
+  - bibtex:
+      bib_file: docs/refs.bib
+      enable_inline_citations: false
+  - git-authors
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
   - mkdocs-jupyter:
       execute: true
       include_source: true
@@ -82,13 +104,21 @@ plugins:
           options:
             docstring_style: google
             docstring_section_style: spacy
-            separate_signature: true
+            members_order: source
             merge_init_into_class: true
-            show_symbol_type_heading: true # waiting for general release
-            show_symbol_type_toc: true
             modernize_annotations: true
-            summary: true
+            overloads_only: true
+            separate_signature: true
+            show_signature: true
+            show_signature_annotations: true
+            show_signature_type_parameters: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_source: true
+            show_overloads: true
             show_submodules: true
+            show_root_heading: true
+            summary: true
           paths: [src]
   - include-markdown:
       opening_tag: "{!"
@@ -106,6 +136,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: "https://github.com/MitchellAcoustics"
+  # version:
+  #   provider: mike
 
 extra_css:
   - stylesheets/extra.css
