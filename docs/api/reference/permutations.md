@@ -1,5 +1,5 @@
 <!-- prettier-ignore -->
-# ::: rthor.permutations
+# ::: rthor._permutations
 
     options:
         filters: "^_"

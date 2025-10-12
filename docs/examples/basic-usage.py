@@ -6,7 +6,7 @@
 # %% [markdown]
 # ## Creating Sample Data
 #
-# First, let's create some sample correlation matrices. We'll create 3 matrices with 6 variables each, following a circular/circumplex structure.
+# First, let's create some sample correlation matrices with varying degrees of fit to a circular pattern. We'll create 3 matrices with 6 variables each, ranging from perfect fit to poor fit.
 
 # %%
 import numpy as np
@@ -14,42 +14,46 @@ import numpy as np
 import rthor
 
 # %%
-# Create sample correlation matrices that follow a circular pattern
-# Variables: 1, 2, 3, 4, 5, 6 arranged in a circle
+# Create sample correlation matrices with varying fit to circular pattern
+# In a circular pattern (1-2-3-4-5-6-1), adjacent variables should correlate
+# higher than distant variables, with opposite variables correlating lowest
 
-# Matrix 1: Strong circular pattern
+# Matrix 1: Excellent fit - perfect circular pattern (CI = 1.0)
+# Clear gradation: adjacent (0.90) > distance-2 (0.60) > opposite (0.30)
 corr_matrix_1 = np.array(
     [
-        [1.00, 0.80, 0.50, 0.20, 0.40, 0.70],
-        [0.80, 1.00, 0.75, 0.45, 0.30, 0.55],
-        [0.50, 0.75, 1.00, 0.80, 0.50, 0.35],
-        [0.20, 0.45, 0.80, 1.00, 0.75, 0.40],
-        [0.40, 0.30, 0.50, 0.75, 1.00, 0.70],
-        [0.70, 0.55, 0.35, 0.40, 0.70, 1.00],
+        [1.00, 0.90, 0.60, 0.30, 0.60, 0.90],  # Var 1
+        [0.90, 1.00, 0.90, 0.60, 0.30, 0.60],  # Var 2
+        [0.60, 0.90, 1.00, 0.90, 0.60, 0.30],  # Var 3
+        [0.30, 0.60, 0.90, 1.00, 0.90, 0.60],  # Var 4
+        [0.60, 0.30, 0.60, 0.90, 1.00, 0.90],  # Var 5
+        [0.90, 0.60, 0.30, 0.60, 0.90, 1.00],  # Var 6
     ]
 )
 
-# Matrix 2: Moderate circular pattern
+# Matrix 2: Good fit - mostly circular with some violations (CI ≈ 0.8)
+# Some distance ordering violations but overall pattern holds
 corr_matrix_2 = np.array(
     [
-        [1.00, 0.70, 0.45, 0.25, 0.35, 0.65],
-        [0.70, 1.00, 0.68, 0.40, 0.28, 0.50],
-        [0.45, 0.68, 1.00, 0.72, 0.48, 0.32],
-        [0.25, 0.40, 0.72, 1.00, 0.70, 0.38],
-        [0.35, 0.28, 0.48, 0.70, 1.00, 0.65],
-        [0.65, 0.50, 0.32, 0.38, 0.65, 1.00],
+        [1.00, 0.68, 0.72, 0.58, 0.65, 0.70],  # Some non-adjacent correlations too high
+        [0.68, 1.00, 0.72, 0.68, 0.52, 0.62],
+        [0.72, 0.72, 1.00, 0.70, 0.68, 0.55],
+        [0.58, 0.68, 0.70, 1.00, 0.72, 0.65],
+        [0.65, 0.52, 0.68, 0.72, 1.00, 0.70],
+        [0.70, 0.62, 0.55, 0.65, 0.70, 1.00],
     ]
 )
 
-# Matrix 3: Weak circular pattern
+# Matrix 3: Poor fit - violates circular pattern (CI ≈ -0.5)
+# Opposite and adjacent correlations have similar or reversed magnitudes
 corr_matrix_3 = np.array(
     [
-        [1.00, 0.60, 0.40, 0.30, 0.35, 0.55],
-        [0.60, 1.00, 0.58, 0.42, 0.32, 0.48],
-        [0.40, 0.58, 1.00, 0.62, 0.45, 0.35],
-        [0.30, 0.42, 0.62, 1.00, 0.60, 0.40],
-        [0.35, 0.32, 0.45, 0.60, 1.00, 0.58],
-        [0.55, 0.48, 0.35, 0.40, 0.58, 1.00],
+        [1.00, 0.48, 0.62, 0.55, 0.51, 0.45],  # Opposite higher than adjacent
+        [0.48, 1.00, 0.45, 0.58, 0.52, 0.50],
+        [0.62, 0.45, 1.00, 0.50, 0.60, 0.48],
+        [0.55, 0.58, 0.50, 1.00, 0.48, 0.55],
+        [0.51, 0.52, 0.60, 0.48, 1.00, 0.50],
+        [0.45, 0.50, 0.48, 0.55, 0.50, 1.00],
     ]
 )
 
@@ -63,8 +67,7 @@ corr_matrices = np.stack([corr_matrix_1, corr_matrix_2, corr_matrix_3], axis=2)
 
 # %%
 # Test single matrix
-result_single = rthor.rthor_test(corr_matrix_1, order="circular6")
-result_single.summary(print_table=True)
+df_single = rthor.test(corr_matrix_1, order="circular6", print_results=True)
 
 # %% [markdown]
 # ## Testing Multiple Matrices
@@ -72,23 +75,22 @@ result_single.summary(print_table=True)
 # Now let's test all three matrices simultaneously and provide descriptive labels.
 
 # %%
-# Test multiple matrices
-result_multiple = rthor.rthor_test(
+# Test multiple matrices with automatic printing
+df_multiple = rthor.test(
     corr_matrices,
     order="circular6",
-    labels=["Strong Pattern", "Moderate Pattern", "Weak Pattern"],
+    labels=["Excellent Fit", "Good Fit", "Poor Fit"],
+    print_results=True,
 )
-result_multiple.summary(print_table=True)
 
 # %% [markdown]
 # ## Accessing Results
 #
-# The results are stored in a pandas DataFrame for easy analysis and export.
+# The results are in a pandas DataFrame for easy analysis and export.
 
 # %%
 # Display results DataFrame
-results_df = result_multiple.results
-results_df.round(3)
+df_multiple.round(3)
 
 # %% [markdown]
 # ## Understanding the Results
@@ -110,12 +112,13 @@ results_df.round(3)
 
 # %%
 # Compare matrices
-comparison = rthor.compare_matrices(corr_matrices, order="circular6")
-comparison.summary(print_table=True)
+individual, pairwise = rthor.compare(
+    corr_matrices, order="circular6", print_results=True
+)
 
 # %%
 # Display pairwise comparisons
-comparison.comparisons.round(3)
+pairwise.round(3)
 
 # %% [markdown]
 # ## Key Concepts
@@ -132,8 +135,7 @@ comparison.comparisons.round(3)
 # corr_matrix = np.array([...])
 #
 # # Test against circular6 preset
-# result = rthor.rthor_test(corr_matrix, order="circular6")
-# print(result.summary())
+# df = rthor.test(corr_matrix, order="circular6", print_results=True)
 # ```
 #
 # ### Testing Multiple Matrices
@@ -142,11 +144,14 @@ comparison.comparisons.round(3)
 #
 # ```python
 # # Stack matrices into 3D array or use list of DataFrames
-# result = rthor.rthor_test(
+# df = rthor.test(
 #     matrices,
 #     order="circular6",
 #     labels=["Group 1", "Group 2", "Group 3"]
 # )
+# # Work with the DataFrame
+# df[df['p_value'] < 0.05]  # Filter significant results
+# df.to_csv('results.csv')  # Export
 # ```
 #
 # ### Understanding the Correspondence Index (CI)

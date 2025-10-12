@@ -10,40 +10,49 @@ import pandas as pd
 
 from rthor._core import (
     compare_multiple_matrices,
-    generate_hypothesis,
     test_multiple_matrices,
 )
 from rthor._input import process_input
-from rthor.permutations import generate_permutations
-from rthor.results import ComparisonResult, RTHORResult
+from rthor._permutations import generate_permutations
+from rthor.formatting import (
+    print_comparison as print_comparison_fn,
+)
+from rthor.formatting import (
+    print_results as print_results_fn,
+)
 
 
 @overload
-def rthor_test(
+def test(
     data: Path | str,
     order: str | list[int] = "circular6",
     labels: list[str] | None = None,
     *,
     n_matrices: int,
     n_variables: int,
-) -> RTHORResult: ...
+    print_results: bool = False,
+) -> pd.DataFrame: ...
 
 
 @overload
-def rthor_test(
+def test(
     data: list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
     labels: list[str] | None = None,
-) -> RTHORResult: ...
+    *,
+    print_results: bool = False,
+) -> pd.DataFrame: ...
 
 
-def rthor_test(
+def test(
     data: Path | str | list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
     labels: list[str] | None = None,
     n_matrices: int | None = None,
     n_variables: int | None = None,
-) -> RTHORResult:
+    *,
+    print_results: bool = False,
+) -> pd.DataFrame:
     """Randomization Test of Hypothesized Order Relations (RTHOR).
 
     Tests whether correlation matrices conform to a hypothesized ordering
@@ -90,35 +99,38 @@ def rthor_test(
             of matrices.
         n_matrices: Number of matrices in file (required for file input only).
         n_variables: Number of variables per matrix (required for file input only).
+        print_results: If True, print formatted results table before returning.
 
     Returns:
-        Result object containing:
+        DataFrame with test results containing columns:
 
-            - `results`: Main results DataFrame with columns (matrix, predictions,
-              agreements, ties, ci, p_value, label)
-            - `n_matrices`: Number of matrices analyzed
-            - `n_variables`: Number of variables per matrix
-            - `order`: The hypothesized ordering used
-            - `n_predictions`: Number of hypothesized predictions
+            - `matrix`: Matrix identifier (1-indexed)
+            - `predictions`: Number of hypothesized predictions
+            - `agreements`: Number of predictions satisfied
+            - `ties`: Number of tied correlations
+            - `ci`: Correspondence Index (-1 to +1)
+            - `p_value`: Randomization test p-value
+            - `label`: Descriptive label for matrix
             - `n_permutations`: Number of permutations tested
+            - `n_variables`: Number of variables per matrix
 
     Examples:
         Test correlation matrices from file:
 
         >>> import rthor
-        >>> result = pythor.rthor_test(
+        >>> df = rthor.test(
         ...     "correlations.txt",
         ...     order="circular6",
         ...     n_matrices=3,
         ...     n_variables=6,
         ...     labels=["Sample 1", "Sample 2", "Sample 3"]
         ... )
-        >>> print(result.summary())
-        >>> result.results  # Access results DataFrame
+        >>> print(df)
+        >>> df[df['p_value'] < 0.05]  # Filter significant results
 
         Test from raw data DataFrames:
 
-        >>> result = pythor.rthor_test(
+        >>> df = rthor.test(
         ...     [df1, df2, df3],
         ...     order="circular6",
         ...     labels=["Group A", "Group B", "Group C"]
@@ -127,7 +139,7 @@ def rthor_test(
         Test with custom ordering:
 
         >>> custom_order = [1, 2, 3, 2, 1, 1, 2, 3, 2, 1]  # For 5 variables
-        >>> result = pythor.rthor_test(data, order=custom_order)
+        >>> df = rthor.test(data, order=custom_order)
 
         Test single correlation matrix:
 
@@ -135,10 +147,10 @@ def rthor_test(
         >>> corr_matrix = np.array([[1.0, 0.8, 0.6],
         ...                          [0.8, 1.0, 0.7],
         ...                          [0.6, 0.7, 1.0]])
-        >>> result = pythor.rthor_test(corr_matrix, order=[1, 2, 1])
+        >>> df = rthor.test(corr_matrix, order=[1, 2, 1])
 
     See Also:
-        - [`compare_matrices`][rthor.compare_matrices]:
+        - [`rthor.compare`][rthor.compare]:
             For pairwise comparisons between matrices
 
         - [`randall.R` in RTHORR](https://github.com/mgurtman/RTHORR/blob/main/R/randall.R):
@@ -146,46 +158,51 @@ def rthor_test(
 
     """
     # Process input to 3D array
-    correlation_matrices, n_vars, n_mats = process_input(data, n_matrices, n_variables)
+    correlation_matrices, n_vars, _ = process_input(data, n_matrices, n_variables)
 
     results_df = test_multiple_matrices(correlation_matrices, order, labels)
-    _, order_array, n_predictions = generate_hypothesis(order, n_vars)
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
 
-    return RTHORResult(
-        results=results_df,
-        n_matrices=n_mats,
-        n_variables=n_vars,
-        order=order_array,
-        n_predictions=n_predictions,
-        n_permutations=n_perms,
-    )
+    # Add metadata columns
+    results_df["n_permutations"] = n_perms
+    results_df["n_variables"] = n_vars
+
+    # Print formatted results if requested
+    if print_results:
+        print_results_fn(results_df)
+
+    return results_df
 
 
 @overload
-def compare_matrices(
+def compare(
     data: Path | str,
     order: str | list[int] = "circular6",
     *,
     n_matrices: int,
     n_variables: int,
-) -> ComparisonResult: ...
+    print_results: bool = False,
+) -> tuple[pd.DataFrame, pd.DataFrame]: ...
 
 
 @overload
-def compare_matrices(
+def compare(
     data: list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
-) -> ComparisonResult: ...
+    *,
+    print_results: bool = False,
+) -> tuple[pd.DataFrame, pd.DataFrame]: ...
 
 
-def compare_matrices(
+def compare(
     data: Path | str | list[pd.DataFrame] | np.ndarray,
     order: str | list[int] = "circular6",
     n_matrices: int | None = None,
     n_variables: int | None = None,
-) -> ComparisonResult:
+    *,
+    print_results: bool = False,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Pairwise comparison of multiple correlation matrices using RTHOR.
 
     Tests both individual matrices and pairwise differences between matrices
@@ -193,46 +210,65 @@ def compare_matrices(
     matrices differ significantly from each other.
 
     Args:
-        data: Input data (same formats as [`rthor_test`][rthor.rthor_test]).
-        order: Hypothesized ordering (same as [`rthor_test`][rthor.rthor_test]).
+        data: Input data (same formats as [`rthor.test`][rthor.test]).
+        order: Hypothesized ordering (same as [`rthor.test`][rthor.test]).
         n_matrices: Number of matrices (required for file input).
         n_variables: Number of variables (required for file input).
+        print_results: If True, print formatted results tables before returning.
 
     Returns:
-        Result object containing:
+        individual_results: Results of individual RTHOR tests for each matrix.
 
-            - `rthor_results`: Individual RTHOR tests for each matrix
-            - `comparisons`: Pairwise comparison results (matrix1, matrix2,
-              both_agree, only1, only2, neither, ci, p_value)
-            - `n_matrices`: Number of matrices analyzed
-            - `n_variables`: Number of variables per matrix
-            - `order`: The hypothesized ordering used
-            - `n_predictions`: Number of hypothesized predictions
+            Columns:
+
+            - `matrix`: Matrix identifier (1-indexed)
+            - `predictions`: Number of hypothesized predictions
+            - `agreements`: Number of predictions satisfied
+            - `ties`: Number of tied correlations
+            - `ci`: Correspondence Index (-1 to +1)
+            - `p_value`: Randomization test p-value
+            - `label`: Descriptive label for matrix
             - `n_permutations`: Number of permutations tested
+            - `n_variables`: Number of variables per matrix
+        pairwise_comparisons: Results of pairwise comparisons between matrices.
+
+            Columns:
+
+                - `matrix1`: First matrix identifier
+                - `matrix2`: Second matrix identifier
+                - `both_agree`: Predictions both matrices satisfy
+                - `only1`: Predictions only matrix 1 satisfies
+                - `only2`: Predictions only matrix 2 satisfies
+                - `neither`: Predictions neither matrix satisfies
+                - `ci`: Comparison Correspondence Index
+                - `p_value`: Randomization test p-value
+                - `n_permutations`: Number of permutations tested
+                - `n_variables`: Number of variables per matrix
 
     Examples:
         Compare multiple correlation matrices:
 
         >>> import rthor
-        >>> result = pythor.compare_matrices(
+        >>> individual, pairwise = rthor.compare(
         ...     "correlations.txt",
         ...     order="circular6",
         ...     n_matrices=3,
         ...     n_variables=6
         ... )
-        >>> print(result.summary())
-        >>> result.rthor_results  # Individual matrix results
-        >>> result.comparisons   # Pairwise comparisons
+        >>> print(individual)
+        >>> print(pairwise[pairwise['p_value'] < 0.05])
 
         Compare from DataFrames:
 
-        >>> result = pythor.compare_matrices([df1, df2, df3], order="circular6")
+        >>> individual, pairwise = rthor.compare(
+        ...     [df1, df2, df3], order="circular6"
+        ... )
 
     Note:
         This function performs two types of tests:
 
         **Individual tests**: Each matrix is tested against the hypothesis
-        independently (same as [`rthor_test`][rthor.rthor_test])
+        independently (same as [`rthor.test`][rthor.test])
 
         **Pairwise comparisons**: Each pair of matrices is compared to determine
         if they differ in their fit to the hypothesis. The comparison CI indicates
@@ -246,31 +282,34 @@ def compare_matrices(
         identically to assess whether the observed difference could occur by chance.
 
     See Also:
-        [`rthor_test`][rthor.rthor_test]:
+        [`rthor.test`][rthor.test]:
             For testing matrices without pairwise comparisons
 
     """
     # Process input to 3D array
-    correlation_matrices, n_vars, n_mats = process_input(data, n_matrices, n_variables)
+    correlation_matrices, n_vars, _ = process_input(data, n_matrices, n_variables)
 
+    # Check we have at least 2 matrices
+    n_mats = correlation_matrices.shape[2]
     if n_mats < 2:
         msg = (
             f"Matrix comparison requires at least 2 matrices, got {n_mats}. "
-            f"Use rthor_test() for single matrix analysis."
+            f"Use test() for single matrix analysis."
         )
         raise ValueError(msg)
 
     rthor_df, comparisons_df = compare_multiple_matrices(correlation_matrices, order)
-    _, order_array, n_predictions = generate_hypothesis(order, n_vars)
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
 
-    return ComparisonResult(
-        rthor_results=rthor_df,
-        comparisons=comparisons_df,
-        n_matrices=n_mats,
-        n_variables=n_vars,
-        order=order_array,
-        n_predictions=n_predictions,
-        n_permutations=n_perms,
-    )
+    # Add metadata columns to both DataFrames
+    rthor_df["n_permutations"] = n_perms
+    rthor_df["n_variables"] = n_vars
+    comparisons_df["n_permutations"] = n_perms
+    comparisons_df["n_variables"] = n_vars
+
+    # Print formatted results if requested
+    if print_results:
+        print_comparison_fn(rthor_df, comparisons_df)
+
+    return rthor_df, comparisons_df

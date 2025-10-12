@@ -4,7 +4,7 @@
 
 RTHOR (Randomization Test of Hypothesized Order Relations) is a statistical test for evaluating whether correlation matrices conform to theoretically predicted patterns, particularly circumplex and circular structures.
 
-Developed by Hubert & Arabie (1987), RTHOR is widely used in personality, emotion, and interpersonal research to validate circumplex models.
+Developed by Hubert & Arabie (1987) [@Hubert1987Evaluating], RTHOR is widely used in personality, emotion, and interpersonal research to validate circumplex models.
 
 ## The Circumplex Problem
 
@@ -45,7 +45,7 @@ RTHOR counts how many predictions are satisfied by observed data:
 
 ### 3. Compute Correspondence Index (CI)
 
-The CI summarizes fit (Hubert & Arabie, 1987, Eq. 3, p. 176):
+The CI summarizes fit (Hubert & Arabie, 1987, Eq. 3, p. 176) [@Hubert1987Evaluating]:
 
 $$
 CI = \frac{A - D}{A + D + T}
@@ -61,7 +61,7 @@ Where:
 
 ### 4. Permutation Test
 
-Statistical significance is determined by randomization (Hubert & Arabie, 1987, p. 175):
+Statistical significance is determined by randomization (Hubert & Arabie, 1987, p. 175) [@Hubert1987Evaluating]:
 
 1. Generate all permutations of variable labels (or sample when n! > 50,000)
 2. For each permutation, recompute CI
@@ -97,7 +97,7 @@ The key insight: By permuting object labels (not individual predictions), the te
 
 ## The Ordering Vector
 
-The ordering vector encodes your hypothesis. For n variables, it has length n(n-1)/2 (one value per unique pair).
+The ordering vector encodes your hypothesis. For n variables, it has length $n(n-1)/2$ (one value per unique pair).
 
 ### Example: Circular6
 
@@ -125,7 +125,7 @@ Lower numbers = predicted higher correlations.
 Test if interpersonal scales follow the classic two-dimensional circular structure:
 
 ```python
-result = rthor.rthor_test(ipc_matrix, order="circular8")
+result = rthor.test(ipc_matrix, order="circular8")
 ```
 
 ### Affect Circumplex
@@ -133,7 +133,7 @@ result = rthor.rthor_test(ipc_matrix, order="circular8")
 Test Russell's (1980) circumplex model of emotions:
 
 ```python
-result = rthor.rthor_test(emotion_matrix, order="circular8")
+result = rthor.test(emotion_matrix, order="circular8")
 ```
 
 ### Custom Models
@@ -143,7 +143,7 @@ Test any hypothesized ordering:
 ```python
 # Linear ordering: 1 < 2 < 3 < 4
 custom_order = [1, 2, 3, 2, 3, 3]
-result = rthor.rthor_test(matrix, order=custom_order)
+result = rthor.test(matrix, order=custom_order)
 ```
 
 ## Method Advantages
@@ -156,18 +156,7 @@ result = rthor.rthor_test(matrix, order=custom_order)
 
 ## References
 
-**Original Method:**
-
-- Hubert, L. J., & Arabie, P. (1987). Evaluating order hypotheses within proximity matrices. _Psychological Bulletin_, 102(1), 172-178. <https://doi.org/10.1037/0033-2909.102.1.172>
-
-**R Implementation:**
-
-- Gurtman, M. B. (2021). RTHORR: Randomization Tests of Hypothesized Order Relations [R package].
-
-**Applications:**
-
-- Gurtman, M. B., & Pincus, A. L. (2003). The circumplex model: Methods and research applications. In _Handbook of psychology_ (pp. 407-428).
-- Browne, M. W. (1992). Circumplex models for correlation matrices. _Psychometrika_, 57(4), 469-497.
+**Original R implementation:** [RTHORR](https://github.com/michaellynnmorris/RTHORR) [@Tracey2025RTHORR].
 
 ## Next Steps
 
@@ -175,3 +164,5 @@ result = rthor.rthor_test(matrix, order=custom_order)
 - Try [Basic Usage](../examples/basic-usage.py) - Getting started examples
 - Explore [Advanced Features](../examples/advanced-features.py) - Custom orderings and comparisons
 - Check [API Reference](../api/reference/input.md) - Complete function documentation
+
+\full_bibliography

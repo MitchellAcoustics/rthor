@@ -1,13 +1,13 @@
 """rthor - Python implementation of RTHOR."""
 
 from ._version import __version__
-from .api import compare_matrices, rthor_test
-from .results import ComparisonResult, RTHORResult
+from .formatting import print_comparison, print_results
+from .rthor import compare, test
 
 __all__ = [
-    "ComparisonResult",
-    "RTHORResult",
     "__version__",
-    "compare_matrices",
-    "rthor_test",
+    "compare",
+    "print_comparison",
+    "print_results",
+    "test",
 ]

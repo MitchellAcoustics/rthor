@@ -29,10 +29,9 @@
 
 ```python
 import rthor
-import pandas as pd
 
 # Test from correlation matrix file
-result = rthor.rthor_test(
+df = rthor.test(
     "correlations.txt",
     order="circular6",
     n_matrices=3,
@@ -40,50 +39,217 @@ result = rthor.rthor_test(
     labels=["Sample 1", "Sample 2", "Sample 3"]
 )
 
-# View results
-print(result.summary())
-print(result.results)
-
-# Test from DataFrames
-result = rthor.rthor_test(
-    [df1, df2, df3],
-    order="circular6",
-    labels=["Group A", "Group B", "Group C"]
-)
-
-# Compare multiple matrices
-comparison = rthor.compare_matrices([df1, df2, df3], order="circular6")
-print(comparison.summary())
-print(comparison.comparisons)  # Pairwise differences
+# View results (returns a pandas DataFrame)
+print(df)
 ```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>matrix</th>
+      <th>predictions</th>
+      <th>agreements</th>
+      <th>ties</th>
+      <th>ci</th>
+      <th>p_value</th>
+      <th>label</th>
+      <th>n_permutations</th>
+      <th>n_variables</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>72</td>
+      <td>59</td>
+      <td>1</td>
+      <td>0.652778</td>
+      <td>0.016667</td>
+      <td>Sample 1</td>
+      <td>720</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>72</td>
+      <td>53</td>
+      <td>1</td>
+      <td>0.486111</td>
+      <td>0.033333</td>
+      <td>Sample 2</td>
+      <td>720</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>72</td>
+      <td>56</td>
+      <td>3</td>
+      <td>0.597222</td>
+      <td>0.016667</td>
+      <td>Sample 3</td>
+      <td>720</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```python
+df[df['ci'] > 0.5]  # Filter results
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>matrix</th>
+      <th>predictions</th>
+      <th>agreements</th>
+      <th>ties</th>
+      <th>ci</th>
+      <th>p_value</th>
+      <th>label</th>
+      <th>n_permutations</th>
+      <th>n_variables</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>72</td>
+      <td>59</td>
+      <td>1</td>
+      <td>0.652778</td>
+      <td>0.016667</td>
+      <td>Sample 1</td>
+      <td>720</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>72</td>
+      <td>56</td>
+      <td>3</td>
+      <td>0.597222</td>
+      <td>0.016667</td>
+      <td>Sample 3</td>
+      <td>720</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```python
+# Or print formatted results
+rthor.print_results(df)
+```
+
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">                                   </span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold; font-style: italic">RTHOR Test Results</span><span style="font-style: italic">                                    </span>
+<span style="font-style: italic">              </span><span style="color: #7f7f7f; text-decoration-color: #7f7f7f; font-style: italic">3 matrices • 6 variables • 72 predictions • 720 permutations</span><span style="font-style: italic">               </span>
+╭──────────────┬────┬───────┬────────────────┬──────────────┬─────────────┬─────────────╮
+│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Matrix       </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    CI </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Interpretation </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Significance </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">   Satisfied </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    Violated </span>│
+├──────────────┼────┼───────┼────────────────┼──────────────┼─────────────┼─────────────┤
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> [1] Sample 1 </span>│ <span style="color: #00ff00; text-decoration-color: #00ff00">↗</span>  │<span style="font-weight: bold"> </span><span style="color: #00ff00; text-decoration-color: #00ff00; font-weight: bold">0.653</span><span style="font-weight: bold"> </span>│ Good fit       │   <span style="color: #008000; text-decoration-color: #008000">p&lt;.05 *</span>    │<span style="color: #008000; text-decoration-color: #008000"> 59/72 (82%) </span>│<span style="color: #800000; text-decoration-color: #800000"> 12/72 (17%) </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> [2] Sample 2 </span>│ <span style="color: #808000; text-decoration-color: #808000">→</span>  │<span style="font-weight: bold"> </span><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">0.486</span><span style="font-weight: bold"> </span>│ Moderate fit   │   <span style="color: #008000; text-decoration-color: #008000">p&lt;.05 *</span>    │<span style="color: #008000; text-decoration-color: #008000"> 53/72 (74%) </span>│<span style="color: #800000; text-decoration-color: #800000"> 18/72 (25%) </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> [3] Sample 3 </span>│ <span style="color: #00ff00; text-decoration-color: #00ff00">↗</span>  │<span style="font-weight: bold"> </span><span style="color: #00ff00; text-decoration-color: #00ff00; font-weight: bold">0.597</span><span style="font-weight: bold"> </span>│ Good fit       │   <span style="color: #008000; text-decoration-color: #008000">p&lt;.05 *</span>    │<span style="color: #008000; text-decoration-color: #008000"> 56/72 (78%) </span>│<span style="color: #800000; text-decoration-color: #800000"> 13/72 (18%) </span>│
+╰──────────────┴────┴───────┴────────────────┴──────────────┴─────────────┴─────────────╯
+<span style="color: #7f7f7f; text-decoration-color: #7f7f7f; font-style: italic">                ℹ️  Higher CI values indicate better fit (range: -1 to +1)                </span>
+</pre>
+
+### Test from DataFrames
+
+```python
+df = rthor.test(
+[df1, df2, df3],
+order="circular6",
+labels=["Group A", "Group B", "Group C"],
+print_results=True # Print formatted results automatically
+)
+```
+
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">                                   </span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold; font-style: italic">RTHOR Test Results</span><span style="font-style: italic">                                    </span>
+<span style="font-style: italic">              </span><span style="color: #7f7f7f; text-decoration-color: #7f7f7f; font-style: italic">3 matrices • 6 variables • 72 predictions • 720 permutations</span><span style="font-style: italic">               </span>
+╭─────────────┬────┬───────┬────────────────┬──────────────┬──────────────┬─────────────╮
+│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Matrix      </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    CI </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Interpretation </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Significance </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    Satisfied </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    Violated </span>│
+├─────────────┼────┼───────┼────────────────┼──────────────┼──────────────┼─────────────┤
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> [1] Group A </span>│ <span style="color: #00ff00; text-decoration-color: #00ff00">✓</span>  │<span style="font-weight: bold"> </span><span style="color: #00ff00; text-decoration-color: #00ff00; font-weight: bold">1.000</span><span style="font-weight: bold"> </span>│ Excellent fit  │   <span style="color: #008000; text-decoration-color: #008000">p&lt;.05 *</span>    │<span style="color: #008000; text-decoration-color: #008000"> 72/72 (100%) </span>│<span style="color: #800000; text-decoration-color: #800000">   0/72 (0%) </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> [2] Group B </span>│ <span style="color: #00ff00; text-decoration-color: #00ff00">↗</span>  │<span style="font-weight: bold"> </span><span style="color: #00ff00; text-decoration-color: #00ff00; font-weight: bold">0.583</span><span style="font-weight: bold"> </span>│ Good fit       │   <span style="color: #008000; text-decoration-color: #008000">p&lt;.05 *</span>    │<span style="color: #008000; text-decoration-color: #008000">  57/72 (79%) </span>│<span style="color: #800000; text-decoration-color: #800000"> 15/72 (21%) </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> [3] Group C </span>│ <span style="color: #800000; text-decoration-color: #800000">⚠</span>  │<span style="font-weight: bold"> </span><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">0.056</span><span style="font-weight: bold"> </span>│ Minimal fit    │   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">p=0.433</span>    │<span style="color: #008000; text-decoration-color: #008000">  38/72 (53%) </span>│<span style="color: #800000; text-decoration-color: #800000"> 34/72 (47%) </span>│
+╰─────────────┴────┴───────┴────────────────┴──────────────┴──────────────┴─────────────╯
+<span style="color: #7f7f7f; text-decoration-color: #7f7f7f; font-style: italic">                ℹ️  Higher CI values indicate better fit (range: -1 to +1)                </span>
+</pre>
+
+### Compare multiple matrices
+
+```python
+individual, pairwise = rthor.compare(
+[df1, df2, df3],
+order="circular6",
+print_results=True
+)
+```
+
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">                                </span><span style="color: #008080; text-decoration-color: #008080; font-weight: bold; font-style: italic">RTHOR Matrix Comparison</span><span style="font-style: italic">                                </span>
+<span style="font-style: italic">             </span><span style="color: #7f7f7f; text-decoration-color: #7f7f7f; font-style: italic">3 matrices • 6 variables • 72 predictions • 720 permutations</span><span style="font-style: italic">              </span>
+╭────────────┬────┬────────┬─────────────────┬──────────────┬───────┬────────┬────────╮
+│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Comparison </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">    </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">     CI </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Result          </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Significance </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">  Both </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Only 1 </span>│<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Only 2 </span>│
+├────────────┼────┼────────┼─────────────────┼──────────────┼───────┼────────┼────────┤
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> Matrix 1   </span>│ <span style="color: #00ff00; text-decoration-color: #00ff00">✓</span>  │<span style="font-weight: bold">  </span><span style="color: #00ff00; text-decoration-color: #00ff00; font-weight: bold">1.000</span><span style="font-weight: bold"> </span>│ Excellent fit   │   <span style="color: #008000; text-decoration-color: #008000">p&lt;.05 *</span>    │<span style="color: #7f7f7f; text-decoration-color: #7f7f7f"> 72/72 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      — </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      — </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> Matrix 2   </span>│ <span style="color: #00ff00; text-decoration-color: #00ff00">↗</span>  │<span style="font-weight: bold">  </span><span style="color: #00ff00; text-decoration-color: #00ff00; font-weight: bold">0.583</span><span style="font-weight: bold"> </span>│ Good fit        │   <span style="color: #008000; text-decoration-color: #008000">p&lt;.05 *</span>    │<span style="color: #7f7f7f; text-decoration-color: #7f7f7f"> 57/72 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      — </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      — </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> Matrix 3   </span>│ <span style="color: #800000; text-decoration-color: #800000">⚠</span>  │<span style="font-weight: bold">  </span><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">0.056</span><span style="font-weight: bold"> </span>│ Minimal fit     │   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">p=0.433</span>    │<span style="color: #7f7f7f; text-decoration-color: #7f7f7f"> 38/72 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      — </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      — </span>│
+├────────────┼────┼────────┼─────────────────┼──────────────┼───────┼────────┼────────┤
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> 1 vs 2     </span>│ <span style="color: #008000; text-decoration-color: #008000">↓</span>  │<span style="font-weight: bold"> </span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">-0.208</span><span style="font-weight: bold"> </span>│ Matrix 1 better │   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">p=0.933</span>    │<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">    57 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">     15 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      0 </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> 1 vs 3     </span>│ <span style="color: #008000; text-decoration-color: #008000">↓</span>  │<span style="font-weight: bold"> </span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">-0.472</span><span style="font-weight: bold"> </span>│ Matrix 1 better │   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">p=0.983</span>    │<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">    38 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">     34 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      0 </span>│
+│<span style="color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold"> 2 vs 3     </span>│ <span style="color: #008000; text-decoration-color: #008000">↓</span>  │<span style="font-weight: bold"> </span><span style="color: #008000; text-decoration-color: #008000; font-weight: bold">-0.264</span><span style="font-weight: bold"> </span>│ Matrix 2 better │   <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">p=0.967</span>    │<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">    37 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">     20 </span>│<span style="color: #7f7f7f; text-decoration-color: #7f7f7f">      1 </span>│
+╰────────────┴────┴────────┴─────────────────┴──────────────┴───────┴────────┴────────╯
+<span style="color: #7f7f7f; text-decoration-color: #7f7f7f; font-style: italic">   Info: Positive CI means matrix 2 fits better, negative means matrix 1 fits better   </span>
+</pre>
 
 ## Installation
 
-### From PyPI
+See [Installation Instructions](docs/installation.md) for more details.
 
 ```sh
 pip install rthor
 ```
-
-### From Source
-
-```sh
-pip install git+https://github.com/MitchellAcoustics/rthor.git
-```
-
-### For Development
-
-```sh
-git clone https://github.com/MitchellAcoustics/rthor.git
-cd rthor
-pip install -e .[dev]
-```
-
-## Requirements
-
-- Python 3.11, 3.12, or 3.13
-- NumPy ≥ 1.24.0
-- pandas ≥ 2.0.0
 
 ## What is RTHOR?
 
@@ -97,7 +263,7 @@ The test uses a randomization approach to compute p-values, comparing the observ
 
 ## Key Functions
 
-### [`rthor_test()`][rthor.rthor_test]
+### [`rthor.test()`][rthor.test]
 
 Test whether correlation matrices conform to a hypothesized ordering.
 
@@ -108,16 +274,17 @@ Test whether correlation matrices conform to a hypothesized ordering.
 - `labels`: Optional descriptive labels for matrices
 - `n_matrices`: Number of matrices (required for file input)
 - `n_variables`: Number of variables (required for file input)
+- `print_results`: If True, print formatted results table
 
-**Returns:** `RTHORResult` object with results DataFrame and metadata
+**Returns:** pandas DataFrame with columns: matrix, predictions, agreements, ties, ci, p_value, label, n_permutations, n_variables
 
-### [`compare_matrices()`][rthor.compare_matrices]
+### [`rthor.compare()`][rthor.compare]
 
 Compare multiple correlation matrices pairwise to determine which fits the hypothesis better.
 
-**Parameters:** Same as `rthor_test()` but requires at least 2 matrices
+**Parameters:** Same as `rthor.test()` but requires at least 2 matrices
 
-**Returns:** `ComparisonResult` object with individual results and pairwise comparisons
+**Returns:** Tuple of two pandas DataFrames: (individual_results, pairwise_comparisons)
 
 ## Documentation
 

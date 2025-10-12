@@ -44,23 +44,23 @@ theme:
     repo: fontawesome/brands/github
 
 nav:
-  - Overview: index.md
-  - Installation: user-guide/installation.md
-  - Examples:
+  - Overview:
+      - index.md
+      - Installation: installation.md
+  - User Guide:
+      - Core Concepts: user-guide/concepts.md
       - Basic Usage: examples/basic-usage.py
       - Advanced Features: examples/advanced-features.py
       - Paper Validation: examples/paper-validation.py
-  - Core Concepts: user-guide/concepts.md
   - API Reference:
       - Overview: api/overview.md
-      - Core Functions: api/api.md
-      - Result Classes: api/result-classes.md
+      - Core Functions: api/rthor.md
+      - Results & Formatting: api/result-classes.md
       - Reference:
           - api/reference/index.md
-          - io: api/reference/io.md
-          - permutations: api/reference/permutations.md
           - _core: api/reference/core.md
           - _input: api/reference/input.md
+          - _permutations: api/reference/permutations.md
           - _validation: api/reference/validation.md
           - _vectorized: api/reference/vectorized.md
   - License: LICENSE.md

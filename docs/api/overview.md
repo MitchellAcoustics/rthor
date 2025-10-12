@@ -2,10 +2,10 @@
 
 `rthor` provides a simple, high-level API for testing correlation matrices against hypothesized orderings. The main functions are:
 
-- [**`rthor_test()`**][rthor.rthor_test]: Test one or more correlation matrices
-- [**`compare_matrices()`**][rthor.compare_matrices]: Compare multiple matrices pairwise
+- [**`rthor.test()`**][rthor.test]: Test one or more correlation matrices
+- [**`rthor.compare()`**][rthor.compare]: Compare multiple matrices pairwise
 
-Results are returned as dataclass objects with convenient methods for viewing and exporting.
+Results are returned as pandas DataFrames for easy integration with data analysis workflows.
 
 ## Input Formats
 
@@ -19,11 +19,11 @@ import rthor
 
 # Single matrix (2D array)
 matrix = np.array([[1.0, 0.8], [0.8, 1.0]])
-result = rthor.rthor_test(matrix, order="circular6")
+result = rthor.test(matrix, order="circular6")
 
 # Multiple matrices (3D array with shape [n_vars, n_vars, n_matrices])
 matrices = np.stack([matrix1, matrix2, matrix3], axis=2)
-result = rthor.rthor_test(matrices, order="circular6")
+result = rthor.test(matrices, order="circular6")
 ```
 
 ### pandas DataFrames
@@ -36,14 +36,14 @@ import rthor
 df1 = pd.DataFrame({'var1': [...], 'var2': [...], ...})
 df2 = pd.DataFrame({'var1': [...], 'var2': [...], ...})
 
-result = rthor.rthor_test([df1, df2], order="circular6")
+result = rthor.test([df1, df2], order="circular6")
 ```
 
 ### File Input
 
 ```python
 # Text file with lower triangular matrices
-result = rthor.rthor_test(
+result = rthor.test(
     "correlations.txt",
     n_matrices=10,
     n_variables=6,
@@ -62,7 +62,7 @@ File format: Lower triangular matrices including diagonal, whitespace-separated 
 For 6 variables arranged in a circular pattern (e.g., interpersonal circumplex):
 
 ```python
-result = rthor.rthor_test(matrix, order="circular6")
+result = rthor.test(matrix, order="circular6")
 ```
 
 Hypothesizes that adjacent variables have stronger correlations than distant ones.
@@ -72,7 +72,7 @@ Hypothesizes that adjacent variables have stronger correlations than distant one
 For 8 variables arranged in a circular pattern:
 
 ```python
-result = rthor.rthor_test(matrix, order="circular8")
+result = rthor.test(matrix, order="circular8")
 ```
 
 Commonly used for octant models in personality and emotion research.
@@ -84,10 +84,10 @@ You can specify custom hypothesized orderings for any number of variables:
 ```python
 # For 4 variables with linear ordering: 1 < 2 < 3 < 4
 custom_order = [1, 2, 3, 2, 3, 3]
-result = rthor.rthor_test(matrix, order=custom_order)
+result = rthor.test(matrix, order=custom_order)
 ```
 
-The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length k×(k-1)/2.
+The ordering vector specifies the expected relationship between all pairs of variables. For k variables, the vector has length $k×(k-1)/2$.
 
 See the [Advanced Features](../examples/advanced-features.py) example for detailed explanation of custom orderings.
 
@@ -115,18 +115,18 @@ The p-value represents the proportion of random permutations that achieve a CI a
 
 ## Export and Integration
 
-### To pandas
+### Working with DataFrames
 
-Results are already in pandas DataFrames:
+Results are pandas DataFrames with full pandas functionality:
 
 ```python
-result = rthor.rthor_test(matrices, order="circular6")
+result = rthor.test(matrices, order="circular6")
 
 # Filter significant results
-sig = result.results[result.results['p_value'] < 0.05]
+sig = result[result['p_value'] < 0.05]
 
 # Export to CSV
-result.results.to_csv("results.csv", index=False)
+result.to_csv("results.csv", index=False)
 ```
 
 ### To Dictionary/JSON
@@ -134,7 +134,7 @@ result.results.to_csv("results.csv", index=False)
 ```python
 import json
 
-result_dict = result.to_dict()
+result_dict = result.to_dict(orient='records')
 with open("results.json", "w") as f:
     json.dump(result_dict, f, indent=2)
 ```
@@ -143,22 +143,15 @@ with open("results.json", "w") as f:
 
 ```python
 # Extract CI values for further analysis
-ci_values = result.results['ci'].values
+ci_values = result['ci']
 
 # Get matrix with best fit
-best_matrix = result.results.loc[result.results['ci'].idxmax(), 'label']
+best_matrix = result.loc[result['ci'].idxmax(), 'label']
 
 # Compare groups
-group1_ci = result.results.loc[result.results['label'].str.contains('Group1'), 'ci']
-group2_ci = result.results.loc[result.results['label'].str.contains('Group2'), 'ci']
+group1_ci = result.loc[result['label'].str.contains('Group1'), 'ci']
+group2_ci = result.loc[result['label'].str.contains('Group2'), 'ci']
 ```
-
-## Performance Notes
-
-- Vectorized operations using NumPy for efficiency
-- Optimized for matrices with 4-20 variables
-- Memory-efficient permutation algorithm
-- Pre-computed correlations recommended for repeated analyses
 
 ## See Also
 

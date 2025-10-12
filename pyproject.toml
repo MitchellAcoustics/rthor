@@ -68,6 +68,8 @@ paths.source = ["src", ".tox*/*/lib/python*/site-packages"]
 
 [tool.pytest.ini_options]
 addopts = ["--color=yes", "--import-mode=importlib", "--verbose"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
 testpaths = ["tests"]
 
 [tool.ruff]
@@ -98,6 +100,8 @@ lint.per-file-ignores."docs/examples/*" = [
     "RUF003",
     "T201",
 ]
+lint.per-file-ignores."src/rthor/formatting.py" = ["E501", "PLC0415", "PLR0915"]
+lint.per-file-ignores."src/rthor/rthor.py" = ["PT028"]
 lint.per-file-ignores."tests*" = ["ERA001", "INP001", "PLR2004", "S101"]
 
 [tool.setuptools_scm]
