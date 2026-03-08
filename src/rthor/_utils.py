@@ -3,6 +3,12 @@
 from __future__ import annotations
 
 import importlib.util
+from typing import TYPE_CHECKING, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+T = TypeVar("T")
 
 
 def is_running_in_ipynb() -> bool:
@@ -36,3 +42,19 @@ def requires(*packages: str, reason: str = "", extras: str | None = None) -> Non
             error_message += f'- pip install "rthor[{extras}]"\n'
         error_message += f"- pip install {package}\n"
         raise ImportError(error_message)
+
+
+def progress_iter(
+    iterable: Iterable[T],
+    *,
+    enabled: bool,
+    total: int | None = None,
+    desc: str | None = None,
+) -> Iterable[T]:
+    """Wrap an iterable with a tqdm progress bar if enabled and installed."""
+    if not enabled:
+        return iterable
+    requires("tqdm", reason="show_progress=True", extras="tqdm")
+    from tqdm.auto import tqdm  # noqa: PLC0415
+
+    return tqdm(iterable, total=total, desc=desc)

@@ -53,8 +53,9 @@ readme = "README.md"
 requires-python = ">=3.11"
 
 [project.optional-dependencies]
-all = ["rthor[rich]"]
+all = ["rthor[rich,tqdm]"]
 rich = ["rich>=14.1.0"]
+tqdm = ["tqdm>=4.60.0"]
 
 [project.urls]
 documentation = "https://drandrewmitchell.com/rthor"

@@ -31,6 +31,7 @@ def test(
     n_matrices: int,
     n_variables: int,
     print_results: bool = False,
+    show_progress: bool = False,
 ) -> pd.DataFrame: ...
 
 
@@ -41,6 +42,7 @@ def test(
     labels: list[str] | None = None,
     *,
     print_results: bool = False,
+    show_progress: bool = False,
 ) -> pd.DataFrame: ...
 
 
@@ -52,6 +54,7 @@ def test(
     n_variables: int | None = None,
     *,
     print_results: bool = False,
+    show_progress: bool = False,
 ) -> pd.DataFrame:
     """Randomization Test of Hypothesized Order Relations (RTHOR).
 
@@ -100,6 +103,8 @@ def test(
         n_matrices: Number of matrices in file (required for file input only).
         n_variables: Number of variables per matrix (required for file input only).
         print_results: If True, print formatted results table before returning.
+        show_progress: If True, display a tqdm progress bar. Requires the
+            ``tqdm`` package (install via ``pip install "rthor[tqdm]"``).
 
     Returns:
         DataFrame with test results containing columns:
@@ -160,7 +165,9 @@ def test(
     # Process input to 3D array
     correlation_matrices, n_vars, _ = process_input(data, n_matrices, n_variables)
 
-    results_df = test_multiple_matrices(correlation_matrices, order, labels)
+    results_df = test_multiple_matrices(
+        correlation_matrices, order, labels, show_progress=show_progress
+    )
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
 
@@ -183,6 +190,7 @@ def compare(
     n_matrices: int,
     n_variables: int,
     print_results: bool = False,
+    show_progress: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]: ...
 
 
@@ -192,6 +200,7 @@ def compare(
     order: str | list[int] = "circular6",
     *,
     print_results: bool = False,
+    show_progress: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]: ...
 
 
@@ -202,6 +211,7 @@ def compare(
     n_variables: int | None = None,
     *,
     print_results: bool = False,
+    show_progress: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Pairwise comparison of multiple correlation matrices using RTHOR.
 
@@ -215,6 +225,8 @@ def compare(
         n_matrices: Number of matrices (required for file input).
         n_variables: Number of variables (required for file input).
         print_results: If True, print formatted results tables before returning.
+        show_progress: If True, display a tqdm progress bar. Requires the
+            ``tqdm`` package (install via ``pip install "rthor[tqdm]"``).
 
     Returns:
         individual_results: Results of individual RTHOR tests for each matrix.
@@ -298,7 +310,9 @@ def compare(
         )
         raise ValueError(msg)
 
-    rthor_df, comparisons_df = compare_multiple_matrices(correlation_matrices, order)
+    rthor_df, comparisons_df = compare_multiple_matrices(
+        correlation_matrices, order, show_progress=show_progress
+    )
     permutations = generate_permutations(n_vars)
     n_perms = permutations.shape[0]
 

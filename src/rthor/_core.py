@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from rthor._permutations import apply_permutation, generate_permutations
+from rthor._utils import progress_iter
 from rthor._validation import validate_labels, validate_order
 from rthor._vectorized import (
     build_comparison_matrix,
@@ -165,6 +166,8 @@ def test_multiple_matrices(
     correlation_matrices: np.ndarray,
     order: str | list[int] | np.ndarray,
     labels: list[str] | None,
+    *,
+    show_progress: bool = False,
 ) -> pd.DataFrame:
     """Test multiple correlation matrices.
 
@@ -172,6 +175,7 @@ def test_multiple_matrices(
         correlation_matrices: 3D array (n_variables, n_variables, n_matrices)
         order: Hypothesized ordering
         labels: Matrix labels
+        show_progress: If True, display a tqdm progress bar.
 
     Returns:
         Results table
@@ -186,7 +190,9 @@ def test_multiple_matrices(
 
     # Test each matrix
     results = []
-    for i in range(n_matrices):
+    for i in progress_iter(
+        range(n_matrices), enabled=show_progress, total=n_matrices, desc="Testing matrices"
+    ):
         corr_mat = correlation_matrices[:, :, i]
         result = test_single_matrix(
             corr_mat,
@@ -292,12 +298,15 @@ def compare_two_matrices(
 def compare_multiple_matrices(
     correlation_matrices: np.ndarray,
     order: str | list[int] | np.ndarray,
+    *,
+    show_progress: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Compare all pairs of correlation matrices.
 
     Args:
         correlation_matrices: 3D array (n_variables, n_variables, n_matrices)
         order: Hypothesized ordering
+        show_progress: If True, display a tqdm progress bar.
 
     Returns:
         rthor_df: Individual matrix test results
@@ -312,7 +321,9 @@ def compare_multiple_matrices(
 
     # Test each matrix individually
     rthor_results = []
-    for i in range(n_matrices):
+    for i in progress_iter(
+        range(n_matrices), enabled=show_progress, total=n_matrices, desc="Testing matrices"
+    ):
         corr_mat = correlation_matrices[:, :, i]
         result = test_single_matrix(
             corr_mat,
@@ -325,21 +336,28 @@ def compare_multiple_matrices(
         rthor_results.append(result)
 
     # Compare all pairs
+    n_pairs = n_matrices * (n_matrices - 1) // 2
+    pairs = (
+        (i, j)
+        for i in range(n_matrices)
+        for j in range(i + 1, n_matrices)
+    )
     comparison_results = []
-    for i in range(n_matrices):
-        for j in range(i + 1, n_matrices):
-            corr_mat1 = correlation_matrices[:, :, i]
-            corr_mat2 = correlation_matrices[:, :, j]
+    for i, j in progress_iter(
+        pairs, enabled=show_progress, total=n_pairs, desc="Comparing pairs"
+    ):
+        corr_mat1 = correlation_matrices[:, :, i]
+        corr_mat2 = correlation_matrices[:, :, j]
 
-            comp_result = compare_two_matrices(
-                corr_mat1,
-                corr_mat2,
-                hypothesis_matrix,
-                permutations,
-                matrix1_id=i + 1,
-                matrix2_id=j + 1,
-            )
-            comparison_results.append(comp_result)
+        comp_result = compare_two_matrices(
+            corr_mat1,
+            corr_mat2,
+            hypothesis_matrix,
+            permutations,
+            matrix1_id=i + 1,
+            matrix2_id=j + 1,
+        )
+        comparison_results.append(comp_result)
 
     # Create DataFrames
     rthor_df = pd.DataFrame(rthor_results)

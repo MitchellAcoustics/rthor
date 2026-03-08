@@ -391,3 +391,57 @@ class TestInputValidation:
         """Test that compare_matrices requires at least 2 matrices."""
         with pytest.raises(ValueError, match="requires at least 2 matrices"):
             compare(data=[df_list[0]], order="circular6")
+
+
+class TestShowProgress:
+    """Test that show_progress=True produces identical results."""
+
+    def test_test_with_progress(
+        self,
+        input_matrix_file: Path,
+        expected_randall_output: pd.DataFrame,
+    ) -> None:
+        """Test that test() with show_progress=True gives identical results."""
+        result = test(
+            data=input_matrix_file,
+            n_matrices=3,
+            n_variables=6,
+            order="circular6",
+            labels=["sample_one", "sample_two", "sample_three"],
+            show_progress=True,
+        )
+
+        result_no_progress = test(
+            data=input_matrix_file,
+            n_matrices=3,
+            n_variables=6,
+            order="circular6",
+            labels=["sample_one", "sample_two", "sample_three"],
+            show_progress=False,
+        )
+
+        pd.testing.assert_frame_equal(result, result_no_progress)
+
+    def test_compare_with_progress(
+        self,
+        input_matrix_file: Path,
+    ) -> None:
+        """Test that compare() with show_progress=True gives identical results."""
+        individual, pairwise = compare(
+            data=input_matrix_file,
+            n_matrices=3,
+            n_variables=6,
+            order="circular6",
+            show_progress=True,
+        )
+
+        ind_no_progress, pw_no_progress = compare(
+            data=input_matrix_file,
+            n_matrices=3,
+            n_variables=6,
+            order="circular6",
+            show_progress=False,
+        )
+
+        pd.testing.assert_frame_equal(individual, ind_no_progress)
+        pd.testing.assert_frame_equal(pairwise, pw_no_progress)
